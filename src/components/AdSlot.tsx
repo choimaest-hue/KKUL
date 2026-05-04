@@ -93,7 +93,7 @@ export default function AdSlot({
     <div
       ref={hostRef}
       className={`transition-all duration-300 ${
-        isVisible ? "max-h-40 opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+        isVisible ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
       } ${className}`}
       aria-hidden={!isVisible}
     >
