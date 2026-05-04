@@ -123,7 +123,7 @@ export default function Home() {
   const [soldSymbol, setSoldSymbol] = useState("TSLA");
   const [soldDate, setSoldDate] = useState("");
   const [soldQuantity, setSoldQuantity] = useState(10);
-  const [evaluationDate, setEvaluationDate] = useState("");
+  const [evaluationDate, setEvaluationDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [buys, setBuys] = useState<BuyLine[]>(initialBuys);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
