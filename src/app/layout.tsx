@@ -17,14 +17,32 @@ const jua = Jua({
 export const metadata: Metadata = {
   title: "껄껄무새 | 미국/한국 주식 기회비용 계산기",
   description:
-    "매도 후 갈아탄 선택을 종가 기준으로 계산해 기회비용을 보여주는 코믹 경제 웹앱",
+    "매도 후 갈아탄 선택을 종가 기준으로 계산해 기회비용을 보여주는 코믹 경제 웹앱. 미국/한국 주식, 환율 자동 반영.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "껄껄무새",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   icons: {
     icon: "/icon.svg",
+    apple: "/icon.svg",
   },
   openGraph: {
-    title: "껄껄무새",
-    description: "매도/매수 시점 기반 주식 기회비용 계산기",
+    title: "껄껄무새 — 주식 기회비용 계산기",
+    description: "매도/매수 시점 기반 주식 기회비용 계산기. 미국·한국 주식, 환율 자동 반영.",
+    type: "website",
+    locale: "ko_KR",
   },
+  twitter: {
+    card: "summary",
+    title: "껄껄무새 — 주식 기회비용 계산기",
+    description: "그때 그냥 들고 있었으면 어땠을까? 웃프게 계산해드립니다.",
+  },
+  themeColor: "#ffd24a",
 };
 
 export default function RootLayout({
