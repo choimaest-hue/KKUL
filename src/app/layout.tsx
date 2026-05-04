@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   title: "껄껄무새 | 미국/한국 주식 기회비용 계산기",
   description:
     "매도 후 갈아탄 선택을 종가 기준으로 계산해 기회비용을 보여주는 코믹 경제 웹앱. 미국/한국 주식, 환율 자동 반영.",
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
