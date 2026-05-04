@@ -31,7 +31,8 @@ export default function AdSlot({
   const hostRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+  const adsenseClient =
+    process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-3397494907696633";
 
   const isConfigured = useMemo(() => {
     if (network === "adsense") {
