@@ -10,6 +10,8 @@ type AdSlotProps = {
   className?: string;
   slotId: string;
   adfitUnit?: string;
+  adfitWidth?: number;
+  adfitHeight?: number;
 };
 
 declare global {
@@ -23,19 +25,20 @@ export default function AdSlot({
   className = "",
   slotId,
   adfitUnit,
+  adfitWidth = 320,
+  adfitHeight = 100,
 }: AdSlotProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-  const adfitClient = process.env.NEXT_PUBLIC_ADFIT_CLIENT;
 
   const isConfigured = useMemo(() => {
     if (network === "adsense") {
       return Boolean(adsenseClient && slotId);
     }
-    return Boolean(adfitClient && adfitUnit);
-  }, [adfitClient, adfitUnit, adsenseClient, network, slotId]);
+    return Boolean(adfitUnit);
+  }, [adfitUnit, adsenseClient, network, slotId]);
 
   useEffect(() => {
     if (!isConfigured || !hostRef.current) {
@@ -122,8 +125,8 @@ export default function AdSlot({
             className="kakao_ad_area"
             style={{ display: "none" }}
             data-ad-unit={adfitUnit}
-            data-ad-width="320"
-            data-ad-height="100"
+            data-ad-width={String(adfitWidth)}
+            data-ad-height={String(adfitHeight)}
           />
         </>
       )}

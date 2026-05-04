@@ -141,9 +141,9 @@ const VERDICT_CONFIG = {
 /* ── Component ───────────────────────────────────────────────── */
 export default function Home() {
   const adsenseTopSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP ?? "";
-  const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "";
-  const adfitMidUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID ?? "";
-  const adfitTopUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ?? "";
+  const adfitTopUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ?? "DAN-Xd16K8L1O7LOmPKB";
+  const adfitMidUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID ?? "DAN-lgSDOXih0RxP3TyP";
+  const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "DAN-v6xcgwZ4Fe6Q2WOh";
 
   const resultRef = useRef<HTMLElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
@@ -330,6 +330,8 @@ export default function Home() {
             network="adfit"
             slotId="unused"
             adfitUnit={adfitTopUnit}
+            adfitWidth={728}
+            adfitHeight={90}
             className="relative mx-auto max-w-5xl px-5 pb-4"
           />
         )}
@@ -508,6 +510,8 @@ export default function Home() {
               network="adfit"
               slotId="unused"
               adfitUnit={adfitMidUnit}
+              adfitWidth={300}
+              adfitHeight={250}
               className="w-full"
             />
           </div>
@@ -683,6 +687,8 @@ export default function Home() {
                 network="adfit"
                 slotId="unused"
                 adfitUnit={adfitBottomUnit}
+                adfitWidth={320}
+                adfitHeight={100}
                 className="rounded-2xl bg-white/70 p-2"
               />
             </>
