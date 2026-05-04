@@ -1,0 +1,19 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="52" fill="url(#bg)"/>
+  <circle cx="121" cy="120" r="74" fill="#FFE173" stroke="#1C2430" stroke-width="8"/>
+  <circle cx="95" cy="109" r="20" fill="white" stroke="#1C2430" stroke-width="6"/>
+  <circle cx="148" cy="109" r="20" fill="white" stroke="#1C2430" stroke-width="6"/>
+  <circle cx="99" cy="112" r="8" fill="#1C2430"/>
+  <circle cx="152" cy="112" r="8" fill="#1C2430"/>
+  <path d="M122 126L143 145H101L122 126Z" fill="#FF7A33" stroke="#1C2430" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M82 164C102 179 140 179 161 164" stroke="#1C2430" stroke-width="7" stroke-linecap="round"/>
+  <path d="M31 62L72 31" stroke="#1C2430" stroke-width="9" stroke-linecap="round"/>
+  <path d="M170 30L209 63" stroke="#1C2430" stroke-width="9" stroke-linecap="round"/>
+  <text x="28" y="218" font-family="Pretendard, sans-serif" font-size="32" font-weight="800" fill="#1C2430">껄껄무새</text>
+  <defs>
+    <linearGradient id="bg" x1="10" y1="14" x2="229" y2="230" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7F3EA"/>
+      <stop offset="1" stop-color="#FEE9C6"/>
+    </linearGradient>
+  </defs>
+</svg>
