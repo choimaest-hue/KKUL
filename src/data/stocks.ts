@@ -104,6 +104,90 @@ export const STOCKS: Stock[] = [
   { symbol: "BRK-B", nameKo: "버크셔해서웨이", nameEn: "Berkshire Hathaway B",     market: "US", tags: ["워런버핏", "warren buffett", "투자회사"] },
   { symbol: "APP",   nameKo: "앱러빈",         nameEn: "AppLovin",                 market: "US", tags: ["광고테크", "애드테크", "앱"] },
 
+  // 유통/소비재
+  { symbol: "COST",  nameKo: "코스트코",       nameEn: "Costco",                   market: "US", tags: ["창고형마트", "코스코", "멤버십", "도매"] },
+  { symbol: "TGT",   nameKo: "타겟",           nameEn: "Target",                   market: "US", tags: ["유통", "마트"] },
+  { symbol: "LULU",  nameKo: "룰루레몬",       nameEn: "Lululemon Athletica",      market: "US", tags: ["패션", "요가복", "스포츠웨어"] },
+
+  // 통신
+  { symbol: "T",     nameKo: "AT&T",           nameEn: "AT&T Inc.",                market: "US", tags: ["통신", "미국통신", "배당주"] },
+  { symbol: "VZ",    nameKo: "버라이즌",       nameEn: "Verizon Communications",   market: "US", tags: ["통신", "미국통신"] },
+  { symbol: "TMUS",  nameKo: "T-모바일",       nameEn: "T-Mobile US",              market: "US", tags: ["통신", "5G", "티모바일"] },
+  { symbol: "CSCO",  nameKo: "시스코",         nameEn: "Cisco Systems",            market: "US", tags: ["네트워크", "스위치", "라우터", "IT인프라"] },
+
+  // 금융/투자
+  { symbol: "AXP",   nameKo: "아메리칸익스프레스", nameEn: "American Express",     market: "US", tags: ["아멕스", "AMEX", "카드", "금융", "워런버핏"] },
+  { symbol: "COF",   nameKo: "캐피탈원",       nameEn: "Capital One",             market: "US", tags: ["은행", "카드", "핀테크"] },
+  { symbol: "BX",    nameKo: "블랙스톤",       nameEn: "Blackstone",               market: "US", tags: ["사모펀드", "PE", "대체투자", "부동산"] },
+  { symbol: "KKR",   nameKo: "KKR",           nameEn: "KKR & Co.",                market: "US", tags: ["사모펀드", "PE", "대체투자"] },
+  { symbol: "BLK",   nameKo: "블랙록",         nameEn: "BlackRock",                market: "US", tags: ["자산운용", "ETF", "aum", "iShares"] },
+  { symbol: "SCHW",  nameKo: "찰스슈왑",       nameEn: "Charles Schwab",           market: "US", tags: ["증권사", "브로커리지", "ETF"] },
+  { symbol: "DKNG",  nameKo: "드래프트킹스",   nameEn: "DraftKings",               market: "US", tags: ["스포츠베팅", "온라인도박", "게임"] },
+
+  // 물류/운송
+  { symbol: "FDX",   nameKo: "페덱스",         nameEn: "FedEx Corporation",        market: "US", tags: ["물류", "택배", "항공화물"] },
+  { symbol: "UPS",   nameKo: "UPS",            nameEn: "United Parcel Service",    market: "US", tags: ["물류", "택배", "배송"] },
+  { symbol: "UNP",   nameKo: "유니온퍼시픽",   nameEn: "Union Pacific",            market: "US", tags: ["철도", "화물"] },
+  { symbol: "WM",    nameKo: "웨이스트매니지먼트", nameEn: "Waste Management",     market: "US", tags: ["폐기물", "환경", "쓰레기처리"] },
+
+  // 항공/여행
+  { symbol: "DAL",   nameKo: "델타항공",       nameEn: "Delta Air Lines",          market: "US", tags: ["항공", "비행기", "여행"] },
+  { symbol: "UAL",   nameKo: "유나이티드항공", nameEn: "United Airlines",          market: "US", tags: ["항공", "비행기", "여행"] },
+  { symbol: "AAL",   nameKo: "아메리칸항공",   nameEn: "American Airlines",        market: "US", tags: ["항공", "비행기", "여행"] },
+  { symbol: "MAR",   nameKo: "메리어트",       nameEn: "Marriott International",   market: "US", tags: ["호텔", "숙박", "여행"] },
+  { symbol: "HLT",   nameKo: "힐튼",           nameEn: "Hilton Worldwide",         market: "US", tags: ["호텔", "숙박", "여행"] },
+  { symbol: "CCL",   nameKo: "카니발",         nameEn: "Carnival Corporation",     market: "US", tags: ["크루즈", "여행", "유람선"] },
+
+  // 테크/SNS/미디어
+  { symbol: "SHOP",  nameKo: "쇼피파이",       nameEn: "Shopify",                  market: "US", tags: ["이커머스", "쇼핑몰솔루션", "SaaS"] },
+  { symbol: "SNAP",  nameKo: "스냅챗",         nameEn: "Snap Inc.",                market: "US", tags: ["SNS", "소셜미디어", "AR", "스냅"] },
+  { symbol: "PINS",  nameKo: "핀터레스트",     nameEn: "Pinterest",                market: "US", tags: ["SNS", "소셜미디어", "이미지"] },
+  { symbol: "RBLX",  nameKo: "로블록스",       nameEn: "Roblox",                   market: "US", tags: ["게임", "메타버스", "어린이게임"] },
+  { symbol: "TTD",   nameKo: "트레이드데스크", nameEn: "The Trade Desk",           market: "US", tags: ["광고테크", "프로그래매틱", "애드테크"] },
+  { symbol: "ROKU",  nameKo: "로쿠",           nameEn: "Roku",                     market: "US", tags: ["스트리밍", "IPTV", "CTV", "광고"] },
+  { symbol: "WDAY",  nameKo: "워크데이",       nameEn: "Workday",                  market: "US", tags: ["SaaS", "HR소프트웨어", "클라우드", "ERP"] },
+
+  // 글로벌 테크 (중국/신흥국)
+  { symbol: "PDD",   nameKo: "PDD홀딩스",      nameEn: "PDD Holdings",             market: "US", tags: ["테무", "temu", "핀둬둬", "중국이커머스", "중국주식"] },
+  { symbol: "JD",    nameKo: "징동닷컴",       nameEn: "JD.com",                   market: "US", tags: ["중국이커머스", "중국주식", "중국유통"] },
+  { symbol: "BIDU",  nameKo: "바이두",         nameEn: "Baidu",                    market: "US", tags: ["중국구글", "AI", "검색엔진", "중국주식"] },
+  { symbol: "MELI",  nameKo: "메르카도리브레", nameEn: "MercadoLibre",             market: "US", tags: ["남미이커머스", "핀테크", "라틴아메리카"] },
+  { symbol: "SE",    nameKo: "씨리미티드",     nameEn: "Sea Limited",              market: "US", tags: ["동남아", "쇼피", "shopee", "게임", "가레나"] },
+
+  // 핀테크/신금융
+  { symbol: "SOFI",  nameKo: "소파이",         nameEn: "SoFi Technologies",        market: "US", tags: ["핀테크", "인터넷은행", "대출", "학자금"] },
+  { symbol: "AFRM",  nameKo: "어펌",           nameEn: "Affirm Holdings",          market: "US", tags: ["BNPL", "후불결제", "핀테크"] },
+  { symbol: "HOOD",  nameKo: "로빈후드",       nameEn: "Robinhood Markets",        market: "US", tags: ["주식앱", "핀테크", "MFA", "무수수료"] },
+
+  // 에너지/전력/인프라
+  { symbol: "CEG",   nameKo: "컨스텔레이션에너지", nameEn: "Constellation Energy",  market: "US", tags: ["원전", "핵발전", "클린에너지", "AI전력"] },
+  { symbol: "GEV",   nameKo: "GE버노바",       nameEn: "GE Vernova",               market: "US", tags: ["전력", "풍력", "가스터빈", "에너지인프라"] },
+  { symbol: "VST",   nameKo: "비스트라",       nameEn: "Vistra Corp",              market: "US", tags: ["원전", "전력", "클린에너지", "AI전력"] },
+  { symbol: "ETN",   nameKo: "이튼",           nameEn: "Eaton Corporation",        market: "US", tags: ["전력관리", "전기설비", "에너지인프라"] },
+  { symbol: "LIN",   nameKo: "린데",           nameEn: "Linde plc",                market: "US", tags: ["산업가스", "수소", "화학"] },
+
+  // 리츠/부동산
+  { symbol: "AMT",   nameKo: "아메리칸타워",   nameEn: "American Tower",           market: "US", tags: ["리츠", "통신탑", "REIT", "인프라"] },
+  { symbol: "O",     nameKo: "리얼티인컴",     nameEn: "Realty Income",            market: "US", tags: ["리츠", "REIT", "배당주", "월배당"] },
+  { symbol: "SPG",   nameKo: "사이먼프로퍼티", nameEn: "Simon Property Group",     market: "US", tags: ["리츠", "REIT", "쇼핑몰", "부동산"] },
+
+  // 헬스케어 추가
+  { symbol: "TMO",   nameKo: "써모피셔",       nameEn: "Thermo Fisher Scientific", market: "US", tags: ["의료기기", "바이오장비", "연구장비"] },
+  { symbol: "DHR",   nameKo: "다나허",         nameEn: "Danaher Corporation",      market: "US", tags: ["의료기기", "바이오장비", "진단"] },
+  { symbol: "ABT",   nameKo: "애보트",         nameEn: "Abbott Laboratories",      market: "US", tags: ["의료기기", "진단", "CGM", "당뇨"] },
+  { symbol: "ISRG",  nameKo: "인튜이티브서지컬", nameEn: "Intuitive Surgical",   market: "US", tags: ["수술로봇", "다빈치", "로봇수술", "의료기기"] },
+  { symbol: "CVS",   nameKo: "CVS헬스",        nameEn: "CVS Health",               market: "US", tags: ["약국", "헬스케어", "보험", "CVS약국"] },
+  { symbol: "ELV",   nameKo: "엘레번스헬스",   nameEn: "Elevance Health",          market: "US", tags: ["건강보험", "의료보험", "헬스케어"] },
+
+  // 신흥 테마
+  { symbol: "IONQ",  nameKo: "아이온큐",       nameEn: "IonQ",                     market: "US", tags: ["양자컴퓨팅", "퀀텀컴퓨팅", "quantum"] },
+  { symbol: "RGTI",  nameKo: "리게티컴퓨팅",   nameEn: "Rigetti Computing",        market: "US", tags: ["양자컴퓨팅", "퀀텀컴퓨팅", "quantum"] },
+  { symbol: "RKLB",  nameKo: "로켓랩",         nameEn: "Rocket Lab USA",           market: "US", tags: ["우주", "로켓", "발사체", "뉴스페이스"] },
+  { symbol: "JOBY",  nameKo: "조비에비에이션", nameEn: "Joby Aviation",            market: "US", tags: ["에어택시", "UAM", "전동항공", "도심항공"] },
+  { symbol: "ACHR",  nameKo: "아처에비에이션", nameEn: "Archer Aviation",          market: "US", tags: ["에어택시", "UAM", "전동항공"] },
+  { symbol: "SOUN",  nameKo: "사운드하운드",   nameEn: "SoundHound AI",            market: "US", tags: ["AI음성", "음성인식", "AI"] },
+  { symbol: "HIMS",  nameKo: "힘스앤허스",     nameEn: "Hims & Hers Health",       market: "US", tags: ["헬스케어", "탈모약", "비만약", "DTC"] },
+
   // ── 한국 주식(KOSPI / KS) ─────────────────────────────────────
   { symbol: "005930", nameKo: "삼성전자",           nameEn: "Samsung Electronics",      market: "KS", tags: ["삼성", "samsung", "반도체", "스마트폰", "갤럭시", "HBM"] },
   { symbol: "000660", nameKo: "SK하이닉스",          nameEn: "SK Hynix",                 market: "KS", tags: ["하이닉스", "hynix", "반도체", "D램", "HBM", "AI메모리"] },
@@ -169,6 +253,52 @@ export const STOCKS: Stock[] = [
   { symbol: "180640", nameKo: "한진칼",              nameEn: "Hanjin KAL",               market: "KS", tags: ["대한항공", "항공", "물류"] },
   { symbol: "326030", nameKo: "SK바이오팜",          nameEn: "SK Biopharmaceuticals",    market: "KS", tags: ["제약", "바이오", "뇌전증"] },
 
+  // 조선
+  { symbol: "042660", nameKo: "한화오션",            nameEn: "Hanwha Ocean",             market: "KS", tags: ["조선", "해양", "방산", "LNG선", "잠수함"] },
+  { symbol: "329180", nameKo: "HD현대중공업",         nameEn: "HD Hyundai Heavy Industries", market: "KS", tags: ["조선", "LNG선", "해양플랜트", "HD현대"] },
+  { symbol: "010140", nameKo: "삼성중공업",           nameEn: "Samsung Heavy Industries",  market: "KS", tags: ["조선", "LNG선", "드릴쉽", "삼성"] },
+  { symbol: "009540", nameKo: "HD한국조선해양",       nameEn: "HD Korea Shipbuilding",     market: "KS", tags: ["조선지주", "HD현대", "조선"] },
+  { symbol: "267270", nameKo: "HD현대",               nameEn: "HD Hyundai",               market: "KS", tags: ["HD지주", "조선", "현대"] },
+
+  // 디스플레이/부품
+  { symbol: "034220", nameKo: "LG디스플레이",         nameEn: "LG Display",               market: "KS", tags: ["OLED", "디스플레이", "패널", "LG"] },
+
+  // 통신
+  { symbol: "032640", nameKo: "LG유플러스",           nameEn: "LG Uplus",                 market: "KS", tags: ["통신", "LGU+", "5G", "인터넷"] },
+  { symbol: "033780", nameKo: "KT&G",                nameEn: "KT&G Corporation",         market: "KS", tags: ["담배", "건강기능식품", "부동산"] },
+
+  // 식품/소비재
+  { symbol: "003230", nameKo: "삼양식품",             nameEn: "Samyang Foods",             market: "KS", tags: ["불닭볶음면", "라면", "식품", "수출", "삼양"] },
+  { symbol: "007310", nameKo: "오뚜기",               nameEn: "Ottogi Corporation",        market: "KS", tags: ["식품", "라면", "카레", "마요네즈"] },
+  { symbol: "004370", nameKo: "농심",                 nameEn: "Nongshim",                 market: "KS", tags: ["라면", "신라면", "식품", "수출"] },
+  { symbol: "280360", nameKo: "롯데웰푸드",           nameEn: "Lotte Wellfood",           market: "KS", tags: ["식품", "과자", "롯데", "빙과"] },
+
+  // 금융 추가
+  { symbol: "138040", nameKo: "메리츠금융지주",       nameEn: "Meritz Financial Group",   market: "KS", tags: ["금융", "보험", "증권", "메리츠"] },
+  { symbol: "005940", nameKo: "NH투자증권",           nameEn: "NH Investment Securities", market: "KS", tags: ["증권", "NH", "투자"] },
+  { symbol: "039490", nameKo: "키움증권",             nameEn: "Kiwoom Securities",        market: "KS", tags: ["증권", "키움", "HTS", "영웅문"] },
+
+  // 유통
+  { symbol: "139480", nameKo: "이마트",               nameEn: "E-Mart",                   market: "KS", tags: ["유통", "마트", "신세계", "쓱닷컴"] },
+  { symbol: "282330", nameKo: "BGF리테일",            nameEn: "BGF Retail",               market: "KS", tags: ["편의점", "CU", "유통"] },
+  { symbol: "069960", nameKo: "현대백화점",           nameEn: "Hyundai Department Store",  market: "KS", tags: ["백화점", "유통", "현대"] },
+  { symbol: "023530", nameKo: "롯데쇼핑",             nameEn: "Lotte Shopping",           market: "KS", tags: ["롯데", "백화점", "마트", "유통"] },
+
+  // 화장품/뷰티
+  { symbol: "051900", nameKo: "LG생활건강",           nameEn: "LG Household & Health Care", market: "KS", tags: ["화장품", "후", "K뷰티", "생활용품", "LG"] },
+  { symbol: "161890", nameKo: "한국콜마",             nameEn: "Kolmar Korea",             market: "KS", tags: ["화장품", "ODM", "OEM", "K뷰티"] },
+  { symbol: "192820", nameKo: "코스맥스",             nameEn: "Cosmax",                   market: "KS", tags: ["화장품", "ODM", "OEM", "K뷰티"] },
+
+  // 제약/바이오
+  { symbol: "069620", nameKo: "대웅제약",             nameEn: "Daewoong Pharmaceutical",  market: "KS", tags: ["제약", "나보타", "보톡스", "신약"] },
+  { symbol: "302440", nameKo: "SK바이오사이언스",      nameEn: "SK Bioscience",            market: "KS", tags: ["백신", "바이오", "SK", "mRNA"] },
+  { symbol: "170900", nameKo: "동아쏘시오홀딩스",     nameEn: "Dong-A Socio Holdings",    market: "KS", tags: ["제약", "동아제약", "박카스"] },
+
+  // 건설/중공업
+  { symbol: "000720", nameKo: "현대건설",             nameEn: "Hyundai Engineering & Construction", market: "KS", tags: ["건설", "현대", "플랜트"] },
+  { symbol: "028050", nameKo: "삼성엔지니어링",       nameEn: "Samsung Engineering",      market: "KS", tags: ["건설", "플랜트", "삼성", "EPC"] },
+  { symbol: "047050", nameKo: "포스코인터내셔널",     nameEn: "POSCO International",      market: "KS", tags: ["무역", "포스코", "에너지", "LNG"] },
+
   // ── 한국 주식(KOSDAQ / KQ) ────────────────────────────────────
   { symbol: "086520", nameKo: "에코프로",            nameEn: "EcoPro",                   market: "KQ", tags: ["2차전지", "배터리소재", "에코", "지주"] },
   { symbol: "247540", nameKo: "에코프로비엠",        nameEn: "EcoPro BM",                market: "KQ", tags: ["2차전지", "양극재", "배터리소재", "에코"] },
@@ -178,6 +308,39 @@ export const STOCKS: Stock[] = [
   { symbol: "145020", nameKo: "휴젤",                nameEn: "Hugel",                    market: "KQ", tags: ["바이오", "보톡스", "필러", "미용"] },
   { symbol: "403870", nameKo: "HPSP",                nameEn: "HPSP",                     market: "KQ", tags: ["반도체장비", "HPM"] },
   { symbol: "096040", nameKo: "두산퓨얼셀",          nameEn: "Doosan Fuel Cell",         market: "KQ", tags: ["수소", "연료전지", "신재생에너지"] },
+
+  // 바이오/헬스케어
+  { symbol: "196170", nameKo: "알테오젠",             nameEn: "Alteogen",                 market: "KQ", tags: ["바이오", "항체약물접합", "ADC", "피하주사", "신약"] },
+  { symbol: "328130", nameKo: "루닛",                 nameEn: "Lunit",                    market: "KQ", tags: ["AI의료", "의료AI", "암진단", "병리"] },
+  { symbol: "214150", nameKo: "클래시스",             nameEn: "Classys",                  market: "KQ", tags: ["의료기기", "미용기기", "슈링크", "울쎄라"] },
+  { symbol: "096530", nameKo: "씨젠",                 nameEn: "Seegene",                  market: "KQ", tags: ["진단", "PCR", "분자진단", "코로나"] },
+  { symbol: "950130", nameKo: "엑세스바이오",         nameEn: "Access Bio",               market: "KQ", tags: ["진단", "신속진단", "말라리아"] },
+  { symbol: "214370", nameKo: "케어젠",               nameEn: "Caregen",                  market: "KQ", tags: ["바이오", "펩타이드", "탈모", "미용"] },
+  { symbol: "377450", nameKo: "리가켐바이오",         nameEn: "LegaChem Biosciences",     market: "KQ", tags: ["바이오", "ADC", "항체약물접합", "신약"] },
+
+  // 보안/소프트웨어
+  { symbol: "053800", nameKo: "안랩",                 nameEn: "AhnLab",                   market: "KQ", tags: ["보안", "백신", "사이버보안", "V3"] },
+  { symbol: "036030", nameKo: "KG이니시스",           nameEn: "KG Inicis",                market: "KQ", tags: ["결제", "PG", "핀테크"] },
+
+  // 게임
+  { symbol: "263750", nameKo: "펄어비스",             nameEn: "Pearl Abyss",              market: "KQ", tags: ["게임", "검은사막", "MMORPG", "도깨비"] },
+  { symbol: "112040", nameKo: "위메이드",             nameEn: "Wemade",                   market: "KQ", tags: ["게임", "미르", "블록체인게임", "위믹스", "P2E"] },
+  { symbol: "194480", nameKo: "데브시스터즈",         nameEn: "Devsisters",               market: "KQ", tags: ["게임", "쿠키런", "모바일게임"] },
+  { symbol: "053580", nameKo: "웹젠",                 nameEn: "Webzen",                   market: "KQ", tags: ["게임", "뮤", "MU", "MMORPG"] },
+  { symbol: "225570", nameKo: "넥슨게임즈",           nameEn: "Nexon Games",              market: "KQ", tags: ["게임", "블루아카이브", "넥슨"] },
+
+  // 반도체 장비/소재
+  { symbol: "348210", nameKo: "넥스틴",               nameEn: "Nextin",                   market: "KQ", tags: ["반도체장비", "검사장비", "웨이퍼"] },
+  { symbol: "131970", nameKo: "테크윙",               nameEn: "Techwing",                 market: "KQ", tags: ["반도체장비", "핸들러", "테스트"] },
+  { symbol: "290510", nameKo: "에스앤에스텍",         nameEn: "S&S Tech",                 market: "KQ", tags: ["반도체소재", "블랭크마스크", "포토마스크"] },
+  { symbol: "104830", nameKo: "원익머트리얼즈",       nameEn: "Wonik Materials",           market: "KQ", tags: ["반도체소재", "특수가스", "전구체"] },
+
+  // 엔터/콘텐츠
+  { symbol: "263720", nameKo: "디어유",               nameEn: "DearU",                    market: "KQ", tags: ["팬덤", "버블", "아이돌", "k팝", "SM"] },
+
+  // 2차전지/소재
+  { symbol: "064760", nameKo: "티씨케이",             nameEn: "TcK",                      market: "KQ", tags: ["반도체소재", "실리콘카바이드", "SiC", "흑연"] },
+  { symbol: "336370", nameKo: "솔루스첨단소재",       nameEn: "Solus Advanced Materials", market: "KQ", tags: ["2차전지", "동박", "배터리소재"] },
 ];
 
 function scoreStock(stock: Stock, query: string): number {
