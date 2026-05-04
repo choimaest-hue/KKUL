@@ -302,7 +302,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_15%_15%,#fff9e8_0%,#f4f6ff_40%,#ecf7ef_100%)]">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_15%_15%,#fff9e8_0%,#f4f6ff_40%,#ecf7ef_100%)] pb-20">
       <div className="bg-noise pointer-events-none absolute inset-0 opacity-25" />
 
       <header className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 pt-7 pb-5 sm:px-6 lg:px-8">

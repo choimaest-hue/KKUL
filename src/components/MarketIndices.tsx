@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// recharts를 dynamic import (SSR 비활성화) — App Router SSR과의 충돌 방지
+// recharts SSR 충돌 방지 — dynamic import with ssr:false
 const IndexChart = dynamic(() => import("./IndexChart"), {
   ssr: false,
   loading: () => (
@@ -22,14 +22,15 @@ type IndexDef = {
 };
 
 const INDICES: IndexDef[] = [
-  { symbol: "^GSPC",    label: "S&P 500",    description: "미국 대형주 500",     decimals: 2 },
-  { symbol: "^IXIC",    label: "나스닥",      description: "미국 기술주 종합",    decimals: 2 },
-  { symbol: "^NDX",     label: "나스닥 100",  description: "나스닥 상위 100",     decimals: 2 },
-  { symbol: "^DJI",     label: "다우존스",    description: "미국 30대 우량주",    decimals: 0 },
-  { symbol: "^KS11",    label: "코스피",      description: "한국 주식시장 대표",  decimals: 2 },
-  { symbol: "^KQ11",    label: "코스닥",      description: "한국 성장기업 시장",  decimals: 2 },
-  { symbol: "^VIX",     label: "VIX",         description: "공포 지수 (변동성)",  decimals: 2 },
-  { symbol: "USDKRW=X", label: "원/달러",     description: "USD/KRW 환율",        decimals: 0, suffix: "원" },
+  { symbol: "^KS11",    label: "코스피",    description: "한국 대표 지수",      decimals: 2 },
+  { symbol: "^KQ11",    label: "코스닥",    description: "한국 성장기업",        decimals: 2 },
+  { symbol: "^GSPC",    label: "S&P 500",   description: "미국 대형주 500",      decimals: 2 },
+  { symbol: "^IXIC",    label: "나스닥",    description: "미국 기술주 종합",     decimals: 2 },
+  { symbol: "^NDX",     label: "나스닥100", description: "나스닥 상위 100",      decimals: 2 },
+  { symbol: "^DJI",     label: "다우존스",  description: "미국 30대 우량주",     decimals: 0 },
+  { symbol: "^VIX",     label: "VIX",       description: "공포 지수 (변동성)",   decimals: 2 },
+  { symbol: "USDKRW=X", label: "원/달러",   description: "USD/KRW 환율",         decimals: 0, suffix: "원" },
+  { symbol: "DX=F",     label: "달러인덱스",description: "달러 강세 지수",       decimals: 3 },
 ];
 
 type IndexSummary = {
@@ -45,6 +46,7 @@ type HistoryPoint = { date: string; close: number };
 type DetailData = {
   symbol: string;
   label: string;
+  description: string;
   history: HistoryPoint[];
   current: number;
   change: number;
@@ -63,129 +65,52 @@ const RANGES = [
 
 type RangeKey = (typeof RANGES)[number]["key"];
 
-function formatVal(v: number, decimals: number, suffix?: string): string {
-  const formatted = v.toLocaleString("ko-KR", {
+function fmtVal(v: number, decimals: number, suffix?: string): string {
+  const s = v.toLocaleString("ko-KR", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
-  return suffix ? `${formatted}${suffix}` : formatted;
+  return suffix ? `${s}${suffix}` : s;
 }
 
-function ChangeChip({ change, changePct }: { change: number; changePct: number }) {
+function ChangeChip({ change, changePct, small }: { change: number; changePct: number; small?: boolean }) {
   const up = change >= 0;
   return (
-    <span
-      className={`inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-bold ${
-        up ? "bg-rose-100 text-rose-700" : "bg-blue-100 text-blue-700"
-      }`}
-    >
+    <span className={`inline-flex items-center gap-0.5 rounded-full font-bold tabular-nums ${
+      small ? "px-1.5 py-px text-[10px]" : "px-2 py-0.5 text-xs"
+    } ${up ? "bg-rose-100 text-rose-700" : "bg-blue-100 text-blue-700"}`}>
       {up ? "▲" : "▼"} {Math.abs(changePct).toFixed(2)}%
     </span>
   );
 }
 
-function IndexCard({
-  def,
-  summary,
-  loading,
-  onClick,
-}: {
-  def: IndexDef;
-  summary?: IndexSummary;
-  loading: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group flex flex-col gap-1.5 rounded-2xl border border-slate-200 bg-white/90 p-3.5 text-left shadow-sm transition-all hover:border-[#18a78f] hover:shadow-[0_4px_18px_rgba(24,167,143,0.18)] active:scale-[0.98]"
-    >
-      <div className="flex items-start justify-between gap-1">
-        <span className="text-xs font-bold text-slate-400 leading-tight">{def.description}</span>
-        {summary && !summary.error && (
-          <ChangeChip change={summary.change} changePct={summary.changePct} />
-        )}
-      </div>
-
-      <p className="text-sm font-extrabold text-slate-900 group-hover:text-[#18a78f]">
-        {def.label}
-      </p>
-
-      {loading ? (
-        <div className="h-6 w-28 animate-pulse rounded bg-slate-200" />
-      ) : summary?.error ? (
-        <p className="text-sm font-bold text-slate-400">데이터 없음</p>
-      ) : summary ? (
-        <>
-          <p className="text-lg font-black tabular-nums text-slate-800 leading-tight">
-            {formatVal(summary.current, def.decimals, def.suffix)}
-          </p>
-          <p
-            className={`text-xs font-semibold tabular-nums ${
-              summary.change >= 0 ? "text-rose-600" : "text-blue-600"
-            }`}
-          >
-            {summary.change >= 0 ? "+" : ""}
-            {formatVal(summary.change, def.decimals, def.suffix)}
-          </p>
-        </>
-      ) : (
-        <div className="h-6 w-28 animate-pulse rounded bg-slate-200" />
-      )}
-    </button>
-  );
-}
-
-function DetailModal({
-  data,
-  onClose,
-}: {
-  data: DetailData;
-  onClose: () => void;
-}) {
+/* ── 상세 차트 모달 ──────────────────────────────────────── */
+function DetailModal({ data, onClose }: { data: DetailData; onClose: () => void }) {
   const [range, setRange] = useState<RangeKey>("1m");
   const [history, setHistory] = useState<HistoryPoint[]>(data.history);
   const [loadingRange, setLoadingRange] = useState(false);
   const [rangeError, setRangeError] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const loadRange = useCallback(
-    async (r: RangeKey) => {
-      if (r === "1m") {
-        setHistory(data.history);
-        setRangeError(false);
-        return;
-      }
-      setLoadingRange(true);
-      setRangeError(false);
-      try {
-        const res = await fetch(
-          `/api/indices?symbol=${encodeURIComponent(data.symbol)}&range=${r}`,
-        );
-        if (!res.ok) throw new Error("failed");
-        const json = (await res.json()) as { history: HistoryPoint[] };
-        if (!json.history?.length) throw new Error("empty");
-        setHistory(json.history);
-      } catch {
-        setRangeError(true);
-      } finally {
-        setLoadingRange(false);
-      }
-    },
-    [data.symbol, data.history],
-  );
+  const loadRange = useCallback(async (r: RangeKey) => {
+    if (r === "1m") { setHistory(data.history); setRangeError(false); return; }
+    setLoadingRange(true); setRangeError(false);
+    try {
+      const res = await fetch(`/api/indices?symbol=${encodeURIComponent(data.symbol)}&range=${r}`);
+      if (!res.ok) throw new Error("failed");
+      const json = (await res.json()) as { history: HistoryPoint[] };
+      if (!json.history?.length) throw new Error("empty");
+      setHistory(json.history);
+    } catch { setRangeError(true); }
+    finally { setLoadingRange(false); }
+  }, [data.symbol, data.history]);
+
+  useEffect(() => { loadRange(range); }, [range, loadRange]);
 
   useEffect(() => {
-    loadRange(range);
-  }, [range, loadRange]);
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   const up = data.change >= 0;
@@ -195,59 +120,49 @@ function DetailModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
-      onClick={(e) => {
-        if (e.target === overlayRef.current) onClose();
-      }}
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
       <div className="relative w-full max-w-2xl rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        {/* 헤더 */}
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 pt-5 pb-4">
           <div>
-            <p className="text-sm text-slate-500">{data.label}</p>
-            <p className="text-3xl font-black tabular-nums text-slate-900">
-              {formatVal(data.current, data.decimals, data.suffix)}
-            </p>
-            <div className="mt-1 flex items-center gap-2">
-              <ChangeChip change={data.change} changePct={data.changePct} />
-              <span
-                className={`text-sm font-semibold tabular-nums ${
-                  up ? "text-rose-600" : "text-blue-600"
-                }`}
-              >
-                {up ? "+" : ""}
-                {formatVal(data.change, data.decimals, data.suffix)}
-              </span>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{data.description}</p>
+            <p className="text-2xl font-black text-slate-900 mt-0.5">{data.label}</p>
+            <div className="mt-2 flex items-center gap-2 flex-wrap">
+              <p className="text-3xl font-black tabular-nums text-slate-900">
+                {fmtVal(data.current, data.decimals, data.suffix)}
+              </p>
+              <div className="flex items-center gap-1.5">
+                <ChangeChip change={data.change} changePct={data.changePct} />
+                <span className={`text-sm font-semibold tabular-nums ${up ? "text-rose-600" : "text-blue-600"}`}>
+                  {up ? "+" : ""}{fmtVal(data.change, data.decimals, data.suffix)}
+                </span>
+              </div>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-          >
+          <button type="button" onClick={onClose}
+            className="mt-1 rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 text-lg leading-none">
             ✕
           </button>
         </div>
 
+        {/* 기간 탭 */}
         <div className="flex gap-1.5 px-6 pt-4">
           {RANGES.map((r) => (
-            <button
-              key={r.key}
-              type="button"
-              onClick={() => setRange(r.key)}
+            <button key={r.key} type="button" onClick={() => setRange(r.key)}
               className={`rounded-lg px-3 py-1 text-xs font-bold transition-colors ${
-                range === r.key
-                  ? "bg-[#18a78f] text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
+                range === r.key ? "bg-[#18a78f] text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}>
               {r.label}
             </button>
           ))}
         </div>
 
+        {/* 차트 */}
         <div className="relative px-4 pt-3 pb-5">
           {loadingRange && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70">
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/80">
               <span className="text-sm font-bold text-slate-400">로딩 중…</span>
             </div>
           )}
@@ -256,15 +171,8 @@ function DetailModal({
               <p className="text-sm text-slate-400">데이터를 불러오지 못했습니다.</p>
             </div>
           ) : history.length > 0 ? (
-            <IndexChart
-              history={history}
-              color={color}
-              gradientId={gradientId}
-              decimals={data.decimals}
-              label={data.label}
-              suffix={data.suffix}
-              range={range}
-            />
+            <IndexChart history={history} color={color} gradientId={gradientId}
+              decimals={data.decimals} label={data.label} suffix={data.suffix} range={range} />
           ) : (
             <div className="h-[260px] w-full animate-pulse rounded-xl bg-slate-100" />
           )}
@@ -274,131 +182,173 @@ function DetailModal({
   );
 }
 
+/* ── 메인 컴포넌트 (하단 고정 바) ────────────────────────── */
 export default function MarketIndices() {
   const [summaries, setSummaries] = useState<Record<string, IndexSummary>>({});
-  const [globalLoading, setGlobalLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [detail, setDetail] = useState<DetailData | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   const fetchAll = useCallback(() => {
-    setGlobalLoading(true);
-    let completed = 0;
+    setLoading(true);
+    let done = 0;
     const total = INDICES.length;
 
     INDICES.forEach(async (def) => {
       try {
-        const res = await fetch(
-          `/api/indices?symbol=${encodeURIComponent(def.symbol)}&range=1m`,
-        );
+        const res = await fetch(`/api/indices?symbol=${encodeURIComponent(def.symbol)}&range=1m`);
         if (!res.ok) throw new Error("failed");
-        const json = (await res.json()) as IndexSummary & {
-          history: HistoryPoint[];
-          error?: string;
-        };
+        const json = (await res.json()) as IndexSummary & { history: HistoryPoint[]; error?: string };
         if (json.error) throw new Error(json.error);
         setSummaries((prev) => ({
           ...prev,
-          [def.symbol]: {
-            symbol: json.symbol ?? def.symbol,
-            current: json.current ?? 0,
-            change: json.change ?? 0,
-            changePct: json.changePct ?? 0,
-          },
+          [def.symbol]: { symbol: json.symbol ?? def.symbol, current: json.current ?? 0, change: json.change ?? 0, changePct: json.changePct ?? 0 },
         }));
       } catch {
         setSummaries((prev) => ({
           ...prev,
-          [def.symbol]: {
-            symbol: def.symbol,
-            current: 0,
-            change: 0,
-            changePct: 0,
-            error: true,
-          },
+          [def.symbol]: { symbol: def.symbol, current: 0, change: 0, changePct: 0, error: true },
         }));
       } finally {
-        completed += 1;
-        if (completed === total) setGlobalLoading(false);
+        done += 1;
+        if (done === total) setLoading(false);
       }
     });
   }, []);
 
-  useEffect(() => {
-    fetchAll();
-  }, [fetchAll]);
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const openDetail = async (def: IndexDef) => {
-    const summary = summaries[def.symbol];
-    if (summary?.error) return;
+    const s = summaries[def.symbol];
+    if (!s || s.error || loadingDetail) return;
     setLoadingDetail(true);
     try {
-      const res = await fetch(
-        `/api/indices?symbol=${encodeURIComponent(def.symbol)}&range=1m`,
-      );
+      const res = await fetch(`/api/indices?symbol=${encodeURIComponent(def.symbol)}&range=1m`);
       if (!res.ok) throw new Error("failed");
       const json = (await res.json()) as IndexSummary & { history: HistoryPoint[] };
       setDetail({
-        symbol: def.symbol,
-        label: def.label,
+        symbol: def.symbol, label: def.label, description: def.description,
         history: json.history ?? [],
-        current: json.current ?? summary?.current ?? 0,
-        change: json.change ?? summary?.change ?? 0,
-        changePct: json.changePct ?? summary?.changePct ?? 0,
-        decimals: def.decimals,
-        suffix: def.suffix,
+        current: json.current ?? s.current,
+        change: json.change ?? s.change,
+        changePct: json.changePct ?? s.changePct,
+        decimals: def.decimals, suffix: def.suffix,
       });
-    } catch {
-      // 조용히 무시
-    } finally {
-      setLoadingDetail(false);
-    }
+    } catch { /* 조용히 무시 */ }
+    finally { setLoadingDetail(false); }
   };
 
+  /* ── 축소 상태: 얇은 티커 바 ── */
+  const tickerContent = (
+    <div className="flex items-center gap-0 overflow-x-auto scrollbar-none">
+      {INDICES.map((def) => {
+        const s = summaries[def.symbol];
+        const up = s ? s.change >= 0 : true;
+        return (
+          <button
+            key={def.symbol}
+            type="button"
+            onClick={() => openDetail(def)}
+            disabled={!s || s.error}
+            className="flex shrink-0 cursor-pointer items-center gap-2 border-r border-slate-200 px-3 py-1.5 transition-colors hover:bg-slate-100 disabled:cursor-default"
+          >
+            <span className="text-xs font-extrabold text-slate-800 whitespace-nowrap">{def.label}</span>
+            {loading && !s ? (
+              <span className="h-3 w-12 animate-pulse rounded bg-slate-200" />
+            ) : s?.error ? (
+              <span className="text-[10px] text-slate-400">-</span>
+            ) : s ? (
+              <>
+                <span className="text-xs font-bold tabular-nums text-slate-700 whitespace-nowrap">
+                  {fmtVal(s.current, def.decimals, def.suffix)}
+                </span>
+                <span className={`text-[10px] font-bold tabular-nums whitespace-nowrap ${up ? "text-rose-600" : "text-blue-600"}`}>
+                  {up ? "▲" : "▼"}{Math.abs(s.changePct).toFixed(2)}%
+                </span>
+              </>
+            ) : null}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  /* ── 확장 상태: 카드 그리드 ── */
+  const cardGrid = (
+    <div className="grid grid-cols-3 gap-2 p-3 sm:grid-cols-5 lg:grid-cols-9">
+      {INDICES.map((def) => {
+        const s = summaries[def.symbol];
+        const up = s ? s.change >= 0 : true;
+        return (
+          <button
+            key={def.symbol}
+            type="button"
+            onClick={() => openDetail(def)}
+            disabled={!s || s.error}
+            className="group flex flex-col gap-1 rounded-xl border border-slate-200 bg-white/90 p-2.5 text-left transition-all hover:border-[#18a78f] hover:shadow-md active:scale-[0.97] disabled:cursor-default disabled:opacity-60"
+          >
+            <span className="text-[10px] font-bold text-slate-400 leading-tight truncate w-full">{def.description}</span>
+            <span className="text-xs font-extrabold text-slate-900 group-hover:text-[#18a78f] whitespace-nowrap">{def.label}</span>
+            {loading && !s ? (
+              <div className="h-4 w-full animate-pulse rounded bg-slate-200" />
+            ) : s?.error ? (
+              <span className="text-xs text-slate-400">-</span>
+            ) : s ? (
+              <>
+                <span className="text-sm font-black tabular-nums text-slate-800 leading-tight whitespace-nowrap">
+                  {fmtVal(s.current, def.decimals, def.suffix)}
+                </span>
+                <span className={`text-[10px] font-bold tabular-nums ${up ? "text-rose-600" : "text-blue-600"}`}>
+                  {up ? "▲" : "▼"}{Math.abs(s.changePct).toFixed(2)}%
+                </span>
+              </>
+            ) : null}
+          </button>
+        );
+      })}
+    </div>
+  );
+
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 pb-12 sm:px-6 lg:px-8">
-      <div className="rounded-3xl border border-slate-900/10 bg-white/80 p-4 shadow-[0_18px_40px_rgba(12,35,64,0.07)] backdrop-blur md:p-6">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h2 className="text-xl font-extrabold text-slate-900 md:text-2xl">주요 시장 지수</h2>
-            <p className="text-sm text-slate-500">카드를 클릭하면 상세 차트를 볼 수 있습니다</p>
+    <>
+      {/* 하단 고정 바 */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 shadow-[0_-4px_24px_rgba(0,0,0,0.10)] backdrop-blur">
+        {/* 헤더 행 */}
+        <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-1">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-black text-[#18a78f] uppercase tracking-widest">LIVE</span>
+            <span className="text-xs font-extrabold text-slate-700">주요 시장 지수</span>
+            <span className="rounded-full bg-slate-100 px-1.5 py-px text-[10px] font-bold text-slate-400">Yahoo Finance</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-500">
-              Yahoo Finance
-            </span>
+          <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={fetchAll}
-              disabled={globalLoading}
-              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 hover:bg-slate-200 disabled:opacity-50"
+              disabled={loading}
+              className="rounded-lg px-2 py-1 text-[10px] font-bold text-slate-500 hover:bg-slate-100 disabled:opacity-40"
             >
-              {globalLoading ? "⟳ 로딩 중" : "⟳ 새로고침"}
+              {loading ? "⟳" : "⟳ 새로고침"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setExpanded((p) => !p)}
+              className="flex items-center gap-0.5 rounded-lg px-2 py-1 text-[10px] font-bold text-slate-500 hover:bg-slate-100"
+            >
+              {expanded ? "▼ 접기" : "▲ 펼치기"}
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {INDICES.map((def) => (
-            <IndexCard
-              key={def.symbol}
-              def={def}
-              summary={summaries[def.symbol]}
-              loading={globalLoading && !summaries[def.symbol]}
-              onClick={() => {
-                if (!loadingDetail) openDetail(def);
-              }}
-            />
-          ))}
-        </div>
+        {/* 확장 카드 그리드 */}
+        {expanded && cardGrid}
 
-        {loadingDetail && (
-          <p className="mt-4 text-center text-sm font-bold text-[#18a78f]">
-            차트 불러오는 중…
-          </p>
-        )}
+        {/* 티커 바 (항상 표시) */}
+        {tickerContent}
       </div>
 
+      {/* 모달 */}
       {detail && <DetailModal data={detail} onClose={() => setDetail(null)} />}
-    </section>
+    </>
   );
 }
