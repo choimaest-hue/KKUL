@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import AdSlot from "@/components/AdSlot";
+import StockSearch from "@/components/StockSearch";
 
 type BuyLine = {
   id: string;
@@ -258,14 +259,14 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            <label className="input-wrap">
+            <div className="input-wrap">
               <span>매도 종목</span>
-              <input
+              <StockSearch
                 value={soldSymbol}
-                onChange={(event) => setSoldSymbol(event.target.value)}
-                placeholder="예: TSLA 또는 005930"
+                onChange={setSoldSymbol}
+                placeholder="종목명·심볼 검색 (예: 테슬라, TSLA)"
               />
-            </label>
+            </div>
             <label className="input-wrap">
               <span>매도일</span>
               <input
@@ -300,16 +301,15 @@ export default function Home() {
                   key={line.id}
                   className="grid grid-cols-1 gap-2 rounded-xl border border-slate-200 bg-white p-3 md:grid-cols-[1.1fr_1fr_0.8fr_auto]"
                 >
-                  <label className="input-wrap compact">
+                  <div className="input-wrap compact">
                     <span>종목 {index + 1}</span>
-                    <input
+                    <StockSearch
                       value={line.symbol}
-                      onChange={(event) =>
-                        updateBuyLine(line.id, { symbol: event.target.value })
-                      }
-                      placeholder="예: NVDA / 000660"
+                      onChange={(symbol) => updateBuyLine(line.id, { symbol })}
+                      placeholder="종목 검색 (엔비디아, 삼성…)"
+                      compact
                     />
-                  </label>
+                  </div>
                   <label className="input-wrap compact">
                     <span>매수일</span>
                     <input

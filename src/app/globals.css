@@ -38,6 +38,7 @@ body {
   color: var(--ink-700);
 }
 
+.form-input,
 .input-wrap > input {
   border: 1px solid rgba(27, 45, 74, 0.22);
   border-radius: 12px;
@@ -46,6 +47,12 @@ body {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.compact-input {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.form-input:focus,
 .input-wrap > input:focus {
   outline: none;
   border-color: var(--brand-teal);
