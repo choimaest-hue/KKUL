@@ -1,0 +1,30 @@
+<svg width="750" height="1334" viewBox="0 0 750 1334" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="750" height="1334" fill="#F6EFD9"/>
+  <rect x="36" y="28" width="678" height="1278" rx="34" fill="#FFF8E6" stroke="#1F2A39" stroke-width="6"/>
+  <rect x="62" y="54" width="626" height="192" rx="26" fill="#0F1623"/>
+  <circle cx="140" cy="152" r="54" fill="#FFE173" stroke="#1F2A39" stroke-width="8"/>
+  <circle cx="122" cy="142" r="15" fill="#FFFDF7" stroke="#1F2A39" stroke-width="5"/>
+  <circle cx="160" cy="142" r="15" fill="#FFFDF7" stroke="#1F2A39" stroke-width="5"/>
+  <circle cx="124" cy="145" r="6" fill="#1F2A39"/>
+  <circle cx="162" cy="145" r="6" fill="#1F2A39"/>
+  <circle cx="142" cy="161" r="8" fill="#FF5A4F" stroke="#1F2A39" stroke-width="4"/>
+  <path d="M142 166L157 179H127L142 166Z" fill="#FF8A2A" stroke="#1F2A39" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M123 188C132 197 152 197 161 188" stroke="#1F2A39" stroke-width="5" stroke-linecap="round"/>
+  <path d="M110 158L100 174" stroke="#4AB9E6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M173 158L184 174" stroke="#FF5A9E" stroke-width="5" stroke-linecap="round"/>
+  <text x="220" y="140" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="56" font-weight="900">껄껄무새</text>
+  <text x="220" y="184" fill="#A6B1C2" font-family="Arial, sans-serif" font-size="22" font-weight="700">광대밈 주식 계산기</text>
+  <rect x="74" y="286" width="602" height="172" rx="24" fill="#FFFFFF" stroke="#D7DDE7" stroke-width="3"/>
+  <rect x="74" y="484" width="602" height="252" rx="24" fill="#FFFFFF" stroke="#D7DDE7" stroke-width="3"/>
+  <rect x="74" y="764" width="602" height="136" rx="24" fill="#FFF6D0" stroke="#1F2A39" stroke-width="3"/>
+  <rect x="74" y="924" width="602" height="140" rx="24" fill="#FFFFFF" stroke="#D7DDE7" stroke-width="3"/>
+  <text x="106" y="342" fill="#1F2A39" font-family="Arial, sans-serif" font-size="26" font-weight="900">매도 정보</text>
+  <text x="106" y="386" fill="#667085" font-family="Arial, sans-serif" font-size="22">TSLA / 매도일 / 10주</text>
+  <text x="106" y="540" fill="#1F2A39" font-family="Arial, sans-serif" font-size="26" font-weight="900">갈아탄 종목</text>
+  <text x="106" y="584" fill="#667085" font-family="Arial, sans-serif" font-size="22">NVDA 50% · 005930 50%</text>
+  <text x="106" y="826" fill="#1F2A39" font-family="Arial, sans-serif" font-size="28" font-weight="900">오늘도 광대 ON</text>
+  <text x="106" y="868" fill="#667085" font-family="Arial, sans-serif" font-size="22">매도했더니 오르고 갈아탔더니 떨어짐</text>
+  <text x="106" y="982" fill="#18A78F" font-family="Arial, sans-serif" font-size="22" font-weight="900">갈아탄 포트폴리오</text>
+  <text x="106" y="1026" fill="#1F2A39" font-family="Arial, sans-serif" font-size="28" font-weight="900">₩12,340,000</text>
+  <text x="106" y="1080" fill="#E15241" font-family="Arial, sans-serif" font-size="22" font-weight="900">들고 있었다면 ₩14,810,000</text>
+</svg>

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    id: "/",
     name: "껄껄무새 — 주식 기회비용 계산기",
     short_name: "껄껄무새",
     description:
@@ -14,11 +15,12 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "ko",
     scope: "/",
     categories: ["finance", "utilities"],
+    prefer_related_applications: false,
     icons: [
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/icons/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
         purpose: "any",
       },
       {
@@ -46,7 +48,29 @@ export default function manifest(): MetadataRoute.Manifest {
         short_name: "계산하기",
         description: "주식 기회비용을 바로 계산합니다",
         url: "/",
-        icons: [{ src: "/icon.svg", sizes: "any" }],
+        icons: [
+          {
+            src: "/icons/icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+        ],
+      },
+    ],
+    screenshots: [
+      {
+        src: "/screenshots/app-wide.svg",
+        sizes: "1600x900",
+        type: "image/svg+xml",
+        form_factor: "wide",
+        label: "껄껄무새 메인 계산 화면",
+      },
+      {
+        src: "/screenshots/app-narrow.svg",
+        sizes: "750x1334",
+        type: "image/svg+xml",
+        form_factor: "narrow",
+        label: "껄껄무새 모바일 결과 화면",
       },
     ],
   };

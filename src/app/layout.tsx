@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Do_Hyeon, Jua } from "next/font/google";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 const doHyeon = Do_Hyeon({
@@ -26,9 +27,10 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
+    icon: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png",
   },
   openGraph: {
     title: "껄껄무새 — 주식 기회비용 계산기",
@@ -57,7 +59,10 @@ export default function RootLayout({
       lang="ko"
       className={`${doHyeon.variable} ${jua.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ServiceWorkerRegister />
+        {children}
+      </body>
     </html>
   );
 }
