@@ -1,0 +1,32 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- bg - slightly pale/shocked tint -->
+  <rect width="120" height="120" rx="28" fill="#E8F4FF"/>
+  <rect width="120" height="120" rx="28" fill="#FFE173" opacity="0.55"/>
+  <!-- face -->
+  <ellipse cx="60" cy="56" rx="40" ry="38" fill="#FFFDE7"/>
+  <!-- raised eyebrows (shocked) -->
+  <path d="M28 32 Q40 24 52 32" stroke="#E65100" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M68 32 Q80 24 92 32" stroke="#E65100" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- wide shocked eyes -->
+  <circle cx="42" cy="50" r="13" fill="white" stroke="#1F2A39" stroke-width="2.5"/>
+  <circle cx="78" cy="50" r="13" fill="white" stroke="#1F2A39" stroke-width="2.5"/>
+  <circle cx="42" cy="52" r="7" fill="#1F2A39"/>
+  <circle cx="78" cy="52" r="7" fill="#1F2A39"/>
+  <circle cx="45" cy="48" r="2.5" fill="white"/>
+  <circle cx="81" cy="48" r="2.5" fill="white"/>
+  <!-- shocked O beak -->
+  <ellipse cx="60" cy="72" rx="9" ry="11" fill="#FF7A33"/>
+  <ellipse cx="60" cy="75" rx="6" ry="7" fill="#BF360C" opacity="0.5"/>
+  <!-- sweat drops -->
+  <path d="M96 28 Q100 38 95 44" stroke="#60B4F7" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M106 38 Q110 46 106 52" stroke="#60B4F7" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- tear drop under left eye -->
+  <path d="M30 58 C27 64 28 72 30 76" stroke="#60B4F7" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- body -->
+  <ellipse cx="60" cy="104" rx="30" ry="16" fill="#FFC107"/>
+  <!-- arms up shocked gesture -->
+  <path d="M24 82 Q10 60 18 44 Q32 62 30 84Z" fill="#FFB300"/>
+  <path d="M96 82 Q110 60 102 44 Q88 62 90 84Z" fill="#FFB300"/>
+  <!-- crest -->
+  <path d="M48 18 Q52 8 60 14 Q68 8 72 18" stroke="#E65100" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>
