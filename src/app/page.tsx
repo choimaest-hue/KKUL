@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import AdSlot from "@/components/AdSlot";
 import MarketIndices from "@/components/MarketIndices";
 import StockSearch from "@/components/StockSearch";
@@ -116,6 +116,9 @@ function verdictMessage(value: number): string {
 export default function Home() {
   const adsenseTopSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP ?? "";
   const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "";
+
+  const resultRef = useRef<HTMLElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
 
   const [soldSymbol, setSoldSymbol] = useState("TSLA");
   const [soldDate, setSoldDate] = useState("");
@@ -280,12 +283,19 @@ export default function Home() {
         opportunityCostVsCash: soldProceeds - totalCurrentValue,
         buyResults,
       });
+      // 모바일에서 결과 섹션으로 스크롤
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
           ? caughtError.message
           : "계산 중 알 수 없는 오류가 발생했습니다.",
       );
+      setTimeout(() => {
+        errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 80);
     } finally {
       setLoading(false);
     }
@@ -379,7 +389,7 @@ export default function Home() {
               {buys.map((line, index) => (
                 <div
                   key={line.id}
-                  className="grid grid-cols-1 gap-2 rounded-xl border border-slate-200 bg-white p-3 md:grid-cols-[1.1fr_1fr_0.8fr_auto]"
+                  className="grid grid-cols-2 gap-2 rounded-xl border border-slate-200 bg-white p-3 sm:grid-cols-[1.2fr_1fr_0.7fr_auto]"
                 >
                   <div className="input-wrap compact">
                     <span>종목 {index + 1}</span>
@@ -417,7 +427,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => removeBuyLine(line.id)}
-                    className="remove-btn"
+                    className="remove-btn col-span-2 sm:col-span-1"
                     disabled={buys.length === 1}
                   >
                     삭제
@@ -426,15 +436,32 @@ export default function Home() {
               ))}
             </div>
 
-            <p
-              className={`mt-3 text-sm font-semibold ${
-                Math.abs(allocationSum - 100) < 0.01
-                  ? "text-emerald-700"
-                  : "text-rose-700"
-              }`}
-            >
-              현재 비중 합계: {allocationSum.toFixed(2)}%
-            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${
+                    Math.abs(allocationSum - 100) < 0.01
+                      ? "bg-emerald-500"
+                      : allocationSum > 100
+                      ? "bg-rose-500"
+                      : "bg-amber-400"
+                  }`}
+                  style={{ width: `${Math.min(allocationSum, 100)}%` }}
+                />
+              </div>
+              <span
+                className={`shrink-0 text-sm font-bold ${
+                  Math.abs(allocationSum - 100) < 0.01
+                    ? "text-emerald-700"
+                    : allocationSum > 100
+                    ? "text-rose-700"
+                    : "text-amber-700"
+                }`}
+              >
+                {allocationSum.toFixed(1)}%
+                {Math.abs(allocationSum - 100) < 0.01 && " ✓"}
+              </span>
+            </div>
           </div>
 
           <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto]">
@@ -457,13 +484,13 @@ export default function Home() {
           </div>
 
           {error && (
-            <p className="mt-4 rounded-xl border border-rose-300 bg-rose-50 p-3 text-sm font-bold text-rose-700">
-              {error}
+            <p ref={errorRef} className="mt-4 rounded-xl border border-rose-300 bg-rose-50 p-3 text-sm font-bold text-rose-700">
+              ⚠️ {error}
             </p>
           )}
         </section>
 
-        <section className="space-y-6">
+        <section ref={resultRef} className="space-y-6">
           <article className="rounded-3xl border border-slate-900/10 bg-white/85 p-4 shadow-[0_18px_40px_rgba(12,35,64,0.1)] md:p-6">
             <div className="mb-4 flex items-start justify-between gap-3">
               <div>

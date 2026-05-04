@@ -140,7 +140,7 @@ body {
 .result-card strong {
   display: block;
   margin-top: 3px;
-  font-size: 24px;
+  font-size: clamp(18px, 4vw, 24px);
   font-family: var(--font-do-hyeon), "Noto Sans KR", sans-serif;
   letter-spacing: 0.3px;
   color: var(--ink-900);
@@ -168,7 +168,7 @@ body {
 .metric-box strong {
   display: block;
   margin-top: 2px;
-  font-size: 22px;
+  font-size: clamp(16px, 3.5vw, 22px);
   font-family: var(--font-do-hyeon), "Noto Sans KR", sans-serif;
 }
 
@@ -176,4 +176,30 @@ body {
   .calc-btn {
     width: 100%;
   }
+}
+
+/* result section scroll-margin so header doesn't overlap */
+section[data-result] {
+  scroll-margin-top: 16px;
+}
+
+/* calc-btn loading pulse */
+.calc-btn:disabled:not(:where([disabled='true'])) {
+  animation: pulse-bg 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-bg {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.65; }
+}
+
+/* date input placeholder color */
+input[type='date']:not(:valid) {
+  color: #94a3b8;
+}
+
+/* number input hide spinner on compact */
+.compact-input::-webkit-inner-spin-button,
+.compact-input::-webkit-outer-spin-button {
+  opacity: 0.5;
 }

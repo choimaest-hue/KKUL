@@ -165,7 +165,7 @@ export default function StockSearch({
       {open && (
         <ul
           role="listbox"
-          className="absolute z-50 mt-1 w-full max-h-72 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-[0_12px_28px_rgba(12,35,64,0.14)] py-1"
+          className="absolute z-50 mt-1 min-w-[260px] w-full max-h-72 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-[0_12px_28px_rgba(12,35,64,0.14)] py-1"
         >
           {results.map((stock, idx) => (
             <li
@@ -177,7 +177,7 @@ export default function StockSearch({
                 select(stock);
               }}
               onMouseEnter={() => setActiveIdx(idx)}
-              className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm transition-colors ${
+              className={`flex cursor-pointer items-center gap-2 px-3 py-2 transition-colors ${
                 idx === activeIdx ? "bg-slate-100" : "hover:bg-slate-50"
               }`}
             >
@@ -188,15 +188,19 @@ export default function StockSearch({
               >
                 {MARKET_LABEL[stock.market]}
               </span>
-              <span className="font-bold text-slate-900 tabular-nums tracking-wide">
-                {highlightMatch(stock.symbol, inputValue)}
-              </span>
-              <span className="min-w-0 truncate text-slate-700">
-                {highlightMatch(stock.nameKo, inputValue)}
-              </span>
-              <span className="ml-auto shrink-0 text-slate-400 text-xs hidden sm:block">
-                {stock.nameEn}
-              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="shrink-0 text-sm font-bold text-slate-900 tabular-nums tracking-wide">
+                    {highlightMatch(stock.symbol, inputValue)}
+                  </span>
+                  <span className="min-w-0 truncate text-sm text-slate-700">
+                    {highlightMatch(stock.nameKo, inputValue)}
+                  </span>
+                </div>
+                <p className="truncate text-xs text-slate-400 leading-tight">
+                  {stock.nameEn}
+                </p>
+              </div>
             </li>
           ))}
         </ul>
