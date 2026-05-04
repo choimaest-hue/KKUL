@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import AdSlot from "@/components/AdSlot";
 import MarketIndices from "@/components/MarketIndices";
 import StockSearch from "@/components/StockSearch";
+import FloatingContact from "@/components/FloatingContact";
 
 /* ── Types ───────────────────────────────────────────────────── */
 type Currency = "USD" | "KRW";
@@ -141,6 +142,8 @@ const VERDICT_CONFIG = {
 export default function Home() {
   const adsenseTopSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP ?? "";
   const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "";
+  const adfitMidUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID ?? "";
+  const adfitTopUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ?? "";
 
   const resultRef = useRef<HTMLElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
@@ -322,6 +325,14 @@ export default function Home() {
           slotId={adsenseTopSlot}
           className="relative mx-auto max-w-5xl px-5 pb-4"
         />
+        {adfitTopUnit && (
+          <AdSlot
+            network="adfit"
+            slotId="unused"
+            adfitUnit={adfitTopUnit}
+            className="relative mx-auto max-w-5xl px-5 pb-4"
+          />
+        )}
       </header>
 
       {/* ── MAIN CONTENT ─────────────────────────────────────── */}
@@ -490,6 +501,17 @@ export default function Home() {
 
         </div>
         {/* ── RIGHT: RESULTS ────────────────────────────────────── */}
+        {/* AdFit 슬롯 2 — 폼과 결과 사이 (모바일에서만 노출) */}
+        {adfitMidUnit && (
+          <div className="adfit-slot lg:hidden py-1">
+            <AdSlot
+              network="adfit"
+              slotId="unused"
+              adfitUnit={adfitMidUnit}
+              className="w-full"
+            />
+          </div>
+        )}
         <section
           ref={resultRef}
           data-result
@@ -669,6 +691,7 @@ export default function Home() {
       </main>
 
       <MarketIndices />
+      <FloatingContact />
     </div>
   );
 }

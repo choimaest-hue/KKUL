@@ -1,4 +1,4 @@
-export type Stock = {
+﻿export type Stock = {
   symbol: string;
   nameKo: string;
   nameEn: string;
@@ -341,6 +341,74 @@ export const STOCKS: Stock[] = [
   // 2차전지/소재
   { symbol: "064760", nameKo: "티씨케이",             nameEn: "TcK",                      market: "KQ", tags: ["반도체소재", "실리콘카바이드", "SiC", "흑연"] },
   { symbol: "336370", nameKo: "솔루스첨단소재",       nameEn: "Solus Advanced Materials", market: "KQ", tags: ["2차전지", "동박", "배터리소재"] },
+
+  // ── 2026 신규 추가 (미국) ─────────────────────────────────────
+  // 비트코인 관련
+  { symbol: "MSTR",  nameKo: "스트래티지",     nameEn: "Strategy (MicroStrategy)",  market: "US", tags: ["비트코인", "bitcoin", "BTC", "마이크로스트래티지", "가상자산"] },
+  { symbol: "MARA",  nameKo: "마라톤디지털",   nameEn: "Marathon Digital Holdings", market: "US", tags: ["비트코인채굴", "bitcoin", "BTC", "채굴", "가상자산"] },
+  { symbol: "RIOT",  nameKo: "라이엇플랫폼스", nameEn: "Riot Platforms",            market: "US", tags: ["비트코인채굴", "bitcoin", "BTC", "채굴", "가상자산"] },
+  { symbol: "CORZ",  nameKo: "코어사이언티픽", nameEn: "Core Scientific",           market: "US", tags: ["비트코인채굴", "AI데이터센터", "bitcoin", "HPC"] },
+  { symbol: "HUT",   nameKo: "헛8코퍼레이션", nameEn: "Hut 8 Corp",               market: "US", tags: ["비트코인채굴", "bitcoin", "BTC", "채굴"] },
+  { symbol: "IREN",  nameKo: "아이리스에너지",  nameEn: "Iris Energy",              market: "US", tags: ["비트코인채굴", "AI데이터센터", "bitcoin", "클린에너지"] },
+  // SNS / 커뮤니티
+  { symbol: "RDDT",  nameKo: "레딧",           nameEn: "Reddit",                    market: "US", tags: ["SNS", "소셜미디어", "커뮤니티", "밈", "인터넷"] },
+  { symbol: "DJT",   nameKo: "트럼프미디어",   nameEn: "Trump Media & Technology",  market: "US", tags: ["트럼프", "SNS", "Truth Social", "밈주식", "MAGA"] },
+  // 외식 / 소비
+  { symbol: "CAVA",  nameKo: "카바",           nameEn: "CAVA Group",                market: "US", tags: ["레스토랑", "패스트캐주얼", "지중해음식", "외식"] },
+  { symbol: "DASH",  nameKo: "도어대시",       nameEn: "DoorDash",                  market: "US", tags: ["배달", "음식배달", "배달앱", "푸드테크"] },
+  { symbol: "CMG",   nameKo: "치폴레",         nameEn: "Chipotle Mexican Grill",    market: "US", tags: ["레스토랑", "패스트캐주얼", "부리토", "멕시코음식"] },
+  { symbol: "WING",  nameKo: "윙스탑",         nameEn: "Wingstop",                  market: "US", tags: ["레스토랑", "치킨윙", "패스트푸드", "외식"] },
+  { symbol: "CELH",  nameKo: "셀시우스",       nameEn: "Celsius Holdings",          market: "US", tags: ["에너지음료", "음료", "피트니스", "헬스"] },
+  { symbol: "CHWY",  nameKo: "츄이",           nameEn: "Chewy",                     market: "US", tags: ["반려동물", "펫푸드", "이커머스", "펫"] },
+  // 모빌리티
+  { symbol: "LYFT",  nameKo: "리프트",         nameEn: "Lyft",                      market: "US", tags: ["차량공유", "라이드쉐어링", "모빌리티"] },
+  // 사이버보안
+  { symbol: "FTNT",  nameKo: "포티넷",         nameEn: "Fortinet",                  market: "US", tags: ["사이버보안", "방화벽", "네트워크보안", "보안"] },
+  { symbol: "S",     nameKo: "센티넬원",       nameEn: "SentinelOne",               market: "US", tags: ["사이버보안", "EDR", "XDR", "AI보안", "보안"] },
+  { symbol: "OKTA",  nameKo: "옥타",           nameEn: "Okta",                      market: "US", tags: ["보안", "IAM", "인증", "ID보안", "제로트러스트"] },
+  // 헬스케어
+  { symbol: "DXCM",  nameKo: "덱스콤",         nameEn: "Dexcom",                    market: "US", tags: ["CGM", "혈당", "당뇨", "의료기기", "웨어러블"] },
+  { symbol: "ELF",   nameKo: "이엘에프뷰티",   nameEn: "e.l.f. Beauty",             market: "US", tags: ["화장품", "뷰티", "저가화장품", "K뷰티"] },
+  // 스페이스
+  { symbol: "ASTS",  nameKo: "AST스페이스모바일", nameEn: "AST SpaceMobile",        market: "US", tags: ["위성인터넷", "우주통신", "저궤도위성", "5G"] },
+  { symbol: "LUNR",  nameKo: "인튜이티브머신스", nameEn: "Intuitive Machines",      market: "US", tags: ["우주", "달착륙", "NASA", "뉴스페이스"] },
+  // AI 인프라
+  { symbol: "APLD",  nameKo: "어플라이드디지털", nameEn: "Applied Digital",         market: "US", tags: ["AI데이터센터", "HPC", "클라우드", "GPU서버"] },
+  // 교육/콘텐츠
+  { symbol: "DUOL",  nameKo: "듀오링고",       nameEn: "Duolingo",                  market: "US", tags: ["언어학습", "교육", "에드테크", "AI"] },
+  // 방산/테크
+  { symbol: "AXON",  nameKo: "액손엔터프라이즈", nameEn: "Axon Enterprise",         market: "US", tags: ["테이저", "경찰장비", "보안", "드론", "카메라"] },
+  // 동남아
+  { symbol: "GRAB",  nameKo: "그랩",           nameEn: "Grab Holdings",             market: "US", tags: ["동남아", "슈퍼앱", "배달", "핀테크", "배달앱"] },
+  // 밈/게임
+  { symbol: "GME",   nameKo: "게임스탑",       nameEn: "GameStop",                  market: "US", tags: ["밈주식", "게임", "공매도", "meme"] },
+  // SaaS
+  { symbol: "ZM",    nameKo: "줌",             nameEn: "Zoom Video Communications", market: "US", tags: ["화상회의", "재택근무", "SaaS", "협업"] },
+
+  // ── 2026 신규 추가 (한국 KOSPI) ──────────────────────────────
+  { symbol: "373220", nameKo: "LG에너지솔루션",    nameEn: "LG Energy Solution",       market: "KS", tags: ["배터리", "전기차배터리", "LG", "LGES", "파우치형"] },
+  { symbol: "267260", nameKo: "HD현대일렉트릭",    nameEn: "HD Hyundai Electric",      market: "KS", tags: ["전력기기", "변압기", "전력설비", "AI전력", "HD현대"] },
+  { symbol: "298040", nameKo: "효성중공업",        nameEn: "Hyosung Heavy Industries", market: "KS", tags: ["전력기기", "변압기", "전력설비", "효성", "초고압"] },
+  { symbol: "010120", nameKo: "LS ELECTRIC",       nameEn: "LS Electric",              market: "KS", tags: ["전력기기", "배전반", "ESS", "전력설비", "LS"] },
+  { symbol: "006260", nameKo: "LS",                nameEn: "LS Corporation",           market: "KS", tags: ["LS지주", "전선", "구리", "산업재"] },
+  { symbol: "443060", nameKo: "HD현대마린솔루션",  nameEn: "HD Hyundai Marine Solution", market: "KS", tags: ["선박엔진정비", "MRO", "선박", "HD현대", "해양"] },
+  { symbol: "022100", nameKo: "포스코DX",          nameEn: "POSCO DX",                 market: "KS", tags: ["IT서비스", "스마트팩토리", "포스코", "AI", "자동화"] },
+  { symbol: "007660", nameKo: "이수페타시스",      nameEn: "ISU Petasys",              market: "KS", tags: ["PCB", "AI서버PCB", "고다층기판", "MLB"] },
+  { symbol: "008060", nameKo: "대덕전자",          nameEn: "Daeduck Electronics",      market: "KS", tags: ["PCB", "기판", "반도체패키지", "MLB"] },
+  { symbol: "000880", nameKo: "한화",              nameEn: "Hanwha Corporation",       market: "KS", tags: ["한화그룹", "방산", "화약", "지주"] },
+  { symbol: "047810", nameKo: "한국항공우주",      nameEn: "Korea Aerospace Industries", market: "KS", tags: ["항공", "방산", "KAI", "전투기", "FA50"] },
+
+  // ── 2026 신규 추가 (한국 KOSDAQ) ─────────────────────────────
+  { symbol: "277810", nameKo: "레인보우로보틱스",  nameEn: "Rainbow Robotics",         market: "KQ", tags: ["로봇", "휴머노이드", "삼성로봇", "협동로봇", "자율주행"] },
+  { symbol: "399720", nameKo: "가온칩스",          nameEn: "Gaon Chip",                market: "KQ", tags: ["AI반도체", "칩설계", "반도체IP", "GPU", "팹리스"] },
+  { symbol: "432720", nameKo: "퀄리타스반도체",    nameEn: "Qualitas Semiconductor",   market: "KQ", tags: ["AI반도체", "칩설계", "반도체IP", "팹리스"] },
+  { symbol: "394280", nameKo: "오픈엣지테크놀로지", nameEn: "OpenEdge Technology",     market: "KQ", tags: ["AI반도체", "칩설계", "NPU", "팹리스"] },
+  { symbol: "066970", nameKo: "엘앤에프",          nameEn: "L&F",                      market: "KQ", tags: ["양극재", "2차전지소재", "배터리소재", "엘앤에프"] },
+  { symbol: "222800", nameKo: "심텍",              nameEn: "Simtech",                  market: "KQ", tags: ["PCB", "반도체패키지", "메모리모듈"] },
+  { symbol: "039030", nameKo: "이오테크닉스",      nameEn: "EO Technics",              market: "KQ", tags: ["반도체장비", "레이저마킹", "다이싱"] },
+  { symbol: "403870", nameKo: "HPSP",              nameEn: "HPSP",                     market: "KQ", tags: ["반도체장비", "고압수소어닐링", "HPM"] },
+  { symbol: "131290", nameKo: "티에스이",          nameEn: "TSE",                      market: "KQ", tags: ["반도체장비", "테스트소켓", "프로브카드"] },
+  { symbol: "460930", nameKo: "현대힘스",          nameEn: "Hyundai Hims",             market: "KQ", tags: ["방산부품", "현대로템", "장갑차"] },
 ];
 
 function scoreStock(stock: Stock, query: string): number {

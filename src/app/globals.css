@@ -327,3 +327,22 @@ input[type="date"]:not(:valid) { color: #94a3b8; }
 /* ── Scrollbar hide util ────────────────────────────────────── */
 .scrollbar-none { scrollbar-width: none; }
 .scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* ── Floating button bob animation ─────────────────────────── */
+@keyframes bob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.animate-bob {
+  animation: bob 2.2s ease-in-out infinite;
+}
+
+/* ── AdFit ad slots ─────────────────────────────────────────── */
+.adfit-slot {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+  overflow: hidden;
+}
