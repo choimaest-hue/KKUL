@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import AdSlot from "@/components/AdSlot";
 import StockSearch from "@/components/StockSearch";
 
+type Currency = "USD" | "KRW";
+
 type BuyLine = {
   id: string;
   symbol: string;
@@ -16,6 +18,7 @@ type PricePayload = {
   resolvedSymbol: string;
   matchedDate: string;
   close: number;
+  currency: Currency;
   message?: string;
 };
 
@@ -26,13 +29,19 @@ type BuyResult = {
   matchedBuyDate: string;
   buyPrice: number;
   evalPrice: number;
+  currency: Currency;
+  fxAtBuy: number;
+  fxAtEval: number;
   allocation: number;
-  invested: number;
+  investedBase: number;
+  investedNative: number;
   shares: number;
-  currentValue: number;
+  currentValueNative: number;
+  currentValueBase: number;
 };
 
 type CalcResult = {
+  soldCurrency: Currency;
   soldResolvedSymbol: string;
   soldMatchedDate: string;
   soldPrice: number;
@@ -62,7 +71,14 @@ const initialBuys: BuyLine[] = [
   },
 ];
 
-function formatMoney(value: number): string {
+function formatAmount(value: number, currency: Currency): string {
+  if (currency === "KRW") {
+    return new Intl.NumberFormat("ko-KR", {
+      style: "currency",
+      currency: "KRW",
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
   return new Intl.NumberFormat("ko-KR", {
     style: "currency",
     currency: "USD",
@@ -136,6 +152,11 @@ export default function Home() {
     );
   };
 
+  const syncBuyDatesToSoldDate = () => {
+    if (!soldDate) return;
+    setBuys((prev) => prev.map((line) => ({ ...line, buyDate: soldDate })));
+  };
+
   const calculate = async () => {
     setError("");
     setResult(null);
@@ -163,19 +184,60 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const soldPrice = await fetchClose(soldSymbol, soldDate);
-      const keepPrice = await fetchClose(soldSymbol, evaluationDate);
+      const [soldPrice, keepPrice] = await Promise.all([
+        fetchClose(soldSymbol, soldDate),
+        fetchClose(soldSymbol, evaluationDate),
+      ]);
 
+      const soldCurrency = soldPrice.currency;
       const soldProceeds = soldPrice.close * soldQuantity;
       const keepValue = keepPrice.close * soldQuantity;
 
       const buyResults = await Promise.all(
         buys.map(async (line) => {
-          const buyPrice = await fetchClose(line.symbol, line.buyDate);
-          const evalPrice = await fetchClose(line.symbol, evaluationDate);
-          const invested = soldProceeds * (line.allocation / 100);
-          const shares = invested / buyPrice.close;
-          const currentValue = shares * evalPrice.close;
+          const [buyPrice, evalPrice] = await Promise.all([
+            fetchClose(line.symbol, line.buyDate),
+            fetchClose(line.symbol, evaluationDate),
+          ]);
+
+          const buyCurrency = buyPrice.currency;
+          const needsFx = soldCurrency !== buyCurrency;
+
+          let fxAtBuy = 1;
+          let fxAtEval = 1;
+
+          if (needsFx) {
+            // USDKRW=X: 1 USD당 KRW
+            [fxAtBuy, fxAtEval] = await Promise.all([
+              fetchClose("USDKRW=X", line.buyDate).then((r) => r.close),
+              fetchClose("USDKRW=X", evaluationDate).then((r) => r.close),
+            ]);
+          }
+
+          const investedBase = soldProceeds * (line.allocation / 100);
+
+          // investedBase(soldCurrency) → investedNative(buyCurrency)
+          let investedNative: number;
+          if (soldCurrency === "USD" && buyCurrency === "KRW") {
+            investedNative = investedBase * fxAtBuy;
+          } else if (soldCurrency === "KRW" && buyCurrency === "USD") {
+            investedNative = investedBase / fxAtBuy;
+          } else {
+            investedNative = investedBase;
+          }
+
+          const shares = investedNative / buyPrice.close;
+          const currentValueNative = shares * evalPrice.close;
+
+          // currentValueNative(buyCurrency) → currentValueBase(soldCurrency)
+          let currentValueBase: number;
+          if (soldCurrency === "USD" && buyCurrency === "KRW") {
+            currentValueBase = currentValueNative / fxAtEval;
+          } else if (soldCurrency === "KRW" && buyCurrency === "USD") {
+            currentValueBase = currentValueNative * fxAtEval;
+          } else {
+            currentValueBase = currentValueNative;
+          }
 
           return {
             id: line.id,
@@ -184,20 +246,26 @@ export default function Home() {
             matchedBuyDate: buyPrice.matchedDate,
             buyPrice: buyPrice.close,
             evalPrice: evalPrice.close,
+            currency: buyCurrency,
+            fxAtBuy,
+            fxAtEval,
             allocation: line.allocation,
-            invested,
+            investedBase,
+            investedNative,
             shares,
-            currentValue,
+            currentValueNative,
+            currentValueBase,
           } satisfies BuyResult;
         }),
       );
 
       const totalCurrentValue = buyResults.reduce(
-        (sum, buyLineResult) => sum + buyLineResult.currentValue,
+        (sum, r) => sum + r.currentValueBase,
         0,
       );
 
       setResult({
+        soldCurrency,
         soldResolvedSymbol: soldPrice.resolvedSymbol,
         soldMatchedDate: soldPrice.matchedDate,
         soldPrice: soldPrice.close,
@@ -288,11 +356,22 @@ export default function Home() {
           </div>
 
           <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/80 p-3 md:p-4">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-lg font-extrabold text-slate-900">갈아탄 매수 내역</h3>
-              <button type="button" onClick={addBuyLine} className="fun-btn">
-                + 라인 추가
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={syncBuyDatesToSoldDate}
+                  disabled={!soldDate}
+                  className="fun-btn disabled:opacity-40 disabled:cursor-not-allowed"
+                  title={soldDate ? `모든 매수일을 ${soldDate}로 통일` : "먼저 매도일을 입력하세요"}
+                >
+                  📅 매도일로 맞추기
+                </button>
+                <button type="button" onClick={addBuyLine} className="fun-btn">
+                  + 라인 추가
+                </button>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -411,31 +490,34 @@ export default function Home() {
               <div className="space-y-3">
                 <div className="result-card">
                   <h4>매도 당시 확보 자금</h4>
-                  <strong>{formatMoney(result.soldProceeds)}</strong>
+                  <strong>{formatAmount(result.soldProceeds, result.soldCurrency)}</strong>
                   <p>
-                    {result.soldResolvedSymbol} @ {result.soldMatchedDate} 종가 {formatMoney(result.soldPrice)}
+                    {result.soldResolvedSymbol} @ {result.soldMatchedDate} 종가 {formatAmount(result.soldPrice, result.soldCurrency)}
                   </p>
                 </div>
                 <div className="result-card">
                   <h4>갈아탄 포트폴리오 평가액</h4>
-                  <strong>{formatMoney(result.totalCurrentValue)}</strong>
+                  <strong>{formatAmount(result.totalCurrentValue, result.soldCurrency)}</strong>
+                  {result.buyResults.some((r) => r.currency !== result.soldCurrency) && (
+                    <p className="text-xs text-amber-700">★ 한국 종목 포함 — 평가일 환율 기준으로 환산됨</p>
+                  )}
                 </div>
                 <div className="result-card">
                   <h4>그냥 들고 있었다면</h4>
-                  <strong>{formatMoney(result.keepValue)}</strong>
+                  <strong>{formatAmount(result.keepValue, result.soldCurrency)}</strong>
                   <p>
-                    {result.soldResolvedSymbol} @ {result.keepMatchedDate} 종가 {formatMoney(result.keepPrice)}
+                    {result.soldResolvedSymbol} @ {result.keepMatchedDate} 종가 {formatAmount(result.keepPrice, result.soldCurrency)}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                   <div className="metric-box">
                     <span>기회비용 (vs 계속 보유)</span>
-                    <strong>{formatMoney(result.opportunityCostVsHold)}</strong>
+                    <strong>{formatAmount(result.opportunityCostVsHold, result.soldCurrency)}</strong>
                   </div>
                   <div className="metric-box">
                     <span>기회비용 (vs 현금 보유)</span>
-                    <strong>{formatMoney(result.opportunityCostVsCash)}</strong>
+                    <strong>{formatAmount(result.opportunityCostVsCash, result.soldCurrency)}</strong>
                   </div>
                 </div>
 
@@ -449,7 +531,7 @@ export default function Home() {
           {result && (
             <article className="rounded-3xl border border-slate-900/10 bg-white/85 p-4 shadow-[0_12px_28px_rgba(12,35,64,0.08)] md:p-6">
               <h3 className="mb-3 text-lg font-extrabold text-slate-900">갈아탄 종목별 상세</h3>
-              <div className="space-y-2">
+                  <div className="space-y-2">
                 {result.buyResults.map((line) => (
                   <div
                     key={line.id}
@@ -457,12 +539,29 @@ export default function Home() {
                   >
                     <p className="text-sm font-bold text-slate-900">
                       {line.symbol} ({line.allocation.toFixed(2)}%)
+                      {line.currency === "KRW" && (
+                        <span className="ml-2 rounded bg-rose-100 px-1.5 py-0.5 text-xs font-bold text-rose-700">KRW</span>
+                      )}
+                      {line.currency === "USD" && (
+                        <span className="ml-2 rounded bg-blue-100 px-1.5 py-0.5 text-xs font-bold text-blue-700">USD</span>
+                      )}
                     </p>
                     <p className="text-xs text-slate-700">
-                      매수가: {formatMoney(line.buyPrice)} ({line.matchedBuyDate}) · 평가가: {formatMoney(line.evalPrice)}
+                      매수가 {formatAmount(line.buyPrice, line.currency)} ({line.matchedBuyDate})
+                      {line.fxAtBuy !== 1 && ` · 매수 환율 ${Math.round(line.fxAtBuy).toLocaleString("ko-KR")} KRW/USD`}
+                      {" · "}평가가 {formatAmount(line.evalPrice, line.currency)}
+                      {line.fxAtEval !== 1 && ` · 평가 환율 ${Math.round(line.fxAtEval).toLocaleString("ko-KR")} KRW/USD`}
                     </p>
                     <p className="text-xs text-slate-700">
-                      매수금액 {formatMoney(line.invested)} → 보유수량 {line.shares.toFixed(4)} → 현재가치 {formatMoney(line.currentValue)}
+                      투자금액 {formatAmount(line.investedNative, line.currency)}
+                      {line.currency !== result.soldCurrency && (
+                        <span className="text-amber-700">{` (${formatAmount(line.investedBase, result.soldCurrency)} 환산)`}</span>
+                      )}
+                      {" → "}보유수량 {line.shares.toFixed(4)}
+                      {" → "}현재가치 {formatAmount(line.currentValueNative, line.currency)}
+                      {line.currency !== result.soldCurrency && (
+                        <span className="text-amber-700">{` (${formatAmount(line.currentValueBase, result.soldCurrency)} 환산)`}</span>
+                      )}
                     </p>
                   </div>
                 ))}

@@ -128,6 +128,13 @@ async function fetchCloseOnOrBeforeDate(
   };
 }
 
+function detectCurrency(resolvedSymbol: string): "USD" | "KRW" {
+  if (resolvedSymbol.endsWith(".KS") || resolvedSymbol.endsWith(".KQ")) {
+    return "KRW";
+  }
+  return "USD";
+}
+
 export async function GET(request: NextRequest) {
   const symbol = request.nextUrl.searchParams.get("symbol") ?? "";
   const date = request.nextUrl.searchParams.get("date") ?? "";
@@ -161,6 +168,7 @@ export async function GET(request: NextRequest) {
         requestedDate: date,
         matchedDate: result.date,
         close: result.close,
+        currency: detectCurrency(result.symbol),
       });
     }
   }
