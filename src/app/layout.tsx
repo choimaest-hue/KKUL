@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Do_Hyeon, Jua } from "next/font/google";
 import "./globals.css";
 
@@ -41,6 +41,9 @@ export const metadata: Metadata = {
     title: "껄껄무새 — 주식 기회비용 계산기",
     description: "그때 그냥 들고 있었으면 어땠을까? 웃프게 계산해드립니다.",
   },
+};
+
+export const viewport: Viewport = {
   themeColor: "#ffd24a",
 };
 

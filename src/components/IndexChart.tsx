@@ -71,8 +71,8 @@ export default function IndexChart({ history, color, gradientId, decimals, label
             border: "1px solid #e2e8f0",
             fontSize: "12px",
           }}
-          formatter={(v: number) => [formatVal(v, decimals, suffix), label]}
-          labelFormatter={(l: string) => `날짜: ${l}`}
+          formatter={(v) => [typeof v === "number" ? formatVal(v, decimals, suffix) : String(v), label]}
+          labelFormatter={(l) => `날짜: ${String(l)}`}
         />
         <Area
           type="monotone"
