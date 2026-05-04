@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import AdSlot from "@/components/AdSlot";
+import MarketIndices from "@/components/MarketIndices";
 import StockSearch from "@/components/StockSearch";
 
 type Currency = "USD" | "KRW";
@@ -577,6 +578,8 @@ export default function Home() {
           />
         </section>
       </main>
+
+      <MarketIndices />
     </div>
   );
 }
