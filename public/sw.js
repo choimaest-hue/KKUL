@@ -1,12 +1,20 @@
-const CACHE_NAME = "kkul-shell-v4";
+const CACHE_NAME = "kkul-shell-v5";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
   "/icon.svg",
   "/apple-icon.png",
+  "/icons/icon-72.png",
+  "/icons/icon-96.png",
+  "/icons/icon-128.png",
+  "/icons/icon-144.png",
+  "/icons/icon-152.png",
+  "/icons/icon-180.png",
   "/icons/icon-192.png",
+  "/icons/icon-384.png",
   "/icons/icon-512.png",
   "/icons/icon-512-maskable.png",
+  "/icons/icon-1024.png",
   "/logo-kkul.svg",
   "/mascot-owl.svg",
   "/mascot-laugh.svg",

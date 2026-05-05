@@ -16,6 +16,7 @@ const jua = Jua({
 });
 
 export const metadata: Metadata = {
+  applicationName: "껄껄무새",
   title: "껄껄무새 | 미국/한국 주식 기회비용 계산기",
   description:
     "매도 후 갈아탄 선택을 종가 기준으로 계산해 기회비용을 보여주는 코믹 경제 웹앱. 미국/한국 주식, 환율 자동 반영.",
@@ -33,8 +34,9 @@ export const metadata: Metadata = {
       { url: "/favicon.ico", sizes: "any" },
       { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/apple-icon.png",
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     title: "껄껄무새 — 주식 기회비용 계산기",

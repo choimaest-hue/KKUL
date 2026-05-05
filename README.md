@@ -22,10 +22,11 @@
 1. 미국/한국 종목 혼합 계산 지원
 2. 한국 6자리 종목코드 입력 시 자동으로 .KS/.KQ 후보 조회
 3. 매수 라인 무제한 추가/삭제
-4. 비중 합계 100% 검증
-5. 광고 슬롯(AdSense/AdFit) 영역 자동 숨김
+4. 비중 합계 100% 초과 방지, 미만분은 현금 보유로 계산
+5. Kakao AdFit 광고 슬롯 자동 숨김
 	- 광고가 실제로 로드되지 않으면 영역이 접혀서 UI를 가리지 않음
-6. 데스크톱/모바일 반응형 레이아웃
+6. PWA 설치용 manifest, 아이콘, 스크린샷 포함
+7. 데스크톱/모바일 반응형 레이아웃
 
 ## 로컬 실행
 
@@ -49,21 +50,21 @@ npm.cmd run dev
 
 파일: .env.local
 
-1. NEXT_PUBLIC_ADSENSE_CLIENT
-2. NEXT_PUBLIC_ADSENSE_SLOT_TOP
-3. NEXT_PUBLIC_ADFIT_CLIENT
-4. NEXT_PUBLIC_ADFIT_UNIT_BOTTOM
+1. NEXT_PUBLIC_ADFIT_UNIT_TOP_DESKTOP: 데스크톱 상단 728x90
+2. NEXT_PUBLIC_ADFIT_UNIT_TOP_MOBILE: 모바일 상단 320x50, 선택 사항
+3. NEXT_PUBLIC_ADFIT_UNIT_MID: 모바일/폼 하단 300x250
+4. NEXT_PUBLIC_ADFIT_UNIT_BOTTOM: 결과 하단 320x100
 
-광고 관련 환경 변수를 비워두면 광고 영역은 렌더링되지 않습니다.
+사용하지 않을 광고 위치는 Vercel에서 빈 문자열로 등록하면 영역이 렌더링되지 않습니다.
 
 ## Vercel 배포
 
 1. GitHub 저장소를 Vercel에 Import
 2. Framework Preset: Next.js 확인
 3. Environment Variables에 아래 값 등록
-	- NEXT_PUBLIC_ADSENSE_CLIENT
-	- NEXT_PUBLIC_ADSENSE_SLOT_TOP
-	- NEXT_PUBLIC_ADFIT_CLIENT
+	- NEXT_PUBLIC_ADFIT_UNIT_TOP_DESKTOP
+	- NEXT_PUBLIC_ADFIT_UNIT_TOP_MOBILE
+	- NEXT_PUBLIC_ADFIT_UNIT_MID
 	- NEXT_PUBLIC_ADFIT_UNIT_BOTTOM
 4. Deploy
 

@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+const iconSizes = [72, 96, 128, 144, 152, 180, 192, 384, 512, 1024] as const;
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
@@ -17,18 +19,12 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["finance", "utilities", "productivity"],
     prefer_related_applications: false,
     icons: [
-      {
-        src: "/icons/icon-192.png",
-        sizes: "192x192",
+      ...iconSizes.map((size) => ({
+        src: `/icons/icon-${size}.png`,
+        sizes: `${size}x${size}`,
         type: "image/png",
-        purpose: "any",
-      },
-      {
-        src: "/icons/icon-512.png",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "any",
-      },
+        purpose: "any" as const,
+      })),
       {
         src: "/icons/icon-512-maskable.png",
         sizes: "512x512",
@@ -43,6 +39,11 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "주식 기회비용을 바로 계산합니다",
         url: "/",
         icons: [
+          {
+            src: "/icons/icon-96.png",
+            sizes: "96x96",
+            type: "image/png",
+          },
           {
             src: "/icons/icon-192.png",
             sizes: "192x192",
