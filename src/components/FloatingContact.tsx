@@ -1,10 +1,23 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useState } from "react";
 
+const BANK = "웰컴저축은행";
+const ACCOUNT = "06601213519539";
+const HOLDER = "최**";
+const TOSS_LINK = `supertoss://send?bank=${encodeURIComponent(BANK)}&accountNo=${ACCOUNT}`;
+
 export default function FloatingContact() {
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(ACCOUNT).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   return (
     <>
@@ -19,16 +32,13 @@ export default function FloatingContact() {
         </span>
       </button>
 
-      {/* 모달 오버레이 */}
       {open && (
         <div
           className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
           onClick={() => setOpen(false)}
         >
-          {/* 배경 딤 */}
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
-          {/* 모달 카드 */}
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
@@ -43,7 +53,6 @@ export default function FloatingContact() {
             }}
             className="sm:mb-0 sm:rounded-lg"
           >
-            {/* 닫기 버튼 */}
             <button
               onClick={() => setOpen(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none"
@@ -52,7 +61,6 @@ export default function FloatingContact() {
               ✕
             </button>
 
-            {/* 헤더 */}
             <div className="text-center mb-6">
               <p className="text-4xl mb-1">🦜</p>
               <h2 style={{ fontFamily: "'Do Hyeon', sans-serif", fontSize: "1.3rem", color: "var(--navy)" }}>
@@ -63,7 +71,6 @@ export default function FloatingContact() {
               </p>
             </div>
 
-            {/* 문의 섹션 */}
             <div
               style={{
                 background: "#fff",
@@ -91,15 +98,12 @@ export default function FloatingContact() {
                   textDecoration: "none",
                   transition: "opacity 0.15s",
                 }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.85")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")}
               >
                 <span style={{ fontSize: "1.2rem" }}>✉️</span>
                 <span>choimaest@naver.com</span>
               </a>
             </div>
 
-            {/* 후원 섹션 */}
             <div
               style={{
                 background: "#fff",
@@ -108,23 +112,79 @@ export default function FloatingContact() {
                 border: "1px solid #f0f0f0",
               }}
             >
-              <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "#888", marginBottom: "8px", letterSpacing: "0.05em" }}>
+              <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "#888", marginBottom: "10px", letterSpacing: "0.05em" }}>
                 ☕ 개발자 커피 후원
               </p>
-              <p style={{ fontSize: "0.8rem", color: "#555", marginBottom: "10px" }}>
-                껄껄무새가 계속 울 수 있도록 커피 한 잔 사주세요 🙏
-              </p>
 
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+              <div
+                style={{
+                  background: "var(--yellow-l)",
+                  borderRadius: "8px",
+                  padding: "12px 14px",
+                  marginBottom: "10px",
+                  border: "1px dashed var(--teal)",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                  <span style={{ fontSize: "0.78rem", color: "#888" }}>{BANK}</span>
+                  <span style={{ fontSize: "0.78rem", color: "#888" }}>예금주: {HOLDER}</span>
+                </div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--navy)", letterSpacing: "0.06em" }}>
+                  {ACCOUNT}
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "8px", marginBottom: "14px" }}>
+                <a
+                  href={TOSS_LINK}
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    background: "#3182f6",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    padding: "11px 8px",
+                    fontWeight: 700,
+                    fontSize: "0.88rem",
+                    textDecoration: "none",
+                    transition: "opacity 0.15s",
+                  }}
+                >
+                  <span>💙</span>
+                  <span>토스로 송금</span>
+                </a>
+                <button
+                  onClick={handleCopy}
+                  style={{
+                    flex: 1,
+                    background: copied ? "#22c55e" : "var(--yellow)",
+                    color: "var(--ink)",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "11px 8px",
+                    fontWeight: 700,
+                    fontSize: "0.88rem",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                  }}
+                >
+                  {copied ? "✅ 복사됐어요!" : "📋 계좌 복사"}
+                </button>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
                 <Image
                   src="/toss-qr.png"
-                  alt="토스 후원 QR코드"
-                  width={180}
-                  height={180}
-                  style={{ borderRadius: "8px", border: "1px solid #e0e0e0" }}
+                  alt="토스 송금 QR코드"
+                  width={160}
+                  height={160}
+                  style={{ borderRadius: "6px", border: "1px solid #e0e0e0" }}
                 />
-                <p style={{ fontSize: "0.75rem", color: "#888", margin: 0 }}>
-                  📱 카메라로 스캔하면 바로 후원할 수 있어요
+                <p style={{ fontSize: "0.72rem", color: "#aaa", margin: 0 }}>
+                  📱 토스 앱으로 스캔하면 바로 송금돼요
                 </p>
               </div>
             </div>
