@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "refresh:stocks": "node scripts/generate-stock-data.mjs",
+    "validate:stocks": "node scripts/validate-stock-data.mjs"
   },
   "dependencies": {
     "next": "16.2.4",

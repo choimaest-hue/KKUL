@@ -1,4 +1,6 @@
-﻿export type Stock = {
+﻿import { GENERATED_STOCKS } from "./generatedStocks";
+
+export type Stock = {
   symbol: string;
   nameKo: string;
   nameEn: string;
@@ -6,7 +8,7 @@
   tags: string[];
 };
 
-export const STOCKS: Stock[] = [
+const CURATED_STOCKS: Stock[] = [
   // ── 미국 주식 ──────────────────────────────────────────────────
   { symbol: "AAPL",  nameKo: "애플",          nameEn: "Apple",                    market: "US", tags: ["아이폰", "맥북", "iphone", "macbook", "앱스토어"] },
   { symbol: "MSFT",  nameKo: "마이크로소프트", nameEn: "Microsoft",                market: "US", tags: ["MS", "윈도우", "windows", "azure", "오피스", "office"] },
@@ -226,9 +228,9 @@ export const STOCKS: Stock[] = [
   { symbol: "010950", nameKo: "S-Oil",               nameEn: "S-Oil Corporation",        market: "KS", tags: ["정유", "석유", "에너지"] },
   { symbol: "271560", nameKo: "오리온",              nameEn: "Orion",                    market: "KS", tags: ["과자", "식품", "초코파이", "소비재"] },
   { symbol: "352820", nameKo: "HYBE",                nameEn: "HYBE",                     market: "KS", tags: ["BTS", "아이돌", "엔터", "하이브", "k팝", "kpop"] },
-  { symbol: "041510", nameKo: "SM엔터테인먼트",      nameEn: "SM Entertainment",         market: "KS", tags: ["엔터", "아이돌", "SM", "k팝"] },
-  { symbol: "035900", nameKo: "JYP Ent.",            nameEn: "JYP Entertainment",        market: "KS", tags: ["엔터", "트와이스", "JYP", "k팝"] },
-  { symbol: "122870", nameKo: "와이지엔터테인먼트", nameEn: "YG Entertainment",         market: "KS", tags: ["엔터", "블랙핑크", "YG", "k팝"] },
+  { symbol: "041510", nameKo: "SM엔터테인먼트",      nameEn: "SM Entertainment",         market: "KQ", tags: ["엔터", "아이돌", "SM", "k팝"] },
+  { symbol: "035900", nameKo: "JYP Ent.",            nameEn: "JYP Entertainment",        market: "KQ", tags: ["엔터", "트와이스", "JYP", "k팝"] },
+  { symbol: "122870", nameKo: "와이지엔터테인먼트", nameEn: "YG Entertainment",         market: "KQ", tags: ["엔터", "블랙핑크", "YG", "k팝"] },
   { symbol: "259960", nameKo: "크래프톤",            nameEn: "Krafton",                  market: "KS", tags: ["게임", "배그", "배틀그라운드", "PUBG"] },
   { symbol: "042700", nameKo: "한미반도체",          nameEn: "Hanmi Semiconductor",      market: "KS", tags: ["반도체장비", "HBM", "TC본더"] },
   { symbol: "079550", nameKo: "LIG넥스원",           nameEn: "LIG Nex1",                 market: "KS", tags: ["방산", "방위산업", "미사일"] },
@@ -258,7 +260,7 @@ export const STOCKS: Stock[] = [
   { symbol: "329180", nameKo: "HD현대중공업",         nameEn: "HD Hyundai Heavy Industries", market: "KS", tags: ["조선", "LNG선", "해양플랜트", "HD현대"] },
   { symbol: "010140", nameKo: "삼성중공업",           nameEn: "Samsung Heavy Industries",  market: "KS", tags: ["조선", "LNG선", "드릴쉽", "삼성"] },
   { symbol: "009540", nameKo: "HD한국조선해양",       nameEn: "HD Korea Shipbuilding",     market: "KS", tags: ["조선지주", "HD현대", "조선"] },
-  { symbol: "267270", nameKo: "HD현대",               nameEn: "HD Hyundai",               market: "KS", tags: ["HD지주", "조선", "현대"] },
+  { symbol: "267250", nameKo: "HD현대",               nameEn: "HD Hyundai",               market: "KS", tags: ["HD지주", "조선", "현대"] },
 
   // 디스플레이/부품
   { symbol: "034220", nameKo: "LG디스플레이",         nameEn: "LG Display",               market: "KS", tags: ["OLED", "디스플레이", "패널", "LG"] },
@@ -306,8 +308,7 @@ export const STOCKS: Stock[] = [
   { symbol: "357780", nameKo: "솔브레인",            nameEn: "Soulbrain",                market: "KQ", tags: ["반도체소재", "화학"] },
   { symbol: "086900", nameKo: "메디톡스",            nameEn: "Medytox",                  market: "KQ", tags: ["바이오", "보톡스", "미용"] },
   { symbol: "145020", nameKo: "휴젤",                nameEn: "Hugel",                    market: "KQ", tags: ["바이오", "보톡스", "필러", "미용"] },
-  { symbol: "403870", nameKo: "HPSP",                nameEn: "HPSP",                     market: "KQ", tags: ["반도체장비", "HPM"] },
-  { symbol: "096040", nameKo: "두산퓨얼셀",          nameEn: "Doosan Fuel Cell",         market: "KQ", tags: ["수소", "연료전지", "신재생에너지"] },
+  { symbol: "336260", nameKo: "두산퓨얼셀",          nameEn: "Doosan Fuel Cell",         market: "KS", tags: ["수소", "연료전지", "신재생에너지"] },
 
   // 바이오/헬스케어
   { symbol: "196170", nameKo: "알테오젠",             nameEn: "Alteogen",                 market: "KQ", tags: ["바이오", "항체약물접합", "ADC", "피하주사", "신약"] },
@@ -410,6 +411,8 @@ export const STOCKS: Stock[] = [
   { symbol: "131290", nameKo: "티에스이",          nameEn: "TSE",                      market: "KQ", tags: ["반도체장비", "테스트소켓", "프로브카드"] },
   { symbol: "460930", nameKo: "현대힘스",          nameEn: "Hyundai Hims",             market: "KQ", tags: ["방산부품", "현대로템", "장갑차"] },
 ];
+
+export const STOCKS: Stock[] = [...CURATED_STOCKS, ...GENERATED_STOCKS];
 
 function scoreStock(stock: Stock, query: string): number {
   const q = query.toLowerCase().trim();
