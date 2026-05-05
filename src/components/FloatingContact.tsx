@@ -115,30 +115,18 @@ export default function FloatingContact() {
                 껄껄무새가 계속 울 수 있도록 커피 한 잔 사주세요 🙏
               </p>
 
-              <a
-                href="https://toss.me/choimaest"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "10px",
-                  background: "#3182f6",
-                  color: "#fff",
-                  borderRadius: "8px",
-                  padding: "11px 16px",
-                  fontWeight: 700,
-                  fontSize: "0.9rem",
-                  textDecoration: "none",
-                  transition: "opacity 0.15s",
-                }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.85")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")}
-              >
-                <span style={{ fontSize: "1.2rem" }}>💙</span>
-                <span>토스로 후원하기</span>
-              </a>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                <Image
+                  src="/toss-qr.png"
+                  alt="토스 후원 QR코드"
+                  width={180}
+                  height={180}
+                  style={{ borderRadius: "8px", border: "1px solid #e0e0e0" }}
+                />
+                <p style={{ fontSize: "0.75rem", color: "#888", margin: 0 }}>
+                  📱 카메라로 스캔하면 바로 후원할 수 있어요
+                </p>
+              </div>
             </div>
 
             <p style={{ textAlign: "center", fontSize: "0.72rem", color: "#bbb", marginTop: "16px" }}>
