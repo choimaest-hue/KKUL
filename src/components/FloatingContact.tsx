@@ -104,6 +104,34 @@ export default function FloatingContact() {
               </a>
             </div>
 
+            {/* QR 코드 섹션 */}
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: "8px",
+                padding: "16px 18px",
+                marginBottom: "10px",
+                border: "1px solid #f0f0f0",
+              }}
+            >
+              <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "#888", marginBottom: "10px", letterSpacing: "0.05em" }}>
+                📱 QR로 후원하기
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
+                <Image
+                  src="/toss-qr.png"
+                  alt="후원 QR코드"
+                  width={170}
+                  height={170}
+                  style={{ borderRadius: "6px", border: "1px solid #e0e0e0" }}
+                />
+                <p style={{ fontSize: "0.72rem", color: "#aaa", margin: 0 }}>
+                  카메라로 스캔하면 바로 후원돼요
+                </p>
+              </div>
+            </div>
+
+            {/* 직접 송금 섹션 */}
             <div
               style={{
                 background: "#fff",
@@ -113,9 +141,8 @@ export default function FloatingContact() {
               }}
             >
               <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "#888", marginBottom: "10px", letterSpacing: "0.05em" }}>
-                ☕ 개발자 커피 후원
+                ☕ 직접 송금
               </p>
-
               <div
                 style={{
                   background: "var(--yellow-l)",
@@ -133,8 +160,7 @@ export default function FloatingContact() {
                   {ACCOUNT}
                 </div>
               </div>
-
-              <div style={{ display: "flex", gap: "8px", marginBottom: "14px" }}>
+              <div style={{ display: "flex", gap: "8px" }}>
                 <a
                   href={TOSS_LINK}
                   style={{
@@ -173,19 +199,6 @@ export default function FloatingContact() {
                 >
                   {copied ? "✅ 복사됐어요!" : "📋 계좌 복사"}
                 </button>
-              </div>
-
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
-                <Image
-                  src="/toss-qr.png"
-                  alt="토스 송금 QR코드"
-                  width={160}
-                  height={160}
-                  style={{ borderRadius: "6px", border: "1px solid #e0e0e0" }}
-                />
-                <p style={{ fontSize: "0.72rem", color: "#aaa", margin: 0 }}>
-                  📱 토스 앱으로 스캔하면 바로 송금돼요
-                </p>
               </div>
             </div>
 
