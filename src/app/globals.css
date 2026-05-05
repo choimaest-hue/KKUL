@@ -20,8 +20,8 @@
   --page-bg:     #F2F5FF;
   --card-bg:     #FFFFFF;
 
-  --r-card:   26px;
-  --r-input:  14px;
+  --r-card:   8px;
+  --r-input:  8px;
   --r-pill:   999px;
 
   --shadow-xs:   0 1px 4px rgba(7,13,26,0.06);
@@ -133,7 +133,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 /* ── Buy line inner card ────────────────────────────────────── */
 .buy-line {
   border: 1.5px solid rgba(15,25,40,0.08);
-  border-radius: 18px;
+  border-radius: 8px;
   background: #F7F9FC;
   padding: 14px;
   display: grid;
@@ -179,7 +179,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 
 .remove-btn {
   border: 1.5px solid rgba(239,68,68,0.22);
-  border-radius: 12px;
+  border-radius: 8px;
   background: #FFF5F5;
   color: #B91C1C;
   font-size: 12px;
@@ -194,7 +194,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 
 .calc-btn {
   border: none;
-  border-radius: 18px;
+  border-radius: 10px;
   background: linear-gradient(145deg, #24D6B4, var(--teal-d));
   color: white;
   font-size: 18px;
@@ -249,7 +249,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 /* ── Result cards ───────────────────────────────────────────── */
 .result-card {
   border: 1.5px solid rgba(15,25,40,0.07);
-  border-radius: 20px;
+  border-radius: 8px;
   background: var(--card-bg);
   padding: 18px 20px;
   box-shadow: var(--shadow-sm);
@@ -276,7 +276,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 }
 
 .metric-box {
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -314,21 +314,21 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 .verdict-lose {
   background: linear-gradient(135deg, #FFF0F2 0%, #FFF7EE 100%);
   border: 2px solid #FFCDD5;
-  border-radius: 24px;
+  border-radius: 8px;
   padding: 22px;
   box-shadow: 0 4px 20px rgba(239,68,68,0.10);
 }
 .verdict-win {
   background: linear-gradient(135deg, #EDFDF5 0%, #EEF8FF 100%);
   border: 2px solid #A7F3D0;
-  border-radius: 24px;
+  border-radius: 8px;
   padding: 22px;
   box-shadow: 0 4px 20px rgba(16,185,129,0.10);
 }
 .verdict-tie {
   background: linear-gradient(135deg, #FFFBEB 0%, #F5F2FF 100%);
   border: 2px solid #FDE68A;
-  border-radius: 24px;
+  border-radius: 8px;
   padding: 22px;
   box-shadow: 0 4px 20px rgba(245,158,11,0.10);
 }
@@ -336,7 +336,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 /* ── Error ──────────────────────────────────────────────────── */
 .error-box {
   border: 2px solid #FECACA;
-  border-radius: 16px;
+  border-radius: 8px;
   background: #FFF5F5;
   padding: 14px 18px;
   color: #991B1B;
@@ -368,5 +368,62 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* ── Contact floating action ───────────────────────────────── */
+.contact-fab {
+  position: fixed;
+  right: 14px;
+  bottom: 76px;
+  z-index: 40;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(15,25,40,0.10);
+  border-radius: 999px;
+  background: #FFF4B8;
+  box-shadow: 0 8px 24px rgba(7,13,26,0.18);
+  cursor: pointer;
+}
+.contact-fab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255,210,74,0.42), 0 8px 24px rgba(7,13,26,0.18);
+}
+.contact-fab-tooltip {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translate(4px, -50%);
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.contact-fab:hover .contact-fab-tooltip,
+.contact-fab:focus-visible .contact-fab-tooltip {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+@media (max-width: 640px) {
+  .contact-fab {
+    right: 12px;
+    bottom: 74px;
+    width: 48px;
+    height: 48px;
+  }
+  .contact-fab-tooltip { display: none; }
+}
+@media (max-height: 720px) and (min-width: 768px) {
+  .contact-fab {
+    display: none;
+  }
 }
 

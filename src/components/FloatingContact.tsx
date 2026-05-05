@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 export default function FloatingContact() {
@@ -19,26 +20,13 @@ export default function FloatingContact() {
 
   return (
     <>
-      {/* 보글보글 플로팅 버튼 */}
       <button
         onClick={() => setOpen(true)}
         aria-label="문의 및 후원"
-        style={{ bottom: "90px" }}
-        className="fixed right-4 z-40 flex flex-col items-center gap-0.5 animate-bob"
+        className="contact-fab animate-bob"
       >
-        <span className="text-3xl drop-shadow-lg select-none">🦜</span>
-        <span
-          style={{
-            fontSize: "10px",
-            background: "var(--yellow)",
-            color: "var(--ink)",
-            borderRadius: "99px",
-            padding: "1px 7px",
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
-          }}
-        >
+        <Image src="/mascot-owl.svg" alt="" width={42} height={42} priority={false} />
+        <span className="contact-fab-tooltip" aria-hidden="true">
           문의/후원
         </span>
       </button>
@@ -56,16 +44,16 @@ export default function FloatingContact() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "var(--cream)",
+              background: "var(--card-bg)",
               color: "var(--ink)",
-              borderRadius: "20px 20px 0 0",
+              borderRadius: "8px 8px 0 0",
               maxWidth: "440px",
               width: "100%",
               padding: "28px 24px 36px",
               position: "relative",
               boxShadow: "0 -8px 40px rgba(0,0,0,0.25)",
             }}
-            className="sm:rounded-2xl sm:mb-0"
+            className="sm:mb-0 sm:rounded-lg"
           >
             {/* 닫기 버튼 */}
             <button
@@ -91,7 +79,7 @@ export default function FloatingContact() {
             <div
               style={{
                 background: "#fff",
-                borderRadius: "14px",
+                borderRadius: "8px",
                 padding: "16px 18px",
                 marginBottom: "14px",
                 border: "1px solid #f0f0f0",
@@ -108,7 +96,7 @@ export default function FloatingContact() {
                   gap: "10px",
                   background: "var(--teal)",
                   color: "#fff",
-                  borderRadius: "10px",
+                  borderRadius: "8px",
                   padding: "11px 16px",
                   fontWeight: 700,
                   fontSize: "0.9rem",
@@ -127,7 +115,7 @@ export default function FloatingContact() {
             <div
               style={{
                 background: "#fff",
-                borderRadius: "14px",
+                borderRadius: "8px",
                 padding: "16px 18px",
                 border: "1px solid #f0f0f0",
               }}
@@ -142,8 +130,8 @@ export default function FloatingContact() {
               {/* 계좌 복사 영역 */}
               <div
                 style={{
-                  background: "var(--cream)",
-                  borderRadius: "10px",
+                  background: "var(--yellow-l)",
+                  borderRadius: "8px",
                   padding: "12px 14px",
                   marginBottom: "10px",
                   border: "1px dashed var(--teal)",
@@ -165,7 +153,7 @@ export default function FloatingContact() {
                   background: copied ? "#22c55e" : "var(--yellow)",
                   color: "var(--ink)",
                   border: "none",
-                  borderRadius: "10px",
+                  borderRadius: "8px",
                   padding: "11px",
                   fontWeight: 700,
                   fontSize: "0.9rem",

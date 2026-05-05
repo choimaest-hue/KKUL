@@ -105,7 +105,10 @@ function DetailModal({ data, onClose }: { data: DetailData; onClose: () => void 
     finally { setLoadingRange(false); }
   }, [data.symbol, data.history]);
 
-  useEffect(() => { loadRange(range); }, [range, loadRange]);
+  useEffect(() => {
+    const timeout = window.setTimeout(() => { void loadRange(range); }, 0);
+    return () => window.clearTimeout(timeout);
+  }, [range, loadRange]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -217,7 +220,10 @@ export default function MarketIndices() {
     });
   }, []);
 
-  useEffect(() => { fetchAll(); }, [fetchAll]);
+  useEffect(() => {
+    const timeout = window.setTimeout(fetchAll, 0);
+    return () => window.clearTimeout(timeout);
+  }, [fetchAll]);
 
   const openDetail = async (def: IndexDef) => {
     const s = summaries[def.symbol];

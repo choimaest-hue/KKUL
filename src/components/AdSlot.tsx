@@ -34,9 +34,11 @@ export default function AdSlot({ unit, width, height, className = "" }: AdSlotPr
   return (
     <div
       ref={hostRef}
-      className={`transition-all duration-500 overflow-hidden ${
-        visible ? "opacity-100" : "max-h-0 opacity-0"
-      } ${className}`}
+      className={`overflow-hidden transition-all duration-500 ${
+        visible ? `opacity-100 ${className}` : "opacity-0"
+      }`}
+      style={{ maxHeight: visible ? height + 48 : 0 }}
+      aria-hidden={!visible}
     >
       <Script
         id="adfit-lib"

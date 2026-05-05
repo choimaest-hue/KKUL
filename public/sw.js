@@ -1,11 +1,18 @@
-const CACHE_NAME = "kkul-shell-v1";
+const CACHE_NAME = "kkul-shell-v3";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
+  "/icon.svg",
+  "/apple-icon.png",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/icon-512-maskable.png",
+  "/logo-kkul.svg",
   "/mascot-owl.svg",
+  "/mascot-laugh.svg",
+  "/mascot-shock.svg",
+  "/screenshots/app-wide.png",
+  "/screenshots/app-narrow.png",
 ];
 
 self.addEventListener("install", (event) => {

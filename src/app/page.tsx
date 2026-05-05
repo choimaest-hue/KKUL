@@ -44,6 +44,7 @@ type BuyResult = {
 };
 
 type CalcResult = {
+  verdictMessageIndex: number;
   soldCurrency: Currency;
   soldResolvedSymbol: string;
   soldMatchedDate: string;
@@ -140,8 +141,12 @@ const VERDICT_CONFIG = {
 
 /* ── Component ───────────────────────────────────────────────── */
 export default function Home() {
-  const adfitTopUnit    = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP    ?? "DAN-Xd16K8L1O7LOmPKB";
-  const adfitMidUnit    = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID    ?? "DAN-lgSDOXih0RxP3TyP";
+  const adfitTopDesktopUnit =
+    process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP_DESKTOP ??
+    process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ??
+    "DAN-Xd16K8L1O7LOmPKB";
+  const adfitTopMobileUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP_MOBILE ?? "";
+  const adfitMidUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID ?? "DAN-lgSDOXih0RxP3TyP";
   const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "DAN-v6xcgwZ4Fe6Q2WOh";
 
   const resultRef = useRef<HTMLElement>(null);
@@ -250,6 +255,7 @@ export default function Home() {
 
       const totalCurrentValue = buyResults.reduce((s, r) => s + r.currentValueBase, 0);
       setResult({
+        verdictMessageIndex: Math.floor(Date.now() / 1000),
         soldCurrency, soldResolvedSymbol: soldPrice.resolvedSymbol, soldMatchedDate: soldPrice.matchedDate,
         soldPrice: soldPrice.close, soldProceeds,
         keepMatchedDate: keepPrice.matchedDate, keepPrice: keepPrice.close, keepValue,
@@ -270,8 +276,8 @@ export default function Home() {
   /* verdict config */
   const verdict = result ? getVerdict(result.opportunityCostVsHold) : null;
   const vc = verdict ? VERDICT_CONFIG[verdict] : null;
-  const verdictMsg = vc
-    ? vc.messages[Math.floor(Date.now() / 1000) % vc.messages.length]
+  const verdictMsg = vc && result
+    ? vc.messages[result.verdictMessageIndex % vc.messages.length]
     : "";
 
   /* allocation bar color */
@@ -283,14 +289,14 @@ export default function Home() {
     <div className="min-h-screen pb-24" style={{ background: "var(--page-bg)" }}>
 
       {/* ── HEADER ───────────────────────────────────────────── */}
-      <header className="relative overflow-hidden" style={{ background: "var(--navy)" }}>
+      <header
+        className="relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, var(--navy) 0%, var(--navy-m) 62%, #111827 100%)" }}
+      >
         <div className="absolute inset-0 bg-noise opacity-30" />
-        <div className="absolute -top-24 -left-16 h-80 w-80 rounded-full opacity-10 blur-3xl" style={{ background: "var(--yellow)" }} />
-        <div className="absolute top-8 right-16 h-64 w-64 rounded-full opacity-14 blur-3xl" style={{ background: "var(--teal)" }} />
-        <div className="absolute -bottom-10 left-1/3 h-48 w-48 rounded-full opacity-8 blur-3xl" style={{ background: "#C84BE6" }} />
 
         <div className="relative mx-auto max-w-5xl px-5 pt-8 pb-7 sm:pt-11 sm:pb-9">
-          <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center justify-between gap-3 sm:gap-6">
             {/* Title block */}
             <div className="flex-1 min-w-0">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
@@ -304,9 +310,9 @@ export default function Home() {
                 style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>
                 껄껄무새
               </h1>
-              <p className="mt-3 max-w-md text-sm font-semibold leading-relaxed text-slate-300 sm:text-base">
-                매도했더니 오르고, 갈아탔더니 떨어질 때.{" "}
-                <span className="text-slate-500">웃프게 계산해주는 기회비용 계산기.</span>
+              <p className="mt-3 max-w-2xl text-sm font-semibold leading-relaxed text-slate-300 sm:text-base">
+                매도 후 갈아탄 선택의{" "}
+                <span className="text-slate-500">기회비용을 웃프게 확인합니다.</span>
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {["종가 기준", "미국·한국 주식", "환율 자동반영"].map((tag) => (
@@ -318,21 +324,26 @@ export default function Home() {
               </div>
             </div>
             {/* Mascot */}
-            <div className="relative shrink-0">
-              <div className="absolute inset-0 rounded-full blur-2xl" style={{ background: "var(--yellow)", opacity: 0.18 }} />
+            <div className="relative hidden shrink-0 sm:block">
               <Image src="/mascot-owl.svg" alt="껄껄무새" width={128} height={128}
-                className="relative drop-shadow-2xl h-24 w-24 sm:h-32 sm:w-32"
+                className="relative h-20 w-20 drop-shadow-2xl sm:h-32 sm:w-32"
                 priority />
             </div>
           </div>
         </div>
-
-        {/* AdFit top banner */}
-        <div className="relative adfit-wrap pb-5 px-5">
-          <AdSlot unit={adfitTopUnit} width={320} height={50} className="sm:hidden" />
-          <AdSlot unit={adfitTopUnit} width={728} height={90} className="hidden sm:block" />
-        </div>
       </header>
+
+      {/* AdFit top banner */}
+      {adfitTopMobileUnit && (
+        <div className="adfit-wrap px-4 sm:hidden">
+          <AdSlot unit={adfitTopMobileUnit} width={320} height={50} className="my-4" />
+        </div>
+      )}
+      {adfitTopDesktopUnit && (
+        <div className="adfit-wrap hidden px-5 sm:flex">
+          <AdSlot unit={adfitTopDesktopUnit} width={728} height={90} className="my-5" />
+        </div>
+      )}
 
       {/* ── MAIN ─────────────────────────────────────────────── */}
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-5 lg:grid lg:grid-cols-[1fr_420px] lg:gap-7 lg:py-8">
@@ -440,8 +451,8 @@ export default function Home() {
         </div>
 
         {/* Mobile AdFit — form 과 results 사이 */}
-        <div className="adfit-wrap lg:hidden py-5">
-          <AdSlot unit={adfitMidUnit} width={300} height={250} />
+        <div className="adfit-wrap lg:hidden">
+          <AdSlot unit={adfitMidUnit} width={300} height={250} className="my-5" />
         </div>
 
         {/* RIGHT: RESULTS */}
@@ -451,17 +462,15 @@ export default function Home() {
           {!result && !loading && (
             <div className="step-card flex flex-col items-center gap-6 py-12 text-center">
               <div className="relative">
-                <div className="absolute inset-0 rounded-full blur-3xl opacity-25"
-                  style={{ background: "var(--yellow)" }} />
                 <Image src="/mascot-owl.svg" alt="껄껄무새" width={108} height={108}
                   className="relative opacity-90" />
               </div>
               <div>
                 <p className="text-xl font-black" style={{ fontFamily: "var(--font-do-hyeon), sans-serif", color: "var(--ink)" }}>
-                  아직 계산 전이에요
+                  계산 대기 중
                 </p>
                 <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
-                  ①②③ 입력 후 껄껄 계산하기를 눌러주세요
+                  매도의 기억을 숫자로 확인해볼 시간입니다
                 </p>
               </div>
             </div>
@@ -484,8 +493,6 @@ export default function Home() {
               <div className={vc.bannerClass}>
                 <div className="flex items-start gap-4">
                   <div className="relative shrink-0">
-                    <div className="absolute inset-0 rounded-full blur-2xl opacity-35"
-                      style={{ background: verdict === "lose" ? "#FF6B6B" : verdict === "win" ? "#22C55E" : "#FFD24A" }} />
                     <Image src={vc.mascot} alt="판정 마스코트" width={84} height={84}
                       className="relative drop-shadow-lg" />
                   </div>
@@ -551,7 +558,7 @@ export default function Home() {
                     const pnl = line.currentValueBase - line.investedBase;
                     const isProfit = pnl >= 0;
                     return (
-                      <div key={line.id} className="rounded-2xl p-3"
+                      <div key={line.id} className="rounded-lg p-3"
                         style={{ border: "1.5px solid rgba(15,25,40,0.07)", background: "#F8FAFC" }}>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-black" style={{ color: "var(--ink)" }}>{line.symbol}</span>
@@ -584,7 +591,7 @@ export default function Home() {
 
               {/* AdFit bottom slot */}
               <div className="adfit-wrap pt-2">
-                <AdSlot unit={adfitBottomUnit} width={320} height={100} />
+                <AdSlot unit={adfitBottomUnit} width={320} height={100} className="mt-2" />
               </div>
             </>
           )}

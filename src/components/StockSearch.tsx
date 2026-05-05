@@ -29,17 +29,11 @@ export default function StockSearch({
   placeholder = "종목명 또는 심볼로 검색",
   compact = false,
 }: Props) {
-  const [inputValue, setInputValue] = useState(value);
   const [results, setResults] = useState<Stock[]>([]);
   const [open, setOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Sync external value changes (e.g. reset)
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
 
   const runSearch = (q: string) => {
     const found = searchStocks(q);
@@ -50,7 +44,6 @@ export default function StockSearch({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const q = e.target.value;
-    setInputValue(q);
     onChange(q);
     if (q.trim().length > 0) {
       runSearch(q);
@@ -61,13 +54,12 @@ export default function StockSearch({
   };
 
   const handleFocus = () => {
-    if (inputValue.trim().length > 0 && results.length > 0) {
+    if (value.trim().length > 0 && results.length > 0) {
       setOpen(true);
     }
   };
 
   const select = (stock: Stock) => {
-    setInputValue(stock.symbol);
     onChange(stock.symbol);
     setOpen(false);
     setResults([]);
@@ -132,7 +124,7 @@ export default function StockSearch({
       <div className="relative">
         <input
           ref={inputRef}
-          value={inputValue}
+          value={value}
           onChange={handleChange}
           onFocus={handleFocus}
           onKeyDown={handleKeyDown}
@@ -142,13 +134,12 @@ export default function StockSearch({
           spellCheck={false}
           className={`stock-search-input form-input w-full pr-8 ${compact ? "compact-input" : ""}`}
         />
-        {inputValue && (
+        {value && (
           <button
             type="button"
             tabIndex={-1}
             onMouseDown={(e) => {
               e.preventDefault();
-              setInputValue("");
               onChange("");
               setResults([]);
               setOpen(false);
@@ -191,10 +182,10 @@ export default function StockSearch({
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-1.5">
                   <span className="shrink-0 text-sm font-bold text-slate-900 tabular-nums tracking-wide">
-                    {highlightMatch(stock.symbol, inputValue)}
+                    {highlightMatch(stock.symbol, value)}
                   </span>
                   <span className="min-w-0 truncate text-sm text-slate-700">
-                    {highlightMatch(stock.nameKo, inputValue)}
+                    {highlightMatch(stock.nameKo, value)}
                   </span>
                 </div>
                 <p className="truncate text-xs text-slate-400 leading-tight">
