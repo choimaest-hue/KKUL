@@ -5,18 +5,6 @@ import { useState } from "react";
 
 export default function FloatingContact() {
   const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const ACCOUNT = "93350200000782";
-  const ACCOUNT_HOLDER = "최기호";
-  const BANK = "국민은행";
-
-  function handleCopy() {
-    navigator.clipboard.writeText(ACCOUNT).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
 
   return (
     <>
@@ -127,43 +115,30 @@ export default function FloatingContact() {
                 껄껄무새가 계속 울 수 있도록 커피 한 잔 사주세요 🙏
               </p>
 
-              {/* 계좌 복사 영역 */}
-              <div
+              <a
+                href="https://toss.me/choimaest"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
-                  background: "var(--yellow-l)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                  background: "#3182f6",
+                  color: "#fff",
                   borderRadius: "8px",
-                  padding: "12px 14px",
-                  marginBottom: "10px",
-                  border: "1px dashed var(--teal)",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                  <span style={{ fontSize: "0.78rem", color: "#888" }}>{BANK}</span>
-                  <span style={{ fontSize: "0.78rem", color: "#888" }}>예금주: {ACCOUNT_HOLDER}</span>
-                </div>
-                <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--navy)", letterSpacing: "0.05em" }}>
-                  {ACCOUNT}
-                </div>
-              </div>
-
-              <button
-                onClick={handleCopy}
-                style={{
-                  width: "100%",
-                  background: copied ? "#22c55e" : "var(--yellow)",
-                  color: "var(--ink)",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "11px",
+                  padding: "11px 16px",
                   fontWeight: 700,
                   fontSize: "0.9rem",
-                  cursor: "pointer",
-                  transition: "background 0.2s, transform 0.1s",
-                  transform: copied ? "scale(0.98)" : "scale(1)",
+                  textDecoration: "none",
+                  transition: "opacity 0.15s",
                 }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.85")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")}
               >
-                {copied ? "✅ 복사됐어요!" : "📋 계좌번호 복사"}
-              </button>
+                <span style={{ fontSize: "1.2rem" }}>💙</span>
+                <span>토스로 후원하기</span>
+              </a>
             </div>
 
             <p style={{ textAlign: "center", fontSize: "0.72rem", color: "#bbb", marginTop: "16px" }}>
