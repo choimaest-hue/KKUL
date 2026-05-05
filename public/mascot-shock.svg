@@ -1,32 +1,116 @@
-<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- bg - slightly pale/shocked tint -->
-  <rect width="120" height="120" rx="28" fill="#E8F4FF"/>
-  <rect width="120" height="120" rx="28" fill="#FFE173" opacity="0.55"/>
-  <!-- face -->
-  <ellipse cx="60" cy="56" rx="40" ry="38" fill="#FFFDE7"/>
-  <!-- raised eyebrows (shocked) -->
-  <path d="M28 32 Q40 24 52 32" stroke="#E65100" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <path d="M68 32 Q80 24 92 32" stroke="#E65100" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <!-- wide shocked eyes -->
-  <circle cx="42" cy="50" r="13" fill="white" stroke="#1F2A39" stroke-width="2.5"/>
-  <circle cx="78" cy="50" r="13" fill="white" stroke="#1F2A39" stroke-width="2.5"/>
-  <circle cx="42" cy="52" r="7" fill="#1F2A39"/>
-  <circle cx="78" cy="52" r="7" fill="#1F2A39"/>
-  <circle cx="45" cy="48" r="2.5" fill="white"/>
-  <circle cx="81" cy="48" r="2.5" fill="white"/>
-  <!-- shocked O beak -->
-  <ellipse cx="60" cy="72" rx="9" ry="11" fill="#FF7A33"/>
-  <ellipse cx="60" cy="75" rx="6" ry="7" fill="#BF360C" opacity="0.5"/>
-  <!-- sweat drops -->
-  <path d="M96 28 Q100 38 95 44" stroke="#60B4F7" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <path d="M106 38 Q110 46 106 52" stroke="#60B4F7" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-  <!-- tear drop under left eye -->
-  <path d="M30 58 C27 64 28 72 30 76" stroke="#60B4F7" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <!-- body -->
-  <ellipse cx="60" cy="104" rx="30" ry="16" fill="#FFC107"/>
-  <!-- arms up shocked gesture -->
-  <path d="M24 82 Q10 60 18 44 Q32 62 30 84Z" fill="#FFB300"/>
-  <path d="M96 82 Q110 60 102 44 Q88 62 90 84Z" fill="#FFB300"/>
-  <!-- crest -->
-  <path d="M48 18 Q52 8 60 14 Q68 8 72 18" stroke="#E65100" stroke-width="3" stroke-linecap="round" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="s-bg" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#EEF6FF"/>
+      <stop offset="100%" stop-color="#D4EEFF"/>
+    </radialGradient>
+    <radialGradient id="s-body" cx="38%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#5CDB8A"/>
+      <stop offset="100%" stop-color="#23884A"/>
+    </radialGradient>
+    <radialGradient id="s-face" cx="45%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F0F8FF"/>
+    </radialGradient>
+    <radialGradient id="s-nose" cx="28%" cy="26%" r="72%">
+      <stop offset="0%" stop-color="#FF7A7A"/>
+      <stop offset="100%" stop-color="#D80000"/>
+    </radialGradient>
+    <filter id="s-shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3.5" flood-color="#0A1020" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <!-- Background (cool blue-white — shocked/surprised) -->
+  <rect width="200" height="200" rx="40" fill="url(#s-bg)"/>
+
+  <!-- Shock sparkle lines -->
+  <path d="M22,18 L28,28 L16,28 Z" fill="#FFD24A" opacity="0.8"/>
+  <path d="M178,22 L184,32 L172,32 Z" fill="#FFD24A" opacity="0.8"/>
+  <path d="M14,55 L12,42 L22,50 Z" fill="#FFD24A" opacity="0.55"/>
+  <path d="M186,55 L188,42 L178,50 Z" fill="#FFD24A" opacity="0.55"/>
+
+  <!-- Body (upright, stiff with shock) -->
+  <ellipse cx="100" cy="153" rx="48" ry="41" fill="url(#s-body)" filter="url(#s-shadow)"/>
+  <ellipse cx="94" cy="142" rx="22" ry="17" fill="rgba(255,255,255,0.20)"/>
+
+  <!-- Wing left spread wide out -->
+  <path d="M54,136 Q18,118 14,88 Q38,104 58,128 Z" fill="#23884A"/>
+  <path d="M54,136 Q20,120 16,92 Q39,106 57,128 Z" fill="#1A6E3A"/>
+  <ellipse cx="28" cy="108" rx="7" ry="12" fill="#1A9FCC" opacity="0.80" transform="rotate(-40,28,108)"/>
+
+  <!-- Wing right spread wide out -->
+  <path d="M146,136 Q182,118 186,88 Q162,104 142,128 Z" fill="#23884A"/>
+  <path d="M146,136 Q180,120 184,92 Q161,106 143,128 Z" fill="#1A6E3A"/>
+  <ellipse cx="172" cy="108" rx="7" ry="12" fill="#1A9FCC" opacity="0.80" transform="rotate(40,172,108)"/>
+
+  <!-- Tail -->
+  <path d="M88,188 Q82,198 78,200" stroke="#23884A" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M100,190 Q100,200 100,200" stroke="#2A9C55" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M112,188 Q118,198 122,200" stroke="#23884A" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+  <!-- Collar (rainbow) -->
+  <ellipse cx="68" cy="118" rx="13" ry="9" fill="#C038F0" transform="rotate(-30,68,118)"/>
+  <ellipse cx="78" cy="113" rx="13" ry="9" fill="#FF3838" transform="rotate(-18,78,113)"/>
+  <ellipse cx="89" cy="109" rx="13" ry="9" fill="#FF8C30" transform="rotate(-8,89,109)"/>
+  <ellipse cx="100" cy="107" rx="14" ry="9" fill="#FFD24A"/>
+  <ellipse cx="111" cy="109" rx="13" ry="9" fill="#32C264" transform="rotate(8,111,109)"/>
+  <ellipse cx="122" cy="113" rx="13" ry="9" fill="#3888F0" transform="rotate(18,122,113)"/>
+  <circle cx="100" cy="108" r="6.5" fill="#EEF6FF" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>
+
+  <!-- Face -->
+  <ellipse cx="100" cy="74" rx="44" ry="42" fill="url(#s-face)" filter="url(#s-shadow)"/>
+
+  <!-- Raised eyebrows (shocked) -->
+  <path d="M60,50 Q70,42 81,50" stroke="#D4720A" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M119,50 Q130,42 140,50" stroke="#D4720A" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Hat (party hat pushed back on head) -->
+  <path d="M70,44 L98,4 L128,44 Z" fill="#FF4478" transform="rotate(-12,98,24)"/>
+  <ellipse cx="98" cy="45" rx="34" ry="8" fill="#FF6898" transform="rotate(-12,98,45)"/>
+  <circle cx="98" cy="14" r="4.5" fill="#FFD24A"/>
+  <circle cx="88" cy="30" r="3.2" fill="#FFD24A"/>
+  <circle cx="112" cy="28" r="3.2" fill="#FFD24A"/>
+  <circle cx="95" cy="40" r="2.2" fill="rgba(255,255,255,0.9)"/>
+
+  <!-- Left eye makeup -->
+  <path d="M59,64 L63,55 L67,64 L76,68 L67,72 L63,81 L59,72 L50,68 Z" fill="#FFD24A" opacity="0.70"/>
+  <!-- Right eye makeup -->
+  <path d="M141,64 L137,55 L133,64 L124,68 L133,72 L137,81 L141,72 L150,68 Z" fill="#FF8C30" opacity="0.70"/>
+
+  <!-- Eyes HUGE (shocked) -->
+  <circle cx="67" cy="70" r="16" fill="white" stroke="#1A1A2E" stroke-width="2"/>
+  <circle cx="67" cy="71" r="11" fill="#1A4FD8"/>
+  <circle cx="67" cy="71" r="6.5" fill="#0A0E1A"/>
+  <circle cx="71" cy="67" r="3" fill="white"/>
+  <!-- Second highlight tiny -->
+  <circle cx="63" cy="74" r="1.5" fill="rgba(255,255,255,0.7)"/>
+
+  <circle cx="133" cy="70" r="16" fill="white" stroke="#1A1A2E" stroke-width="2"/>
+  <circle cx="133" cy="71" r="11" fill="#1A4FD8"/>
+  <circle cx="133" cy="71" r="6.5" fill="#0A0E1A"/>
+  <circle cx="137" cy="67" r="3" fill="white"/>
+  <circle cx="129" cy="74" r="1.5" fill="rgba(255,255,255,0.7)"/>
+
+  <!-- Beak open in O (shocked) -->
+  <ellipse cx="100" cy="96" rx="11" ry="13" fill="#F5963A"/>
+  <ellipse cx="100" cy="99" rx="7.5" ry="9" fill="#D4720A" opacity="0.60"/>
+  <!-- Inside of mouth -->
+  <ellipse cx="100" cy="101" rx="5.5" ry="6" fill="#8B2800" opacity="0.5"/>
+
+  <!-- Red clown nose (above beak, slightly big with shock) -->
+  <circle cx="100" cy="87" r="11" fill="url(#s-nose)" filter="url(#s-shadow)"/>
+  <circle cx="96.5" cy="83.5" r="3.5" fill="rgba(255,255,255,0.5)"/>
+
+  <!-- Cheek blush (pale from shock) -->
+  <ellipse cx="56" cy="80" rx="10" ry="6" fill="#C0D8FF" opacity="0.55"/>
+  <ellipse cx="144" cy="80" rx="10" ry="6" fill="#C0D8FF" opacity="0.55"/>
+
+  <!-- Sweat drops -->
+  <path d="M155,36 Q159,46 155,52" stroke="#60B4F7" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <circle cx="155" cy="54" r="3" fill="#60B4F7" opacity="0.75"/>
+  <path d="M165,52 Q168,60 165,65" stroke="#60B4F7" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+  <circle cx="165" cy="67" r="2.5" fill="#60B4F7" opacity="0.65"/>
+  <path d="M42,38 Q38,48 42,54" stroke="#60B4F7" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <circle cx="42" cy="56" r="2.8" fill="#60B4F7" opacity="0.65"/>
 </svg>

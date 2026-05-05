@@ -140,9 +140,8 @@ const VERDICT_CONFIG = {
 
 /* ── Component ───────────────────────────────────────────────── */
 export default function Home() {
-  const adsenseTopSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP ?? "";
-  const adfitTopUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ?? "DAN-Xd16K8L1O7LOmPKB";
-  const adfitMidUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID ?? "DAN-lgSDOXih0RxP3TyP";
+  const adfitTopUnit    = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP    ?? "DAN-Xd16K8L1O7LOmPKB";
+  const adfitMidUnit    = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID    ?? "DAN-lgSDOXih0RxP3TyP";
   const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "DAN-v6xcgwZ4Fe6Q2WOh";
 
   const resultRef = useRef<HTMLElement>(null);
@@ -281,66 +280,65 @@ export default function Home() {
   const allocBarColor = allocOk ? "#22c55e" : allocOver ? "#ef4444" : "#f59e0b";
 
   return (
-    <div className="min-h-screen bg-[--cream] pb-24">
-      {/* ── HEADER ───────────────────────────────────────────── */}
-      <header className="relative overflow-hidden bg-[#0f1623]">
-        <div className="absolute inset-0 bg-noise opacity-20" />
-        {/* Gradient blobs */}
-        <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-[#ffd24a] opacity-10 blur-3xl" />
-        <div className="absolute -bottom-10 right-10 h-56 w-56 rounded-full bg-[#18a78f] opacity-15 blur-3xl" />
+    <div className="min-h-screen pb-24" style={{ background: "var(--page-bg)" }}>
 
-        <div className="relative mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-6 sm:py-8">
-          <div className="flex-1">
-            <div className="mb-1 inline-flex items-center gap-2 rounded-full border border-[#ffd24a]/30 bg-[#ffd24a]/10 px-3 py-1">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#ffd24a]" />
-              <span className="text-xs font-bold text-[#ffd24a] tracking-widest uppercase">주식 기회비용 계산기</span>
+      {/* ── HEADER ───────────────────────────────────────────── */}
+      <header className="relative overflow-hidden" style={{ background: "var(--navy)" }}>
+        <div className="absolute inset-0 bg-noise opacity-30" />
+        <div className="absolute -top-24 -left-16 h-80 w-80 rounded-full opacity-10 blur-3xl" style={{ background: "var(--yellow)" }} />
+        <div className="absolute top-8 right-16 h-64 w-64 rounded-full opacity-14 blur-3xl" style={{ background: "var(--teal)" }} />
+        <div className="absolute -bottom-10 left-1/3 h-48 w-48 rounded-full opacity-8 blur-3xl" style={{ background: "#C84BE6" }} />
+
+        <div className="relative mx-auto max-w-5xl px-5 pt-8 pb-7 sm:pt-11 sm:pb-9">
+          <div className="flex items-center justify-between gap-6">
+            {/* Title block */}
+            <div className="flex-1 min-w-0">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
+                style={{ borderColor: "rgba(255,210,74,0.38)", background: "rgba(255,210,74,0.10)" }}>
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "var(--yellow)" }} />
+                <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "var(--yellow)" }}>
+                  주식 기회비용 계산기
+                </span>
+              </div>
+              <h1 className="text-5xl font-black leading-none text-white sm:text-6xl"
+                style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>
+                껄껄무새
+              </h1>
+              <p className="mt-3 max-w-md text-sm font-semibold leading-relaxed text-slate-300 sm:text-base">
+                매도했더니 오르고, 갈아탔더니 떨어질 때.{" "}
+                <span className="text-slate-500">웃프게 계산해주는 기회비용 계산기.</span>
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {["종가 기준", "미국·한국 주식", "환율 자동반영"].map((tag) => (
+                  <span key={tag} className="rounded-full px-3 py-1 text-xs font-bold"
+                    style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.52)" }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-            <h1 className="mt-2 text-4xl font-black leading-tight text-white sm:text-5xl"
-              style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>
-              껄껄무새
-            </h1>
-            <p className="mt-1 text-sm font-semibold leading-snug text-slate-300 sm:text-base">
-              매도했더니 오르고, 갈아탔더니 떨어질 때.<br className="sm:hidden" />
-              {" "}웃프게 계산해주는 기회비용 계산기.
-            </p>
-            <p className="mt-3 text-xs text-slate-500">
-              종가 기준 · 미국/한국 주식 · 환율 자동 반영
-            </p>
-          </div>
-          <div className="relative shrink-0">
-            <div className="absolute inset-0 rounded-full bg-[#ffd24a]/20 blur-xl" />
-            <Image
-              src="/mascot-owl.svg"
-              alt="껄껄무새"
-              width={96}
-              height={96}
-              className="relative h-20 w-20 sm:h-24 sm:w-24 drop-shadow-2xl"
-              priority
-            />
+            {/* Mascot */}
+            <div className="relative shrink-0">
+              <div className="absolute inset-0 rounded-full blur-2xl" style={{ background: "var(--yellow)", opacity: 0.18 }} />
+              <Image src="/mascot-owl.svg" alt="껄껄무새" width={128} height={128}
+                className="relative drop-shadow-2xl h-24 w-24 sm:h-32 sm:w-32"
+                priority />
+            </div>
           </div>
         </div>
 
-        <AdSlot
-          network="adsense"
-          slotId={adsenseTopSlot}
-          className="relative mx-auto max-w-5xl px-5 pb-4"
-        />
-        {adfitTopUnit && (
-          <AdSlot
-            network="adfit"
-            slotId="unused"
-            adfitUnit={adfitTopUnit}
-            adfitWidth={728}
-            adfitHeight={90}
-            className="relative mx-auto max-w-5xl px-5 pb-4"
-          />
-        )}
+        {/* AdFit top banner */}
+        <div className="relative adfit-wrap pb-5 px-5">
+          <AdSlot unit={adfitTopUnit} width={320} height={50} className="sm:hidden" />
+          <AdSlot unit={adfitTopUnit} width={728} height={90} className="hidden sm:block" />
+        </div>
       </header>
 
-      {/* ── MAIN CONTENT ─────────────────────────────────────── */}
-      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-5 lg:grid lg:grid-cols-[1fr_420px] lg:gap-6 lg:py-8">
-        {/* ── LEFT: FORM ──────────────────────────────────────── */}
-        <div className="space-y-4">
+      {/* ── MAIN ─────────────────────────────────────────────── */}
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-5 lg:grid lg:grid-cols-[1fr_420px] lg:gap-7 lg:py-8">
+
+        {/* LEFT: FORM */}
+        <div className="space-y-5">
 
           {/* STEP 1 ─ 매도 정보 */}
           <div className="step-card">
@@ -348,32 +346,19 @@ export default function Home() {
               <span className="step-num">1</span>
               <span className="step-title">매도 정보</span>
             </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="input-wrap sm:col-span-1">
                 <span>매도 종목</span>
-                <StockSearch
-                  value={soldSymbol}
-                  onChange={setSoldSymbol}
-                  placeholder="TSLA, 테슬라…"
-                />
+                <StockSearch value={soldSymbol} onChange={setSoldSymbol} placeholder="TSLA, 테슬라…" />
               </div>
               <label className="input-wrap">
                 <span>매도일</span>
-                <input
-                  type="date"
-                  value={soldDate}
-                  onChange={(e) => setSoldDate(e.target.value)}
-                />
+                <input type="date" value={soldDate} onChange={(e) => setSoldDate(e.target.value)} />
               </label>
               <label className="input-wrap">
                 <span>수량</span>
-                <input
-                  type="number"
-                  min={0.0001}
-                  step="0.0001"
-                  value={soldQuantity}
-                  onChange={(e) => setSoldQuantity(Number(e.target.value))}
-                />
+                <input type="number" min={0.0001} step="0.0001" value={soldQuantity}
+                  onChange={(e) => setSoldQuantity(Number(e.target.value))} />
               </label>
             </div>
           </div>
@@ -384,86 +369,47 @@ export default function Home() {
               <span className="step-num">2</span>
               <span className="step-title">갈아탄 종목</span>
               <div className="ml-auto flex gap-2">
-                <button
-                  type="button"
-                  onClick={syncBuyDatesToSoldDate}
-                  disabled={!soldDate}
-                  className="fun-btn"
-                  title="모든 매수일을 매도일로 맞춤"
-                >
+                <button type="button" onClick={syncBuyDatesToSoldDate} disabled={!soldDate}
+                  className="fun-btn" title="모든 매수일을 매도일로 맞춤">
                   📅 날짜 맞추기
                 </button>
-                <button type="button" onClick={addBuyLine} className="fun-btn">
-                  + 추가
-                </button>
+                <button type="button" onClick={addBuyLine} className="fun-btn">+ 추가</button>
               </div>
             </div>
-
-            <div className="space-y-2">
+            <div className="space-y-3">
               {buys.map((line, idx) => (
                 <div key={line.id} className="buy-line">
-                  {/* 종목 */}
                   <div className="input-wrap compact">
                     <span>종목 {idx + 1}</span>
-                    <StockSearch
-                      value={line.symbol}
+                    <StockSearch value={line.symbol}
                       onChange={(sym) => updateBuyLine(line.id, { symbol: sym })}
-                      placeholder="엔비디아, 삼성…"
-                      compact
-                    />
+                      placeholder="엔비디아, 삼성…" compact />
                   </div>
-                  {/* 매수일 */}
                   <label className="input-wrap compact">
                     <span>매수일</span>
-                    <input
-                      type="date"
-                      value={line.buyDate}
-                      onChange={(e) => updateBuyLine(line.id, { buyDate: e.target.value })}
-                    />
+                    <input type="date" value={line.buyDate}
+                      onChange={(e) => updateBuyLine(line.id, { buyDate: e.target.value })} />
                   </label>
-                  {/* 비중 */}
                   <label className="input-wrap compact">
                     <span>비중(%)</span>
-                    <input
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      value={line.allocation}
-                      onChange={(e) =>
-                        updateBuyLine(line.id, { allocation: Number(e.target.value) })
-                      }
-                    />
+                    <input type="number" min={0} step="0.01" value={line.allocation}
+                      onChange={(e) => updateBuyLine(line.id, { allocation: Number(e.target.value) })} />
                   </label>
-                  {/* 삭제 */}
                   <div className="delete-col flex items-end">
-                    <button
-                      type="button"
-                      onClick={() => removeBuyLine(line.id)}
-                      className="remove-btn"
-                      disabled={buys.length === 1}
-                    >
+                    <button type="button" onClick={() => removeBuyLine(line.id)}
+                      className="remove-btn" disabled={buys.length === 1}>
                       삭제
                     </button>
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* 비중 바 */}
-            <div className="mt-3 flex items-center gap-3">
+            <div className="mt-4 flex items-center gap-3">
               <div className="alloc-bar-track">
-                <div
-                  className="alloc-bar-fill"
-                  style={{
-                    width: `${Math.min(allocationSum, 100)}%`,
-                    background: allocBarColor,
-                  }}
-                />
+                <div className="alloc-bar-fill"
+                  style={{ width: `${Math.min(allocationSum, 100)}%`, background: allocBarColor }} />
               </div>
-              <span
-                className="shrink-0 text-sm font-black tabular-nums"
-                style={{ color: allocBarColor }}
-              >
+              <span className="shrink-0 text-sm font-black tabular-nums" style={{ color: allocBarColor }}>
                 {allocationSum.toFixed(1)}%{allocOk && " ✓"}
               </span>
             </div>
@@ -475,67 +421,46 @@ export default function Home() {
               <span className="step-num">3</span>
               <span className="step-title">평가 기준일</span>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
               <label className="input-wrap flex-1">
                 <span>평가일 (오늘 기준 비교)</span>
-                <input
-                  type="date"
-                  value={evaluationDate}
-                  onChange={(e) => setEvaluationDate(e.target.value)}
-                />
+                <input type="date" value={evaluationDate}
+                  onChange={(e) => setEvaluationDate(e.target.value)} />
               </label>
-              <button
-                type="button"
-                onClick={calculate}
-                disabled={loading}
-                className="calc-btn sm:w-auto sm:min-w-[160px]"
-              >
+              <button type="button" onClick={calculate} disabled={loading}
+                className="calc-btn sm:w-auto sm:min-w-[170px]">
                 {loading ? "🔄 계산 중…" : "껄껄 계산하기"}
               </button>
             </div>
-
             {error && (
-              <div ref={errorRef} className="error-box mt-3">
-                ⚠️ {error}
-              </div>
+              <div ref={errorRef} className="error-box mt-4">⚠️ {error}</div>
             )}
           </div>
 
         </div>
-        {/* ── RIGHT: RESULTS ────────────────────────────────────── */}
-        {/* AdFit 슬롯 2 — 폼과 결과 사이 (모바일에서만 노출) */}
-        {adfitMidUnit && (
-          <div className="adfit-slot lg:hidden py-1">
-            <AdSlot
-              network="adfit"
-              slotId="unused"
-              adfitUnit={adfitMidUnit}
-              adfitWidth={300}
-              adfitHeight={250}
-              className="w-full"
-            />
-          </div>
-        )}
-        <section
-          ref={resultRef}
-          data-result
-          className="mt-4 space-y-4 lg:mt-0"
-        >
+
+        {/* Mobile AdFit — form 과 results 사이 */}
+        <div className="adfit-wrap lg:hidden py-5">
+          <AdSlot unit={adfitMidUnit} width={300} height={250} />
+        </div>
+
+        {/* RIGHT: RESULTS */}
+        <section ref={resultRef} data-result className="mt-5 space-y-4 lg:mt-0">
+
           {/* Empty state */}
           {!result && !loading && (
-            <div className="step-card flex flex-col items-center gap-4 py-10 text-center">
-              <Image
-                src="/mascot-owl.svg"
-                alt="껄껄무새"
-                width={88}
-                height={88}
-                className="h-22 w-22 opacity-80"
-              />
+            <div className="step-card flex flex-col items-center gap-6 py-12 text-center">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full blur-3xl opacity-25"
+                  style={{ background: "var(--yellow)" }} />
+                <Image src="/mascot-owl.svg" alt="껄껄무새" width={108} height={108}
+                  className="relative opacity-90" />
+              </div>
               <div>
-                <p className="text-lg font-black text-[--ink]" style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>
+                <p className="text-xl font-black" style={{ fontFamily: "var(--font-do-hyeon), sans-serif", color: "var(--ink)" }}>
                   아직 계산 전이에요
                 </p>
-                <p className="mt-1 text-sm text-[--muted]">
+                <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
                   ①②③ 입력 후 껄껄 계산하기를 눌러주세요
                 </p>
               </div>
@@ -544,17 +469,9 @@ export default function Home() {
 
           {/* Loading state */}
           {loading && (
-            <div className="step-card flex flex-col items-center gap-4 py-10 text-center">
-              <div className="relative">
-                <Image
-                  src="/mascot-owl.svg"
-                  alt="계산 중"
-                  width={88}
-                  height={88}
-                  className="h-22 w-22 animate-bounce"
-                />
-              </div>
-              <p className="text-base font-black text-[--teal]">
+            <div className="step-card flex flex-col items-center gap-6 py-12 text-center">
+              <Image src="/mascot-owl.svg" alt="계산 중" width={108} height={108} className="animate-bounce" />
+              <p className="text-base font-black" style={{ color: "var(--teal)", fontFamily: "var(--font-do-hyeon), sans-serif" }}>
                 Yahoo Finance에서 데이터 가져오는 중…
               </p>
             </div>
@@ -566,43 +483,35 @@ export default function Home() {
               {/* Verdict banner */}
               <div className={vc.bannerClass}>
                 <div className="flex items-start gap-4">
-                  <Image
-                    src={vc.mascot}
-                    alt="판정 마스코트"
-                    width={72}
-                    height={72}
-                    className="h-16 w-16 shrink-0 drop-shadow-md sm:h-18 sm:w-18"
-                  />
+                  <div className="relative shrink-0">
+                    <div className="absolute inset-0 rounded-full blur-2xl opacity-35"
+                      style={{ background: verdict === "lose" ? "#FF6B6B" : verdict === "win" ? "#22C55E" : "#FFD24A" }} />
+                    <Image src={vc.mascot} alt="판정 마스코트" width={84} height={84}
+                      className="relative drop-shadow-lg" />
+                  </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-black uppercase tracking-widest opacity-70">껄껄무새 판정</p>
-                    <p
-                      className="mt-0.5 text-xl font-black leading-tight sm:text-2xl"
-                      style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}
-                    >
+                    <p className="text-xs font-black uppercase tracking-widest opacity-55">껄껄무새 판정</p>
+                    <p className="mt-1 text-2xl font-black leading-tight sm:text-3xl"
+                      style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>
                       {vc.emoji}
                     </p>
-                    <p className="mt-1 text-sm font-semibold leading-snug opacity-80">
-                      {verdictMsg}
-                    </p>
+                    <p className="mt-1.5 text-sm font-semibold leading-snug opacity-72">{verdictMsg}</p>
                   </div>
                 </div>
               </div>
 
-              {/* 3 big metric cards */}
+              {/* 3 metric cards */}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="result-card">
                   <p className="label">💸 매도 확보 자금</p>
                   <p className="value">{formatAmount(result.soldProceeds, result.soldCurrency)}</p>
                   <p className="sub">{result.soldResolvedSymbol} · {result.soldMatchedDate}</p>
                 </div>
-                <div className="result-card border-[--teal]/30"
-                  style={{ background: "linear-gradient(135deg,#f0fdf9,#fff)" }}>
+                <div className="result-card" style={{ borderColor: "rgba(24,167,143,0.22)", background: "linear-gradient(135deg,#EDFDF7,#fff)" }}>
                   <p className="label">📦 갈아탄 포트폴리오</p>
-                  <p className={`value ${vc.valueColor}`}>
-                    {formatAmount(result.totalCurrentValue, result.soldCurrency)}
-                  </p>
+                  <p className={`value ${vc.valueColor}`}>{formatAmount(result.totalCurrentValue, result.soldCurrency)}</p>
                   {result.buyResults.some((r) => r.currency !== result.soldCurrency) && (
-                    <p className="sub text-amber-600">★ 환율 기준 환산</p>
+                    <p className="sub" style={{ color: "#B45309" }}>★ 환율 기준 환산</p>
                   )}
                 </div>
                 <div className="result-card">
@@ -630,48 +539,38 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Details */}
+              {/* Detail accordion */}
               <details className="step-card group">
-                <summary className="flex cursor-pointer list-none items-center justify-between font-black text-[--ink]">
-                  <span style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>
-                    종목별 상세 내역
-                  </span>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-500 group-open:rotate-180 transition-transform">
-                    ▼
-                  </span>
+                <summary className="flex cursor-pointer list-none items-center justify-between font-black" style={{ color: "var(--ink)" }}>
+                  <span style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>종목별 상세 내역</span>
+                  <span className="rounded-full px-2.5 py-1 text-xs transition-transform group-open:rotate-180"
+                    style={{ background: "#EEF2FF", color: "var(--muted)" }}>▼</span>
                 </summary>
                 <div className="mt-4 space-y-2">
                   {result.buyResults.map((line) => {
                     const pnl = line.currentValueBase - line.investedBase;
                     const isProfit = pnl >= 0;
                     return (
-                      <div
-                        key={line.id}
-                        className="rounded-2xl border border-slate-100 bg-slate-50 p-3"
-                      >
+                      <div key={line.id} className="rounded-2xl p-3"
+                        style={{ border: "1.5px solid rgba(15,25,40,0.07)", background: "#F8FAFC" }}>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-black text-[--ink]">{line.symbol}</span>
-                          <span className="text-xs text-slate-400">({line.allocation.toFixed(1)}%)</span>
-                          {line.currency === "KRW" ? (
-                            <span className="tag-krw">KRW</span>
-                          ) : (
-                            <span className="tag-usd">USD</span>
-                          )}
+                          <span className="font-black" style={{ color: "var(--ink)" }}>{line.symbol}</span>
+                          <span className="text-xs" style={{ color: "var(--muted)" }}>({line.allocation.toFixed(1)}%)</span>
+                          {line.currency === "KRW" ? <span className="tag-krw">KRW</span> : <span className="tag-usd">USD</span>}
                           <span className={`ml-auto text-sm font-black tabular-nums ${isProfit ? "text-emerald-600" : "text-red-600"}`}>
                             {isProfit ? "+" : ""}{formatAmount(pnl, result.soldCurrency)}
                           </span>
                         </div>
-                        <div className="mt-1.5 space-y-0.5 text-xs text-slate-500">
+                        <div className="mt-2 space-y-1 text-xs" style={{ color: "var(--muted)" }}>
                           <p>
                             매수 {formatAmount(line.buyPrice, line.currency)} ({line.matchedBuyDate})
                             {line.fxAtBuy !== 1 && ` · 환율 ₩${Math.round(line.fxAtBuy).toLocaleString()}`}
                           </p>
                           <p>
-                            평가 {formatAmount(line.evalPrice, line.currency)} ·{" "}
-                            {line.shares.toFixed(4)}주 →{" "}
+                            평가 {formatAmount(line.evalPrice, line.currency)} · {line.shares.toFixed(4)}주 →{" "}
                             {formatAmount(line.currentValueNative, line.currency)}
                             {line.currency !== result.soldCurrency && (
-                              <span className="text-amber-600">
+                              <span style={{ color: "#B45309" }}>
                                 {" "}({formatAmount(line.currentValueBase, result.soldCurrency)} 환산)
                               </span>
                             )}
@@ -683,14 +582,10 @@ export default function Home() {
                 </div>
               </details>
 
-              <AdSlot
-                network="adfit"
-                slotId="unused"
-                adfitUnit={adfitBottomUnit}
-                adfitWidth={320}
-                adfitHeight={100}
-                className="rounded-2xl bg-white/70 p-2"
-              />
+              {/* AdFit bottom slot */}
+              <div className="adfit-wrap pt-2">
+                <AdSlot unit={adfitBottomUnit} width={320} height={100} />
+              </div>
             </>
           )}
         </section>

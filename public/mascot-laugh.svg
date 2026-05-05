@@ -1,28 +1,109 @@
-<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- bg -->
-  <rect width="120" height="120" rx="28" fill="#FFE173"/>
-  <!-- face -->
-  <ellipse cx="60" cy="56" rx="40" ry="38" fill="#FFF6C0"/>
-  <!-- rosy cheeks -->
-  <ellipse cx="28" cy="64" rx="10" ry="7" fill="#FF8A65" opacity="0.45"/>
-  <ellipse cx="92" cy="64" rx="10" ry="7" fill="#FF8A65" opacity="0.45"/>
-  <!-- squinted laughing eyes -->
-  <path d="M36 46 Q44 36 54 46" stroke="#1F2A39" stroke-width="4" stroke-linecap="round" fill="none"/>
-  <path d="M66 46 Q76 36 84 46" stroke="#1F2A39" stroke-width="4" stroke-linecap="round" fill="none"/>
-  <!-- laugh tears -->
-  <path d="M32 52 C28 58 29 66 32 70" stroke="#60B4F7" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-  <path d="M88 52 C92 58 91 66 88 70" stroke="#60B4F7" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-  <!-- big open laughing beak -->
-  <path d="M42 66 Q60 56 78 66 Q60 86 42 66Z" fill="#FF7A33"/>
-  <path d="M42 66 Q60 78 78 66" fill="#BF360C" opacity="0.55"/>
-  <!-- teeth -->
-  <rect x="49" y="66" width="8" height="6" rx="2" fill="white"/>
-  <rect x="59" y="66" width="8" height="6" rx="2" fill="white"/>
-  <!-- body -->
-  <ellipse cx="60" cy="104" rx="30" ry="16" fill="#FFC107"/>
-  <!-- wings (laughing gesture) -->
-  <path d="M22 78 Q8 60 16 46 Q30 62 28 80Z" fill="#FFB300"/>
-  <path d="M98 78 Q112 60 104 46 Q90 62 92 80Z" fill="#FFB300"/>
-  <!-- crest feathers -->
-  <path d="M48 18 Q52 6 60 14 Q68 6 72 18" stroke="#E65100" stroke-width="3" stroke-linecap="round" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="l-bg" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#FFFDE0"/>
+      <stop offset="100%" stop-color="#FFE48A"/>
+    </radialGradient>
+    <radialGradient id="l-body" cx="38%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#5CDB8A"/>
+      <stop offset="100%" stop-color="#23884A"/>
+    </radialGradient>
+    <radialGradient id="l-face" cx="45%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F8EED4"/>
+    </radialGradient>
+    <radialGradient id="l-nose" cx="28%" cy="26%" r="72%">
+      <stop offset="0%" stop-color="#FF7A7A"/>
+      <stop offset="100%" stop-color="#D80000"/>
+    </radialGradient>
+    <filter id="l-shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3.5" flood-color="#0A1020" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <!-- Background (warm) -->
+  <rect width="200" height="200" rx="40" fill="url(#l-bg)"/>
+
+  <!-- Body tilted laughing -->
+  <ellipse cx="100" cy="152" rx="48" ry="40" fill="url(#l-body)" filter="url(#l-shadow)" transform="rotate(-6,100,152)"/>
+  <ellipse cx="94" cy="141" rx="22" ry="17" fill="rgba(255,255,255,0.20)" transform="rotate(-6,94,141)"/>
+
+  <!-- Wing left raised up -->
+  <path d="M54,135 Q22,108 28,84 Q46,106 58,128 Z" fill="#23884A"/>
+  <path d="M54,135 Q24,110 30,88 Q47,108 57,128 Z" fill="#1A6E3A"/>
+  <ellipse cx="34" cy="106" rx="7" ry="11" fill="#1A9FCC" opacity="0.8" transform="rotate(-30,34,106)"/>
+
+  <!-- Wing right raised up -->
+  <path d="M146,135 Q178,108 172,84 Q154,106 142,128 Z" fill="#23884A"/>
+  <path d="M146,135 Q176,110 170,88 Q153,108 143,128 Z" fill="#1A6E3A"/>
+  <ellipse cx="166" cy="106" rx="7" ry="11" fill="#1A9FCC" opacity="0.8" transform="rotate(30,166,106)"/>
+
+  <!-- Tail feathers -->
+  <path d="M88,186 Q82,196 78,200" stroke="#23884A" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M100,188 Q100,198 100,200" stroke="#2A9C55" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M112,186 Q118,196 122,200" stroke="#23884A" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+  <!-- Collar (rainbow) -->
+  <ellipse cx="68" cy="118" rx="13" ry="9" fill="#C038F0" transform="rotate(-30,68,118)"/>
+  <ellipse cx="78" cy="113" rx="13" ry="9" fill="#FF3838" transform="rotate(-18,78,113)"/>
+  <ellipse cx="89" cy="109" rx="13" ry="9" fill="#FF8C30" transform="rotate(-8,89,109)"/>
+  <ellipse cx="100" cy="107" rx="14" ry="9" fill="#FFD24A"/>
+  <ellipse cx="111" cy="109" rx="13" ry="9" fill="#32C264" transform="rotate(8,111,109)"/>
+  <ellipse cx="122" cy="113" rx="13" ry="9" fill="#3888F0" transform="rotate(18,122,113)"/>
+  <circle cx="100" cy="108" r="6.5" fill="#FFFDE0" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>
+
+  <!-- Face (tilted slightly, laughing) -->
+  <ellipse cx="100" cy="76" rx="44" ry="42" fill="url(#l-face)" filter="url(#l-shadow)" transform="rotate(-5,100,76)"/>
+
+  <!-- Hat (party hat tilted) -->
+  <path d="M66,48 L97,5 L131,50 Z" fill="#FF4478" transform="rotate(8,97,30)"/>
+  <ellipse cx="99" cy="50" rx="36" ry="8" fill="#FF6898" transform="rotate(8,99,50)"/>
+  <circle cx="97" cy="18" r="4.5" fill="#FFD24A"/>
+  <circle cx="86" cy="36" r="3.2" fill="#FFD24A"/>
+  <circle cx="113" cy="34" r="3.2" fill="#FFD24A"/>
+  <circle cx="95" cy="44" r="2.2" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="108" cy="26" r="2.2" fill="rgba(255,255,255,0.9)"/>
+
+  <!-- Left eye makeup -->
+  <path d="M62,66 L66,57 L70,66 L79,70 L70,74 L66,83 L62,74 L53,70 Z" fill="#FFD24A" opacity="0.70"/>
+  <!-- Right eye makeup -->
+  <path d="M138,66 L134,57 L130,66 L121,70 L130,74 L134,83 L138,74 L147,70 Z" fill="#FF8C30" opacity="0.70"/>
+
+  <!-- Eyes squinted (laughing - curved arcs) -->
+  <path d="M57,70 Q66,60 75,70" stroke="#0A0E1A" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <path d="M125,70 Q134,60 143,70" stroke="#0A0E1A" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <!-- Eyelash lines below squinted eyes -->
+  <path d="M59,73 Q66,78 75,73" stroke="#0A0E1A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <path d="M125,73 Q134,78 143,73" stroke="#0A0E1A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- Laugh tears -->
+  <path d="M54,74 C49,82 50,93 54,98" stroke="#60B4F7" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <circle cx="54" cy="100" r="3.5" fill="#60B4F7" opacity="0.7"/>
+  <path d="M146,74 C151,82 150,93 146,98" stroke="#60B4F7" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <circle cx="146" cy="100" r="3.5" fill="#60B4F7" opacity="0.7"/>
+
+  <!-- Beak wide open (laughing) -->
+  <path d="M80,88 Q100,80 120,88 Q116,100 100,108 Q84,100 80,88 Z" fill="#F5963A"/>
+  <!-- Open mouth / lower beak -->
+  <path d="M80,88 Q100,98 120,88 Q118,104 100,108 Q82,104 80,88 Z" fill="#D4720A" opacity="0.65"/>
+  <!-- Tongue -->
+  <ellipse cx="100" cy="100" rx="12" ry="7" fill="#FF6B88"/>
+  <!-- Teeth top row -->
+  <rect x="87" y="88" width="8" height="6" rx="2.5" fill="white" opacity="0.95"/>
+  <rect x="97" y="88" width="8" height="6" rx="2.5" fill="white" opacity="0.95"/>
+  <rect x="107" y="88" width="7" height="6" rx="2.5" fill="white" opacity="0.95"/>
+
+  <!-- Red clown nose -->
+  <circle cx="100" cy="84" r="10" fill="url(#l-nose)" filter="url(#l-shadow)"/>
+  <circle cx="96.5" cy="80.5" r="3" fill="rgba(255,255,255,0.5)"/>
+
+  <!-- Cheek blush -->
+  <ellipse cx="56" cy="82" rx="10" ry="6" fill="#FFB3B3" opacity="0.60"/>
+  <ellipse cx="144" cy="82" rx="10" ry="6" fill="#FFB3B3" opacity="0.60"/>
+
+  <!-- Laugh motion lines -->
+  <path d="M26,50 Q30,44 26,38" stroke="#FFD24A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M18,62 Q23,56 18,50" stroke="#FFD24A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M174,50 Q170,44 174,38" stroke="#FFD24A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M182,62 Q177,56 182,50" stroke="#FFD24A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
 </svg>
