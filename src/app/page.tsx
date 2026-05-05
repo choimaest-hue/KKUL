@@ -6,6 +6,7 @@ import AdSlot from "@/components/AdSlot";
 import MarketIndices from "@/components/MarketIndices";
 import StockSearch from "@/components/StockSearch";
 import FloatingContact from "@/components/FloatingContact";
+import UsageGuide from "@/components/UsageGuide";
 
 /* ── Types ───────────────────────────────────────────────────── */
 type Currency = "USD" | "KRW";
@@ -628,6 +629,7 @@ export default function Home() {
       </main>
 
       <MarketIndices />
+      <UsageGuide />
       <FloatingContact />
     </div>
   );
