@@ -9,7 +9,7 @@ export default function ServiceWorkerRegister() {
     }
 
     const register = () => {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
+      navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" }).catch(() => {
         // Ignore registration failures. The app still works without offline cache.
       });
     };
