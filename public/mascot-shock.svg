@@ -1,116 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="220" height="220">
   <defs>
-    <radialGradient id="s-bg" cx="50%" cy="30%" r="80%">
-      <stop offset="0%" stop-color="#EEF6FF"/>
-      <stop offset="100%" stop-color="#D4EEFF"/>
+    <radialGradient id="bg" cx="50%" cy="18%" r="82%">
+      <stop offset="0" stop-color="#172554"/>
+      <stop offset="0.58" stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#070A12"/>
     </radialGradient>
-    <radialGradient id="s-body" cx="38%" cy="32%" r="68%">
-      <stop offset="0%" stop-color="#5CDB8A"/>
-      <stop offset="100%" stop-color="#23884A"/>
+    <radialGradient id="hair" cx="50%" cy="44%" r="72%">
+      <stop offset="0" stop-color="#FF6F7F"/>
+      <stop offset="0.5" stop-color="#C9162F"/>
+      <stop offset="1" stop-color="#680714"/>
     </radialGradient>
-    <radialGradient id="s-face" cx="45%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="100%" stop-color="#F0F8FF"/>
+    <radialGradient id="face" cx="40%" cy="22%" r="76%">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.58" stop-color="#EDF6FF"/>
+      <stop offset="1" stop-color="#C9D7E8"/>
     </radialGradient>
-    <radialGradient id="s-nose" cx="28%" cy="26%" r="72%">
-      <stop offset="0%" stop-color="#FF7A7A"/>
-      <stop offset="100%" stop-color="#D80000"/>
-    </radialGradient>
-    <filter id="s-shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="3.5" flood-color="#0A1020" flood-opacity="0.16"/>
+    <linearGradient id="suit" x1="58" y1="142" x2="166" y2="214" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22C55E"/>
+      <stop offset="0.5" stop-color="#1E3A8A"/>
+      <stop offset="1" stop-color="#6D28D9"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#020617" flood-opacity="0.38"/>
     </filter>
   </defs>
+  <rect width="220" height="220" rx="44" fill="url(#bg)"/>
+  <path d="M24 183C48 165 78 162 110 169C146 177 178 164 199 145V220H24Z" fill="#083344" opacity="0.86"/>
+  <path d="M26 30L35 46L17 43Z" fill="#FACC15" opacity="0.82"/>
+  <path d="M195 31L187 48L205 44Z" fill="#FACC15" opacity="0.82"/>
+  <path d="M44 59L34 68" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
+  <path d="M176 59L186 68" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
 
-  <!-- Background (cool blue-white — shocked/surprised) -->
-  <rect width="200" height="200" rx="40" fill="url(#s-bg)"/>
+  <g filter="url(#shadow)">
+    <path d="M58 148C68 129 86 120 110 120C135 120 153 130 163 149L180 214H41Z" fill="url(#suit)"/>
+    <path d="M54 140C69 119 91 114 110 126C130 114 151 119 166 140C151 157 129 158 110 143C91 158 69 157 54 140Z" fill="#F8FAFC"/>
+    <path d="M62 136C77 146 92 145 110 134C128 145 143 146 158 136" fill="none" stroke="#B8C3D2" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
 
-  <!-- Shock sparkle lines -->
-  <path d="M22,18 L28,28 L16,28 Z" fill="#FFD24A" opacity="0.8"/>
-  <path d="M178,22 L184,32 L172,32 Z" fill="#FFD24A" opacity="0.8"/>
-  <path d="M14,55 L12,42 L22,50 Z" fill="#FFD24A" opacity="0.55"/>
-  <path d="M186,55 L188,42 L178,50 Z" fill="#FFD24A" opacity="0.55"/>
+    <ellipse cx="61" cy="85" rx="37" ry="47" fill="url(#hair)" transform="rotate(-19 61 85)"/>
+    <ellipse cx="159" cy="85" rx="37" ry="47" fill="url(#hair)" transform="rotate(19 159 85)"/>
+    <path d="M71 52C87 21 133 21 149 52C132 44 88 44 71 52Z" fill="url(#hair)"/>
 
-  <!-- Body (upright, stiff with shock) -->
-  <ellipse cx="100" cy="153" rx="48" ry="41" fill="url(#s-body)" filter="url(#s-shadow)"/>
-  <ellipse cx="94" cy="142" rx="22" ry="17" fill="rgba(255,255,255,0.20)"/>
-
-  <!-- Wing left spread wide out -->
-  <path d="M54,136 Q18,118 14,88 Q38,104 58,128 Z" fill="#23884A"/>
-  <path d="M54,136 Q20,120 16,92 Q39,106 57,128 Z" fill="#1A6E3A"/>
-  <ellipse cx="28" cy="108" rx="7" ry="12" fill="#1A9FCC" opacity="0.80" transform="rotate(-40,28,108)"/>
-
-  <!-- Wing right spread wide out -->
-  <path d="M146,136 Q182,118 186,88 Q162,104 142,128 Z" fill="#23884A"/>
-  <path d="M146,136 Q180,120 184,92 Q161,106 143,128 Z" fill="#1A6E3A"/>
-  <ellipse cx="172" cy="108" rx="7" ry="12" fill="#1A9FCC" opacity="0.80" transform="rotate(40,172,108)"/>
-
-  <!-- Tail -->
-  <path d="M88,188 Q82,198 78,200" stroke="#23884A" stroke-width="6" stroke-linecap="round" fill="none"/>
-  <path d="M100,190 Q100,200 100,200" stroke="#2A9C55" stroke-width="7" stroke-linecap="round" fill="none"/>
-  <path d="M112,188 Q118,198 122,200" stroke="#23884A" stroke-width="6" stroke-linecap="round" fill="none"/>
-
-  <!-- Collar (rainbow) -->
-  <ellipse cx="68" cy="118" rx="13" ry="9" fill="#C038F0" transform="rotate(-30,68,118)"/>
-  <ellipse cx="78" cy="113" rx="13" ry="9" fill="#FF3838" transform="rotate(-18,78,113)"/>
-  <ellipse cx="89" cy="109" rx="13" ry="9" fill="#FF8C30" transform="rotate(-8,89,109)"/>
-  <ellipse cx="100" cy="107" rx="14" ry="9" fill="#FFD24A"/>
-  <ellipse cx="111" cy="109" rx="13" ry="9" fill="#32C264" transform="rotate(8,111,109)"/>
-  <ellipse cx="122" cy="113" rx="13" ry="9" fill="#3888F0" transform="rotate(18,122,113)"/>
-  <circle cx="100" cy="108" r="6.5" fill="#EEF6FF" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>
-
-  <!-- Face -->
-  <ellipse cx="100" cy="74" rx="44" ry="42" fill="url(#s-face)" filter="url(#s-shadow)"/>
-
-  <!-- Raised eyebrows (shocked) -->
-  <path d="M60,50 Q70,42 81,50" stroke="#D4720A" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-  <path d="M119,50 Q130,42 140,50" stroke="#D4720A" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-
-  <!-- Hat (party hat pushed back on head) -->
-  <path d="M70,44 L98,4 L128,44 Z" fill="#FF4478" transform="rotate(-12,98,24)"/>
-  <ellipse cx="98" cy="45" rx="34" ry="8" fill="#FF6898" transform="rotate(-12,98,45)"/>
-  <circle cx="98" cy="14" r="4.5" fill="#FFD24A"/>
-  <circle cx="88" cy="30" r="3.2" fill="#FFD24A"/>
-  <circle cx="112" cy="28" r="3.2" fill="#FFD24A"/>
-  <circle cx="95" cy="40" r="2.2" fill="rgba(255,255,255,0.9)"/>
-
-  <!-- Left eye makeup -->
-  <path d="M59,64 L63,55 L67,64 L76,68 L67,72 L63,81 L59,72 L50,68 Z" fill="#FFD24A" opacity="0.70"/>
-  <!-- Right eye makeup -->
-  <path d="M141,64 L137,55 L133,64 L124,68 L133,72 L137,81 L141,72 L150,68 Z" fill="#FF8C30" opacity="0.70"/>
-
-  <!-- Eyes HUGE (shocked) -->
-  <circle cx="67" cy="70" r="16" fill="white" stroke="#1A1A2E" stroke-width="2"/>
-  <circle cx="67" cy="71" r="11" fill="#1A4FD8"/>
-  <circle cx="67" cy="71" r="6.5" fill="#0A0E1A"/>
-  <circle cx="71" cy="67" r="3" fill="white"/>
-  <!-- Second highlight tiny -->
-  <circle cx="63" cy="74" r="1.5" fill="rgba(255,255,255,0.7)"/>
-
-  <circle cx="133" cy="70" r="16" fill="white" stroke="#1A1A2E" stroke-width="2"/>
-  <circle cx="133" cy="71" r="11" fill="#1A4FD8"/>
-  <circle cx="133" cy="71" r="6.5" fill="#0A0E1A"/>
-  <circle cx="137" cy="67" r="3" fill="white"/>
-  <circle cx="129" cy="74" r="1.5" fill="rgba(255,255,255,0.7)"/>
-
-  <!-- Beak open in O (shocked) -->
-  <ellipse cx="100" cy="96" rx="11" ry="13" fill="#F5963A"/>
-  <ellipse cx="100" cy="99" rx="7.5" ry="9" fill="#D4720A" opacity="0.60"/>
-  <!-- Inside of mouth -->
-  <ellipse cx="100" cy="101" rx="5.5" ry="6" fill="#8B2800" opacity="0.5"/>
-
-  <!-- Red clown nose (above beak, slightly big with shock) -->
-  <circle cx="100" cy="87" r="11" fill="url(#s-nose)" filter="url(#s-shadow)"/>
-  <circle cx="96.5" cy="83.5" r="3.5" fill="rgba(255,255,255,0.5)"/>
-
-  <!-- Cheek blush (pale from shock) -->
-  <ellipse cx="56" cy="80" rx="10" ry="6" fill="#C0D8FF" opacity="0.55"/>
-  <ellipse cx="144" cy="80" rx="10" ry="6" fill="#C0D8FF" opacity="0.55"/>
-
-  <!-- Sweat drops -->
-  <path d="M155,36 Q159,46 155,52" stroke="#60B4F7" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-  <circle cx="155" cy="54" r="3" fill="#60B4F7" opacity="0.75"/>
-  <path d="M165,52 Q168,60 165,65" stroke="#60B4F7" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-  <circle cx="165" cy="67" r="2.5" fill="#60B4F7" opacity="0.65"/>
-  <path d="M42,38 Q38,48 42,54" stroke="#60B4F7" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <circle cx="42" cy="56" r="2.8" fill="#60B4F7" opacity="0.65"/>
+    <ellipse cx="110" cy="84" rx="51" ry="59" fill="url(#face)"/>
+    <path d="M77 61C88 48 101 51 107 67" fill="none" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+    <path d="M143 61C132 48 119 51 113 67" fill="none" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="91" cy="81" r="15" fill="#FFFFFF" stroke="#111827" stroke-width="3"/>
+    <circle cx="129" cy="81" r="15" fill="#FFFFFF" stroke="#111827" stroke-width="3"/>
+    <circle cx="91" cy="82" r="7" fill="#020617"/>
+    <circle cx="129" cy="82" r="7" fill="#020617"/>
+    <circle cx="96" cy="76" r="3" fill="#FFFFFF"/>
+    <circle cx="134" cy="76" r="3" fill="#FFFFFF"/>
+    <path d="M89 98C80 111 75 124 72 135" stroke="#C9162F" stroke-width="4" stroke-linecap="round"/>
+    <path d="M131 98C140 111 145 124 148 135" stroke="#C9162F" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="110" cy="97" r="13" fill="#C9162F"/>
+    <circle cx="105" cy="92" r="4" fill="#FFB4BF" opacity="0.8"/>
+    <ellipse cx="110" cy="119" rx="13" ry="17" fill="#5B0F1A"/>
+    <ellipse cx="110" cy="123" rx="7" ry="9" fill="#E9902F" opacity="0.9"/>
+    <path d="M157 50C163 62 161 74 153 83" stroke="#60A5FA" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="151" cy="88" r="4" fill="#60A5FA" opacity="0.8"/>
+  </g>
 </svg>

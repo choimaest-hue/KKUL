@@ -253,6 +253,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   background: var(--card-bg);
   padding: 18px 20px;
   box-shadow: var(--shadow-sm);
+  min-width: 0;
 }
 .result-card .label {
   font-size: 11px;
@@ -268,6 +269,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   color: var(--ink);
   margin-top: 4px;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 .result-card .sub {
   font-size: 11px;
@@ -281,6 +283,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   display: flex;
   flex-direction: column;
   gap: 5px;
+  min-width: 0;
 }
 .metric-box .label {
   font-size: 11px;
@@ -293,6 +296,7 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   font-weight: 900;
   font-family: var(--font-do-hyeon), sans-serif;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 .metric-box.loss {
   background: linear-gradient(135deg, #FFF0F2, #FFF7F0);

@@ -54,6 +54,8 @@ type CalcResult = {
   keepPrice: number;
   keepValue: number;
   totalCurrentValue: number;
+  cashAllocation: number;
+  cashRemainderValue: number;
   cashHoldValue: number;
   opportunityCostVsHold: number;
   opportunityCostVsCash: number;
@@ -188,19 +190,26 @@ export default function Home() {
   const calculate = async () => {
     setError("");
     setResult(null);
+    const activeBuys = buys.filter((line) => line.allocation > 0);
+    const cashAllocation = Math.max(0, 100 - allocationSum);
 
     if (!soldSymbol || !soldDate || !evaluationDate || soldQuantity <= 0) {
       setError("매도 종목, 매도일, 평가일, 수량을 정확히 입력해주세요.");
       setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
       return;
     }
-    if (allocationSum <= 0 || Math.abs(allocationSum - 100) > 0.01) {
-      setError("매수 비중 합계는 정확히 100%여야 합니다.");
+    if (buys.some((line) => line.allocation < 0)) {
+      setError("매수 비중은 0% 이상으로 입력해주세요.");
       setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
       return;
     }
-    if (buys.some((l) => !l.symbol || !l.buyDate || l.allocation <= 0)) {
-      setError("각 매수 라인의 종목, 매수일, 비중을 모두 입력해주세요.");
+    if (allocationSum > 100) {
+      setError("갈아탄 종목 비중 합계는 100%를 넘을 수 없습니다.");
+      setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
+      return;
+    }
+    if (activeBuys.some((line) => !line.symbol.trim() || !line.buyDate)) {
+      setError("비중이 있는 매수 라인은 종목과 매수일을 모두 입력해주세요.");
       setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
       return;
     }
@@ -216,7 +225,7 @@ export default function Home() {
       const keepValue = keepPrice.close * soldQuantity;
 
       const buyResults = await Promise.all(
-        buys.map(async (line) => {
+        activeBuys.map(async (line) => {
           const [buyPrice, evalPrice] = await Promise.all([
             fetchClose(line.symbol, line.buyDate),
             fetchClose(line.symbol, evaluationDate),
@@ -253,13 +262,15 @@ export default function Home() {
         }),
       );
 
-      const totalCurrentValue = buyResults.reduce((s, r) => s + r.currentValueBase, 0);
+      const cashRemainderValue = soldProceeds * (cashAllocation / 100);
+      const totalCurrentValue =
+        buyResults.reduce((s, r) => s + r.currentValueBase, 0) + cashRemainderValue;
       setResult({
         verdictMessageIndex: Math.floor(Date.now() / 1000),
         soldCurrency, soldResolvedSymbol: soldPrice.resolvedSymbol, soldMatchedDate: soldPrice.matchedDate,
         soldPrice: soldPrice.close, soldProceeds,
         keepMatchedDate: keepPrice.matchedDate, keepPrice: keepPrice.close, keepValue,
-        totalCurrentValue, cashHoldValue: soldProceeds,
+        totalCurrentValue, cashAllocation, cashRemainderValue, cashHoldValue: soldProceeds,
         opportunityCostVsHold: keepValue - totalCurrentValue,
         opportunityCostVsCash: soldProceeds - totalCurrentValue,
         buyResults,
@@ -281,9 +292,9 @@ export default function Home() {
     : "";
 
   /* allocation bar color */
-  const allocOk = Math.abs(allocationSum - 100) < 0.01;
   const allocOver = allocationSum > 100;
-  const allocBarColor = allocOk ? "#22c55e" : allocOver ? "#ef4444" : "#f59e0b";
+  const cashAllocationPreview = Math.max(0, 100 - allocationSum);
+  const allocBarColor = allocOver ? "#ef4444" : "#22c55e";
 
   return (
     <div className="min-h-screen pb-24" style={{ background: "var(--page-bg)" }}>
@@ -306,10 +317,9 @@ export default function Home() {
                   주식 기회비용 계산기
                 </span>
               </div>
-              <h1 className="text-5xl font-black leading-none text-white sm:text-6xl"
-                style={{ fontFamily: "var(--font-do-hyeon), sans-serif" }}>
-                껄껄무새
-              </h1>
+              <h1 className="sr-only">껄껄무새</h1>
+              <Image src="/logo-kkul.svg" alt="껄껄무새" width={560} height={175}
+                className="h-auto w-[min(82vw,360px)] sm:w-[430px]" priority />
               <p className="mt-3 max-w-2xl text-sm font-semibold leading-relaxed text-slate-300 sm:text-base">
                 매도 후 갈아탄 선택의{" "}
                 <span className="text-slate-500">기회비용을 웃프게 확인합니다.</span>
@@ -403,7 +413,7 @@ export default function Home() {
                   </label>
                   <label className="input-wrap compact">
                     <span>비중(%)</span>
-                    <input type="number" min={0} step="0.01" value={line.allocation}
+                    <input type="number" min={0} max={100} step="0.01" value={line.allocation}
                       onChange={(e) => updateBuyLine(line.id, { allocation: Number(e.target.value) })} />
                   </label>
                   <div className="delete-col flex items-end">
@@ -418,10 +428,11 @@ export default function Home() {
             <div className="mt-4 flex items-center gap-3">
               <div className="alloc-bar-track">
                 <div className="alloc-bar-fill"
-                  style={{ width: `${Math.min(allocationSum, 100)}%`, background: allocBarColor }} />
+                  style={{ width: `${Math.max(0, Math.min(allocationSum, 100))}%`, background: allocBarColor }} />
               </div>
               <span className="shrink-0 text-sm font-black tabular-nums" style={{ color: allocBarColor }}>
-                {allocationSum.toFixed(1)}%{allocOk && " ✓"}
+                {allocationSum.toFixed(1)}%
+                {allocOver ? " 초과" : cashAllocationPreview > 0 ? ` · 현금 ${cashAllocationPreview.toFixed(1)}%` : " ✓"}
               </span>
             </div>
           </div>
@@ -508,7 +519,7 @@ export default function Home() {
               </div>
 
               {/* 3 metric cards */}
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                 <div className="result-card">
                   <p className="label">💸 매도 확보 자금</p>
                   <p className="value">{formatAmount(result.soldProceeds, result.soldCurrency)}</p>
@@ -517,6 +528,9 @@ export default function Home() {
                 <div className="result-card" style={{ borderColor: "rgba(24,167,143,0.22)", background: "linear-gradient(135deg,#EDFDF7,#fff)" }}>
                   <p className="label">📦 갈아탄 포트폴리오</p>
                   <p className={`value ${vc.valueColor}`}>{formatAmount(result.totalCurrentValue, result.soldCurrency)}</p>
+                  {result.cashAllocation > 0 && (
+                    <p className="sub">현금 {result.cashAllocation.toFixed(1)}% 포함</p>
+                  )}
                   {result.buyResults.some((r) => r.currency !== result.soldCurrency) && (
                     <p className="sub" style={{ color: "#B45309" }}>★ 환율 기준 환산</p>
                   )}
@@ -586,6 +600,21 @@ export default function Home() {
                       </div>
                     );
                   })}
+                  {result.cashAllocation > 0 && (
+                    <div className="rounded-lg p-3"
+                      style={{ border: "1.5px solid rgba(15,25,40,0.07)", background: "#F8FAFC" }}>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-black" style={{ color: "var(--ink)" }}>현금 보유</span>
+                        <span className="text-xs" style={{ color: "var(--muted)" }}>({result.cashAllocation.toFixed(1)}%)</span>
+                        <span className="ml-auto text-sm font-black tabular-nums text-slate-600">
+                          {formatAmount(result.cashRemainderValue, result.soldCurrency)}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-xs" style={{ color: "var(--muted)" }}>
+                        100%에서 남은 비중은 투자 수익률 계산에서 제외하고 현금으로 유지합니다.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </details>
 
