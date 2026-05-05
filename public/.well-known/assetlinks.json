@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.kkul.twa",
+      "sha256_cert_fingerprints": [
+        "B5:27:A5:98:3E:85:5E:6D:56:45:BE:1E:45:72:7D:E5:56:32:A9:E2:3F:11:48:65:3E:FB:E2:5A:01:35:A4:5B"
+      ]
+    }
+  }
+]
