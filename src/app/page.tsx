@@ -147,8 +147,8 @@ export default function Home() {
   const adfitTopDesktopUnit =
     process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP_DESKTOP ??
     process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ??
-    "DAN-Xd16K8L1O7LOmPKB";
-  const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "DAN-v6xcgwZ4Fe6Q2WOh";
+    "DAN-z7FYy7k6vNgLL2Fw";
+  const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "DAN-h7DMLbiSbP20G8DI";
 
   const resultRef = useRef<HTMLElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
