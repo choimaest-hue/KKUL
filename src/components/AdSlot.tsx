@@ -12,24 +12,43 @@ type AdSlotProps = {
 
 export default function AdSlot({ unit, width, height, className = "" }: AdSlotProps) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [status, setStatus] = useState<"pending" | "visible" | "empty">("pending");
 
   useEffect(() => {
     if (!unit || !hostRef.current) return;
     const host = hostRef.current;
+    let resolved = false;
+
+    setStatus("pending");
+
     const check = () => {
-      setVisible(host.querySelector("iframe") !== null);
+      const iframe = host.querySelector("iframe");
+      if (!iframe) return false;
+
+      resolved = true;
+      setStatus("visible");
+      return true;
     };
+
     const ob = new MutationObserver(check);
     ob.observe(host, { childList: true, subtree: true });
-    const t = window.setTimeout(check, 4500);
+    const checkTimer = window.setTimeout(check, 4500);
+    const emptyTimer = window.setTimeout(() => {
+      if (resolved || check()) return;
+      ob.disconnect();
+      setStatus("empty");
+    }, 7000);
+
     return () => {
       ob.disconnect();
-      clearTimeout(t);
+      clearTimeout(checkTimer);
+      clearTimeout(emptyTimer);
     };
-  }, [unit]);
+  }, [unit, width, height]);
 
-  if (!unit) return null;
+  if (!unit || status === "empty") return null;
+
+  const visible = status === "visible";
 
   return (
     <div
@@ -37,7 +56,7 @@ export default function AdSlot({ unit, width, height, className = "" }: AdSlotPr
       className={`overflow-hidden transition-all duration-500 ${
         visible ? `opacity-100 ${className}` : "opacity-0"
       }`}
-      style={{ maxHeight: visible ? height + 48 : 0 }}
+      style={{ maxHeight: visible ? height + 48 : 0, maxWidth: "100%" }}
       aria-hidden={!visible}
     >
       <Script

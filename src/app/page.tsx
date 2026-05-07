@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AdSlot from "@/components/AdSlot";
 import MarketIndices from "@/components/MarketIndices";
 import StockSearch from "@/components/StockSearch";
@@ -127,6 +127,24 @@ async function fetchBestTrade(
 
 type Verdict = "lose" | "win" | "tie";
 
+type AdViewport = "desktop" | "mobile" | null;
+
+function useAdViewport(): AdViewport {
+  const [adViewport, setAdViewport] = useState<AdViewport>(null);
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 768px)");
+    const update = () => setAdViewport(desktopQuery.matches ? "desktop" : "mobile");
+
+    update();
+    desktopQuery.addEventListener("change", update);
+
+    return () => desktopQuery.removeEventListener("change", update);
+  }, []);
+
+  return adViewport;
+}
+
 function getVerdict(opportunityCostVsHold: number): Verdict {
   if (opportunityCostVsHold > 0) return "lose";
   if (opportunityCostVsHold < 0) return "win";
@@ -178,11 +196,14 @@ const VERDICT_CONFIG = {
 
 /* ── Component ───────────────────────────────────────────────── */
 export default function Home() {
+  const adViewport = useAdViewport();
   const adfitTopDesktopUnit =
     process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP_DESKTOP ??
     process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ??
     "DAN-z7FYy7k6vNgLL2Fw";
   const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "DAN-h7DMLbiSbP20G8DI";
+  const showDesktopAd = adViewport === "desktop" && Boolean(adfitTopDesktopUnit);
+  const showMobileAd = adViewport === "mobile" && Boolean(adfitBottomUnit);
 
   const resultRef = useRef<HTMLElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
@@ -379,9 +400,9 @@ export default function Home() {
         </div>
       </header>
 
-      {/* AdFit top banner (desktop only) */}
-      {adfitTopDesktopUnit && (
-        <div className="adfit-wrap hidden items-center justify-center px-5 md:flex">
+      {/* AdFit top banner (desktop only; not rendered on mobile) */}
+      {showDesktopAd && (
+        <div className="adfit-wrap flex items-center justify-center px-5">
           <AdSlot unit={adfitTopDesktopUnit} width={728} height={90} className="my-5" />
         </div>
       )}
@@ -676,10 +697,12 @@ export default function Home() {
                 </div>
               </details>
 
-              {/* Mobile minimal AdFit (single slot after results) */}
-              <div className="adfit-wrap flex items-center justify-center pt-2 sm:hidden">
-                <AdSlot unit={adfitBottomUnit} width={320} height={100} className="mt-2" />
-              </div>
+              {/* Mobile minimal AdFit (single slot after results; not rendered on desktop) */}
+              {showMobileAd && (
+                <div className="adfit-wrap flex items-center justify-center">
+                  <AdSlot unit={adfitBottomUnit} width={320} height={100} className="mt-2" />
+                </div>
+              )}
             </>
           )}
         </section>
