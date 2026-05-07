@@ -148,8 +148,6 @@ export default function Home() {
     process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP_DESKTOP ??
     process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP ??
     "DAN-Xd16K8L1O7LOmPKB";
-  const adfitTopMobileUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_TOP_MOBILE ?? "";
-  const adfitMidUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_MID ?? "DAN-lgSDOXih0RxP3TyP";
   const adfitBottomUnit = process.env.NEXT_PUBLIC_ADFIT_UNIT_BOTTOM ?? "DAN-v6xcgwZ4Fe6Q2WOh";
 
   const resultRef = useRef<HTMLElement>(null);
@@ -344,12 +342,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* AdFit top banner */}
-      {adfitTopMobileUnit && (
-        <div className="adfit-wrap px-4 sm:hidden">
-          <AdSlot unit={adfitTopMobileUnit} width={320} height={50} className="my-4" />
-        </div>
-      )}
+      {/* AdFit top banner (desktop only) */}
       {adfitTopDesktopUnit && (
         <div className="adfit-wrap hidden px-5 sm:flex">
           <AdSlot unit={adfitTopDesktopUnit} width={728} height={90} className="my-5" />
@@ -460,11 +453,6 @@ export default function Home() {
             )}
           </div>
 
-        </div>
-
-        {/* Mobile AdFit — form 과 results 사이 */}
-        <div className="adfit-wrap lg:hidden">
-          <AdSlot unit={adfitMidUnit} width={300} height={250} className="my-5" />
         </div>
 
         {/* RIGHT: RESULTS */}
@@ -619,7 +607,7 @@ export default function Home() {
                 </div>
               </details>
 
-              {/* AdFit bottom slot */}
+              {/* Mobile minimal AdFit (single slot after results) */}
               <div className="adfit-wrap pt-2">
                 <AdSlot unit={adfitBottomUnit} width={320} height={100} className="mt-2" />
               </div>
