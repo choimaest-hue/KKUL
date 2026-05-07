@@ -306,38 +306,20 @@ export default function Home() {
         <div className="absolute inset-0 bg-noise opacity-30" />
 
         <div className="relative mx-auto max-w-5xl px-5 pt-8 pb-7 sm:pt-11 sm:pb-9">
-          <div className="flex items-center justify-between gap-3 sm:gap-6">
-            {/* Title block */}
-            <div className="flex-1 min-w-0">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
-                style={{ borderColor: "rgba(255,210,74,0.38)", background: "rgba(255,210,74,0.10)" }}>
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "var(--yellow)" }} />
-                <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "var(--yellow)" }}>
-                  주식 기회비용 계산기
-                </span>
-              </div>
-              <h1 className="sr-only">껄껄무새</h1>
-              <Image src="/logo-kkul.svg" alt="껄껄무새" width={560} height={175}
-                className="h-auto w-[min(82vw,360px)] sm:w-[430px]" priority />
-              <p className="mt-3 max-w-2xl text-sm font-semibold leading-relaxed text-slate-300 sm:text-base">
-                매도 후 갈아탄 선택의{" "}
-                <span className="text-slate-500">기회비용을 웃프게 확인합니다.</span>
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {["종가 기준", "미국·한국 주식", "환율 자동반영"].map((tag) => (
-                  <span key={tag} className="rounded-full px-3 py-1 text-xs font-bold"
-                    style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.52)" }}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
+          <div>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
+              style={{ borderColor: "rgba(255,210,74,0.38)", background: "rgba(255,210,74,0.10)" }}>
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "var(--yellow)" }} />
+              <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "var(--yellow)" }}>
+                주식 기회비용 계산기
+              </span>
             </div>
-            {/* Mascot */}
-            <div className="relative hidden shrink-0 sm:block">
-              <Image src="/mascot-owl.svg" alt="껄껄무새" width={128} height={128}
-                className="relative h-20 w-20 drop-shadow-2xl sm:h-32 sm:w-32"
-                priority />
-            </div>
+            <h1 className="sr-only">껄껄무새</h1>
+            <Image src="/logo-kkul.svg" alt="껄껄무새" width={560} height={175}
+              className="h-auto w-[min(72vw,320px)] sm:w-[400px]" priority />
+            <p className="mt-3 text-sm font-semibold leading-relaxed text-slate-400">
+              매도 후 갈아탄 선택의 기회비용을 웃프게 확인합니다.
+            </p>
           </div>
         </div>
       </header>
