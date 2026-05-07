@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Do_Hyeon, Jua } from "next/font/google";
-import Script from "next/script";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
@@ -69,13 +68,14 @@ export default function RootLayout({
       lang="ko"
       className={`${doHyeon.variable} ${jua.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Script
+      <head>
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3397494907696633"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
+      </head>
+      <body className="min-h-full flex flex-col">
         <ServiceWorkerRegister />
         {children}
       </body>
