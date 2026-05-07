@@ -314,6 +314,69 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   color: var(--ink-2);
 }
 
+.timing-card {
+  border: 2px solid rgba(255, 210, 74, 0.48);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #FFF8D6 0%, #F7FCFF 100%);
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.10);
+}
+.timing-card .eyebrow {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #9A6B00;
+}
+.timing-card .headline {
+  margin-top: 4px;
+  font-family: var(--font-do-hyeon), sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.timing-card .copy {
+  margin-top: 8px;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.timing-badge {
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-family: var(--font-do-hyeon), sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+.timing-badge.profit {
+  background: #DCFCE7;
+  color: #047857;
+}
+.timing-badge.flat {
+  background: #E5E7EB;
+  color: #475569;
+}
+.timing-prices {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.timing-prices span {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 6px 10px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
 /* ── Verdict banners ────────────────────────────────────────── */
 .verdict-lose {
   background: linear-gradient(135deg, #FFF0F2 0%, #FFF7EE 100%);
@@ -369,9 +432,6 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 /* ── AdFit banner wrapper ───────────────────────────────────── */
 .adfit-wrap {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* ── Contact floating action ───────────────────────────────── */

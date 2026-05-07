@@ -26,6 +26,20 @@ type PricePayload = {
   message?: string;
 };
 
+type BestTradePayload = {
+  requestedSymbol: string;
+  resolvedSymbol: string;
+  currency: Currency;
+  startDate: string;
+  endDate: string;
+  buyDate: string;
+  buyPrice: number;
+  sellDate: string;
+  sellPrice: number;
+  returnPct: number;
+  gainPerShare: number;
+};
+
 type BuyResult = {
   id: string;
   symbol: string;
@@ -60,6 +74,7 @@ type CalcResult = {
   cashHoldValue: number;
   opportunityCostVsHold: number;
   opportunityCostVsCash: number;
+  bestTrade: BestTradePayload | null;
   buyResults: BuyResult[];
 };
 
@@ -89,6 +104,25 @@ async function fetchClose(symbol: string, date: string): Promise<PricePayload> {
   const payload = (await res.json()) as PricePayload;
   if (!res.ok) throw new Error(payload.message ?? "가격 데이터를 가져오지 못했습니다.");
   return payload;
+}
+
+async function fetchBestTrade(
+  symbol: string,
+  startDate: string,
+  endDate: string,
+): Promise<BestTradePayload | null> {
+  const params = new URLSearchParams({ symbol, start: startDate, end: endDate });
+
+  try {
+    const response = await fetch(`/api/best-trade?${params.toString()}`);
+    if (!response.ok) {
+      return null;
+    }
+
+    return (await response.json()) as BestTradePayload;
+  } catch {
+    return null;
+  }
 }
 
 type Verdict = "lose" | "win" | "tie";
@@ -264,6 +298,26 @@ export default function Home() {
       const cashRemainderValue = soldProceeds * (cashAllocation / 100);
       const totalCurrentValue =
         buyResults.reduce((s, r) => s + r.currentValueBase, 0) + cashRemainderValue;
+      const tradeWindowStart = [soldDate, ...activeBuys.map((line) => line.buyDate)].sort()[0];
+      const tradeSymbols = Array.from(
+        new Set([soldPrice.resolvedSymbol, ...buyResults.map((line) => line.symbol)]),
+      );
+      const bestTradeCandidates = tradeWindowStart < evaluationDate
+        ? await Promise.all(
+            tradeSymbols.map((symbol) => fetchBestTrade(symbol, tradeWindowStart, evaluationDate)),
+          )
+        : [];
+      const bestTrade = bestTradeCandidates.reduce<BestTradePayload | null>((best, candidate) => {
+        if (!candidate) {
+          return best;
+        }
+
+        if (!best || candidate.returnPct > best.returnPct) {
+          return candidate;
+        }
+
+        return best;
+      }, null);
       setResult({
         verdictMessageIndex: Math.floor(Date.now() / 1000),
         soldCurrency, soldResolvedSymbol: soldPrice.resolvedSymbol, soldMatchedDate: soldPrice.matchedDate,
@@ -272,6 +326,7 @@ export default function Home() {
         totalCurrentValue, cashAllocation, cashRemainderValue, cashHoldValue: soldProceeds,
         opportunityCostVsHold: keepValue - totalCurrentValue,
         opportunityCostVsCash: soldProceeds - totalCurrentValue,
+        bestTrade,
         buyResults,
       });
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
@@ -326,7 +381,7 @@ export default function Home() {
 
       {/* AdFit top banner (desktop only) */}
       {adfitTopDesktopUnit && (
-        <div className="adfit-wrap hidden px-5 sm:flex">
+        <div className="adfit-wrap hidden items-center justify-center px-5 md:flex">
           <AdSlot unit={adfitTopDesktopUnit} width={728} height={90} className="my-5" />
         </div>
       )}
@@ -531,6 +586,38 @@ export default function Home() {
                 </div>
               </div>
 
+              {result.bestTrade && (
+                <div className="timing-card">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="eyebrow">껄껄무새 타이밍 훈수</p>
+                      <p className="headline">나라면 이랬을 껄껄~</p>
+                      <p className="copy">
+                        {result.bestTrade.returnPct > 0
+                          ? `${result.bestTrade.buyDate}에 ${result.bestTrade.resolvedSymbol} 줍줍, ${result.bestTrade.sellDate}에 호다닥 매도했을 껄껄~`
+                          : `${result.bestTrade.startDate}부터 ${result.bestTrade.endDate}까지는 매수 버튼보다 관망 버튼이 더 웃겼을 껄껄~`}
+                      </p>
+                    </div>
+                    <div className={`timing-badge ${result.bestTrade.returnPct > 0 ? "profit" : "flat"}`}>
+                      {result.bestTrade.returnPct > 0 ? "+" : ""}
+                      {result.bestTrade.returnPct.toFixed(1)}%
+                    </div>
+                  </div>
+                  <div className="timing-prices">
+                    <span>
+                      매수 {formatAmount(result.bestTrade.buyPrice, result.bestTrade.currency)}
+                    </span>
+                    <span>
+                      매도 {formatAmount(result.bestTrade.sellPrice, result.bestTrade.currency)}
+                    </span>
+                    <span>
+                      1주당 {result.bestTrade.gainPerShare >= 0 ? "+" : ""}
+                      {formatAmount(result.bestTrade.gainPerShare, result.bestTrade.currency)}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Detail accordion */}
               <details className="step-card group">
                 <summary className="flex cursor-pointer list-none items-center justify-between font-black" style={{ color: "var(--ink)" }}>
@@ -590,7 +677,7 @@ export default function Home() {
               </details>
 
               {/* Mobile minimal AdFit (single slot after results) */}
-              <div className="adfit-wrap pt-2">
+              <div className="adfit-wrap flex items-center justify-center pt-2 sm:hidden">
                 <AdSlot unit={adfitBottomUnit} width={320} height={100} className="mt-2" />
               </div>
             </>
