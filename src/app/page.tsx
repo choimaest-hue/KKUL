@@ -568,7 +568,7 @@ export default function Home() {
               </div>
 
               {/* 3 metric cards */}
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+              <div className="result-metrics-grid">
                 <div className="result-card">
                   <p className="label">💸 매도 확보 자금</p>
                   <p className="value">{formatAmount(result.soldProceeds, result.soldCurrency)}</p>
@@ -592,7 +592,7 @@ export default function Home() {
               </div>
 
               {/* Opportunity cost */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="result-opportunity-grid">
                 <div className={`metric-box ${verdict === "lose" ? "loss" : verdict === "win" ? "win" : "neutral"}`}>
                   <span className="label">vs 계속 보유</span>
                   <span className="value">
