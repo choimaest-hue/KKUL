@@ -319,7 +319,7 @@ export default function MarketIndices() {
   return (
     <>
       {/* 하단 고정 바 */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 shadow-[0_-4px_24px_rgba(0,0,0,0.10)] backdrop-blur">
+      <div className="market-indices-bar fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 shadow-[0_-4px_24px_rgba(0,0,0,0.10)] backdrop-blur">
         {/* 헤더 행 */}
         <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-1">
           <div className="flex items-center gap-1.5">

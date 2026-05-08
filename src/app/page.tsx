@@ -371,8 +371,10 @@ export default function Home() {
   const cashAllocationPreview = Math.max(0, 100 - allocationSum);
   const allocBarColor = allocOver ? "#ef4444" : "#22c55e";
 
+  const hasMobileResultAd = Boolean(result && showMobileAd);
+
   return (
-    <div className="min-h-screen pb-24" style={{ background: "var(--page-bg)" }}>
+    <div className={`min-h-screen pb-24${hasMobileResultAd ? " has-mobile-result-ad" : ""}`} style={{ background: "var(--page-bg)" }}>
 
       {/* ── HEADER ───────────────────────────────────────────── */}
       <header
@@ -697,16 +699,14 @@ export default function Home() {
                 </div>
               </details>
 
-              {/* Mobile minimal AdFit (single slot after results; not rendered on desktop) */}
-              {showMobileAd && (
-                <div className="adfit-wrap flex items-center justify-center">
-                  <AdSlot unit={adfitBottomUnit} width={320} height={100} className="mt-2" />
-                </div>
-              )}
             </>
           )}
         </section>
       </main>
+
+      {hasMobileResultAd && (
+        <AdSlot unit={adfitBottomUnit} width={320} height={100} className="mobile-ad-safe-slot" />
+      )}
 
       <MarketIndices />
       <UsageGuide />
