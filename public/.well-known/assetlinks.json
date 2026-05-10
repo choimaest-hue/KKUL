@@ -1,11 +1,15 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "app.kkul.twa",
       "sha256_cert_fingerprints": [
-        "B5:27:A5:98:3E:85:5E:6D:56:45:BE:1E:45:72:7D:E5:56:32:A9:E2:3F:11:48:65:3E:FB:E2:5A:01:35:A4:5B"
+        "B5:27:A5:98:3E:85:5E:6D:56:45:BE:1E:45:72:7D:E5:56:32:A9:E2:3F:11:48:65:3E:FB:E2:5A:01:35:A4:5B",
+        "23:90:CB:5A:73:E2:4F:EE:2F:00:0D:74:44:79:98:8A:DA:8E:53:17:06:51:B1:3E:08:83:09:D1:DC:A9:B4:C7"
       ]
     }
   }
