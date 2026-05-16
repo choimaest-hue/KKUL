@@ -30,7 +30,7 @@ const INDICES: IndexDef[] = [
   { symbol: "^DJI",     label: "다우존스",  description: "미국 30대 우량주",     decimals: 0 },
   { symbol: "^VIX",     label: "VIX",       description: "공포 지수 (변동성)",   decimals: 2 },
   { symbol: "USDKRW=X", label: "원/달러",   description: "USD/KRW 환율",         decimals: 0, suffix: "원" },
-  { symbol: "DX=F",     label: "달러인덱스",description: "달러 강세 지수",       decimals: 3 },
+  { symbol: "DX-Y.NYB", label: "달러인덱스",description: "달러 강세 지수",       decimals: 3 },
 ];
 
 type IndexSummary = {

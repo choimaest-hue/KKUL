@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="220" height="220">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="18%" r="82%">
+      <stop offset="0" stop-color="#7F1D1D"/>
+      <stop offset="0.58" stop-color="#111827"/>
+      <stop offset="1" stop-color="#070A12"/>
+    </radialGradient>
+    <radialGradient id="hair" cx="50%" cy="44%" r="72%">
+      <stop offset="0" stop-color="#FF6F7F"/>
+      <stop offset="0.5" stop-color="#C9162F"/>
+      <stop offset="1" stop-color="#680714"/>
+    </radialGradient>
+    <radialGradient id="face" cx="40%" cy="22%" r="76%">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.58" stop-color="#F5ECDD"/>
+      <stop offset="1" stop-color="#D8C4A7"/>
+    </radialGradient>
+    <linearGradient id="suit" x1="58" y1="142" x2="166" y2="214" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F97316"/>
+      <stop offset="0.5" stop-color="#1E3A8A"/>
+      <stop offset="1" stop-color="#6D28D9"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#020617" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <rect width="220" height="220" rx="44" fill="url(#bg)"/>
+  <path d="M24 183C48 165 78 162 110 169C146 177 178 164 199 145V220H24Z" fill="#431407" opacity="0.86"/>
+  <path d="M34 39C48 24 70 31 69 50C67 68 42 67 43 51C44 38 61 39 59 51" fill="none" stroke="#FACC15" stroke-width="4" stroke-linecap="round"/>
+  <path d="M185 39C171 24 149 31 150 50C152 68 177 67 176 51C175 38 158 39 160 51" fill="none" stroke="#FACC15" stroke-width="4" stroke-linecap="round"/>
+  <g filter="url(#shadow)">
+    <path d="M58 148C68 129 86 120 110 120C135 120 153 130 163 149L180 214H41Z" fill="url(#suit)"/>
+    <path d="M54 140C69 119 91 114 110 126C130 114 151 119 166 140C151 157 129 158 110 143C91 158 69 157 54 140Z" fill="#F8FAFC"/>
+    <ellipse cx="61" cy="85" rx="37" ry="47" fill="url(#hair)" transform="rotate(-19 61 85)"/>
+    <ellipse cx="159" cy="85" rx="37" ry="47" fill="url(#hair)" transform="rotate(19 159 85)"/>
+    <path d="M71 52C87 21 133 21 149 52C132 44 88 44 71 52Z" fill="url(#hair)"/>
+    <ellipse cx="110" cy="84" rx="51" ry="59" fill="url(#face)"/>
+    <path d="M78 63C89 51 101 52 108 68" fill="none" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+    <path d="M142 63C131 51 119 52 112 68" fill="none" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+    <path d="M82 77L101 91M101 77L82 91" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+    <path d="M119 77L138 91M138 77L119 91" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+    <path d="M89 98C80 111 75 124 72 135" stroke="#C9162F" stroke-width="4" stroke-linecap="round"/>
+    <path d="M131 98C140 111 145 124 148 135" stroke="#C9162F" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="110" cy="97" r="13" fill="#C9162F"/>
+    <ellipse cx="110" cy="119" rx="14" ry="17" fill="#5B0F1A"/>
+    <path d="M101 105Q110 112 119 105Q116 119 110 124Q104 119 101 105Z" fill="#E9902F"/>
+  </g>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="220" height="220">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="18%" r="82%">
+      <stop offset="0" stop-color="#7F1D1D"/>
+      <stop offset="0.58" stop-color="#111827"/>
+      <stop offset="1" stop-color="#070A12"/>
+    </radialGradient>
+    <radialGradient id="hair" cx="50%" cy="44%" r="72%">
+      <stop offset="0" stop-color="#FF6F7F"/>
+      <stop offset="0.5" stop-color="#C9162F"/>
+      <stop offset="1" stop-color="#680714"/>
+    </radialGradient>
+    <radialGradient id="face" cx="40%" cy="22%" r="76%">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.58" stop-color="#F5ECDD"/>
+      <stop offset="1" stop-color="#D8C4A7"/>
+    </radialGradient>
+    <linearGradient id="suit" x1="58" y1="142" x2="166" y2="214" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F97316"/>
+      <stop offset="0.5" stop-color="#1E3A8A"/>
+      <stop offset="1" stop-color="#6D28D9"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#020617" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <rect width="220" height="220" rx="44" fill="url(#bg)"/>
+  <path d="M24 183C48 165 78 162 110 169C146 177 178 164 199 145V220H24Z" fill="#431407" opacity="0.86"/>
+  <path d="M34 39C48 24 70 31 69 50C67 68 42 67 43 51C44 38 61 39 59 51" fill="none" stroke="#FACC15" stroke-width="4" stroke-linecap="round"/>
+  <path d="M185 39C171 24 149 31 150 50C152 68 177 67 176 51C175 38 158 39 160 51" fill="none" stroke="#FACC15" stroke-width="4" stroke-linecap="round"/>
+  <g filter="url(#shadow)">
+    <path d="M58 148C68 129 86 120 110 120C135 120 153 130 163 149L180 214H41Z" fill="url(#suit)"/>
+    <path d="M54 140C69 119 91 114 110 126C130 114 151 119 166 140C151 157 129 158 110 143C91 158 69 157 54 140Z" fill="#F8FAFC"/>
+    <ellipse cx="61" cy="85" rx="37" ry="47" fill="url(#hair)" transform="rotate(-19 61 85)"/>
+    <ellipse cx="159" cy="85" rx="37" ry="47" fill="url(#hair)" transform="rotate(19 159 85)"/>
+    <path d="M71 52C87 21 133 21 149 52C132 44 88 44 71 52Z" fill="url(#hair)"/>
+    <ellipse cx="110" cy="84" rx="51" ry="59" fill="url(#face)"/>
+    <path d="M78 63C89 51 101 52 108 68" fill="none" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+    <path d="M142 63C131 51 119 52 112 68" fill="none" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+    <path d="M82 77L101 91M101 77L82 91" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+    <path d="M119 77L138 91M138 77L119 91" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+    <path d="M89 98C80 111 75 124 72 135" stroke="#C9162F" stroke-width="4" stroke-linecap="round"/>
+    <path d="M131 98C140 111 145 124 148 135" stroke="#C9162F" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="110" cy="97" r="13" fill="#C9162F"/>
+    <ellipse cx="110" cy="119" rx="14" ry="17" fill="#5B0F1A"/>
+    <path d="M101 105Q110 112 119 105Q116 119 110 124Q104 119 101 105Z" fill="#E9902F"/>
+  </g>
+</svg>

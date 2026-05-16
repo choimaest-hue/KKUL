@@ -33,6 +33,15 @@ const RANGE_CONFIG: Record<string, RangeConfig> = {
   "1y": { interval: "1wk", daysBack: 365 },
   "5y": { interval: "1mo", daysBack: 1825 },
 };
+const YAHOO_HOSTS = ["query1.finance.yahoo.com", "query2.finance.yahoo.com"];
+const YAHOO_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  Accept: "application/json, text/plain, */*",
+  "Accept-Language": "en-US,en;q=0.9",
+  Referer: "https://finance.yahoo.com",
+  Origin: "https://finance.yahoo.com",
+};
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -48,29 +57,33 @@ export async function GET(request: NextRequest) {
   const period1 = now - config.daysBack * 86400;
   const period2 = now + 86400;
 
-  const url = new URL(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}`);
-  url.searchParams.set("period1", String(period1));
-  url.searchParams.set("period2", String(period2));
-  url.searchParams.set("interval", config.interval);
+  let payload: YahooChartResponse | null = null;
 
-  const response = await fetch(url.toString(), {
-    cache: "no-store",
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-      Accept: "application/json, text/plain, */*",
-      "Accept-Language": "en-US,en;q=0.9",
-      "Accept-Encoding": "gzip, deflate, br",
-      Referer: "https://finance.yahoo.com",
-      Origin: "https://finance.yahoo.com",
-    },
-  });
+  for (const host of YAHOO_HOSTS) {
+    const url = new URL(`https://${host}/v8/finance/chart/${encodeURIComponent(symbol)}`);
+    url.searchParams.set("period1", String(period1));
+    url.searchParams.set("period2", String(period2));
+    url.searchParams.set("interval", config.interval);
 
-  if (!response.ok) {
+    const response = await fetch(url.toString(), {
+      cache: "no-store",
+      headers: YAHOO_HEADERS,
+    });
+
+    if (!response.ok) {
+      continue;
+    }
+
+    payload = (await response.json()) as YahooChartResponse;
+    if (payload.chart?.result?.[0]) {
+      break;
+    }
+  }
+
+  if (!payload) {
     return NextResponse.json({ error: "Yahoo Finance fetch failed" }, { status: 502 });
   }
 
-  const payload = (await response.json()) as YahooChartResponse;
   const result = payload.chart?.result?.[0];
 
   if (!result) {

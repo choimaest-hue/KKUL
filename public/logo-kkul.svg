@@ -55,7 +55,6 @@
   </g>
 
   <rect x="316" y="46" width="590" height="196" rx="24" fill="url(#word-bg)" opacity="0.96"/>
-  <path d="M316 79H906" stroke="#FACC15" stroke-width="3" opacity="0.35"/>
   <text x="354" y="146" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="82" font-weight="900" fill="#FFF7ED">껄껄무새</text>
   <text x="358" y="194" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="31" font-weight="800" fill="#FACC15">주식 기회비용 계산기</text>
   <text x="358" y="230" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" font-weight="700" fill="#94A3B8">매도했더니 오르고, 갈아탔더니 웃픈 순간</text>

@@ -21,6 +21,15 @@ type YahooChartResponse = {
 };
 
 const DAY_SECONDS = 60 * 60 * 24;
+const YAHOO_HOSTS = ["query1.finance.yahoo.com", "query2.finance.yahoo.com"];
+const YAHOO_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  Accept: "application/json, text/plain, */*",
+  "Accept-Language": "en-US,en;q=0.9",
+  Referer: "https://finance.yahoo.com",
+  Origin: "https://finance.yahoo.com",
+};
 
 function toUnix(dateString: string): number {
   const date = new Date(`${dateString}T00:00:00Z`);
@@ -63,24 +72,33 @@ async function fetchCloseOnOrBeforeDate(
   const startUnix = targetUnix - DAY_SECONDS * 14;
   const endUnix = targetUnix + DAY_SECONDS;
 
-  const url = new URL(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`);
-  url.searchParams.set("period1", String(startUnix));
-  url.searchParams.set("period2", String(endUnix));
-  url.searchParams.set("interval", "1d");
+  let payload: YahooChartResponse | null = null;
 
-  const response = await fetch(url.toString(), {
-    cache: "no-store",
-    headers: {
-      "User-Agent": "Mozilla/5.0",
-      Accept: "application/json",
-    },
-  });
+  for (const host of YAHOO_HOSTS) {
+    const url = new URL(`https://${host}/v8/finance/chart/${encodeURIComponent(symbol)}`);
+    url.searchParams.set("period1", String(startUnix));
+    url.searchParams.set("period2", String(endUnix));
+    url.searchParams.set("interval", "1d");
 
-  if (!response.ok) {
+    const response = await fetch(url.toString(), {
+      cache: "no-store",
+      headers: YAHOO_HEADERS,
+    });
+
+    if (!response.ok) {
+      continue;
+    }
+
+    payload = (await response.json()) as YahooChartResponse;
+    if (payload.chart?.result?.[0]) {
+      break;
+    }
+  }
+
+  if (!payload) {
     return null;
   }
 
-  const payload = (await response.json()) as YahooChartResponse;
   const result = payload.chart?.result?.[0];
   if (!result) {
     return null;

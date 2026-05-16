@@ -156,7 +156,7 @@ export default function StockSearch({
       {open && (
         <ul
           role="listbox"
-          className="absolute z-50 mt-1 min-w-[260px] w-full max-h-72 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-[0_12px_28px_rgba(12,35,64,0.14)] py-1"
+          className="stock-search-list absolute z-50 mt-1 min-w-[260px] w-full max-h-72 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-[0_12px_28px_rgba(12,35,64,0.14)] py-1"
         >
           {results.map((stock, idx) => (
             <li
