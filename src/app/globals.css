@@ -255,6 +255,12 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 .wizard-actions.compact-only {
   grid-template-columns: minmax(0, 180px);
 }
+.wizard-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 460px;
+}
 .ghost-btn {
   min-height: 58px;
   border: 1.5px solid rgba(15,25,40,0.12);
@@ -309,6 +315,20 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   font-family: var(--font-do-hyeon), sans-serif;
   font-size: 20px;
   line-height: 1.18;
+}
+.mode-panel {
+  display: grid;
+  gap: 10px;
+  border: 1.5px solid rgba(15,25,40,0.08);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.74);
+  padding: 14px;
+}
+.mode-help {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.45;
 }
 
 /* ── Manual drawer ─────────────────────────────────────────── */
@@ -472,6 +492,9 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   border-color: rgba(24,167,143,0.30);
   background: #F5FEFC;
 }
+.buy-line.sell-line {
+  background: #FFFBEB;
+}
 @media (min-width: 640px) {
   .buy-line {
     grid-template-columns: 1.4fr 1fr 0.7fr auto;
@@ -481,6 +504,68 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
 }
 .buy-line .delete-col { grid-column: 1 / -1; }
 @media (min-width: 640px) { .buy-line .delete-col { grid-column: auto; } }
+
+.line-mode-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  border-radius: var(--r-pill);
+  background: #EEF2FF;
+  padding: 4px;
+}
+.line-mode-toggle button {
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 900;
+  min-height: 30px;
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+.line-mode-toggle button.active {
+  background: white;
+  color: var(--teal-d);
+  box-shadow: var(--shadow-xs);
+}
+.mini-link {
+  align-self: flex-start;
+  border: 0;
+  background: transparent;
+  color: var(--teal-d);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 0;
+}
+.mini-link:disabled {
+  color: #AAB6C8;
+  cursor: not-allowed;
+}
+
+.manual-nudge {
+  display: grid;
+  gap: 4px;
+  border: 1.5px solid rgba(245,158,11,0.30);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #FFF8D6, #FFFFFF);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.manual-nudge strong {
+  color: var(--ink);
+  font-family: var(--font-do-hyeon), sans-serif;
+  font-size: 18px;
+  line-height: 1.15;
+}
+.manual-nudge span {
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+}
 
 /* ── Buttons ────────────────────────────────────────────────── */
 .fun-btn {
@@ -610,6 +695,9 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   margin-top: 5px;
   line-height: 1.4;
   word-break: break-word;
+}
+.result-card .sub.accent {
+  color: #B45309;
 }
 
 .metric-box {
@@ -875,6 +963,16 @@ input[type="date"]:not(:valid) { color: #9CAABF; }
   font-size: 20px;
   line-height: 1.1;
   overflow-wrap: anywhere;
+}
+.detail-subtitle {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.detail-subtitle.with-gap {
+  margin-top: 14px;
 }
 
 .result-opportunity-grid {

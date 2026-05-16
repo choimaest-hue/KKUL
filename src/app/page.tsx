@@ -23,11 +23,22 @@ import type { Stock } from "@/data/stocks";
 /* ── Types ───────────────────────────────────────────────────── */
 type Currency = "USD" | "KRW";
 
+type BuyInputMode = "allocation" | "shares";
+
+type SellLine = {
+  id: string;
+  symbol: string;
+  sellDate: string;
+  quantity: number;
+};
+
 type BuyLine = {
   id: string;
   symbol: string;
   buyDate: string;
   allocation: number;
+  quantity: number;
+  inputMode: BuyInputMode;
 };
 
 type PricePayload = {
@@ -62,6 +73,7 @@ type BuyResult = {
   currency: Currency;
   fxAtBuy: number;
   fxAtEval: number;
+  inputMode: BuyInputMode;
   allocation: number;
   investedBase: number;
   investedNative: number;
@@ -70,10 +82,29 @@ type BuyResult = {
   currentValueBase: number;
 };
 
+type SellResult = {
+  id: string;
+  symbol: string;
+  sellDate: string;
+  matchedSellDate: string;
+  keepMatchedDate: string;
+  sellPrice: number;
+  keepPrice: number;
+  currency: Currency;
+  fxAtSell: number;
+  fxAtEval: number;
+  quantity: number;
+  soldProceedsNative: number;
+  soldProceedsBase: number;
+  keepValueNative: number;
+  keepValueBase: number;
+};
+
 type CalcResult = {
   verdictMessageIndex: number;
   soldCurrency: Currency;
   displayFxRate: number;
+  soldResults: SellResult[];
   soldResolvedSymbol: string;
   soldMatchedDate: string;
   soldPrice: number;
@@ -81,7 +112,11 @@ type CalcResult = {
   keepMatchedDate: string;
   keepPrice: number;
   keepValue: number;
+  holdScenarioValue: number;
   totalCurrentValue: number;
+  totalInvestedBase: number;
+  additionalCashBase: number;
+  additionalCashAllocation: number;
   cashAllocation: number;
   cashRemainderValue: number;
   cashHoldValue: number;
@@ -93,8 +128,8 @@ type CalcResult = {
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 const initialBuys: BuyLine[] = [
-  { id: "line-1", symbol: "NVDA", buyDate: "", allocation: 50 },
-  { id: "line-2", symbol: "005930", buyDate: "", allocation: 50 },
+  { id: "line-1", symbol: "NVDA", buyDate: "", allocation: 50, quantity: 0, inputMode: "allocation" },
+  { id: "line-2", symbol: "005930", buyDate: "", allocation: 50, quantity: 0, inputMode: "allocation" },
 ];
 
 function formatAmount(value: number, currency: Currency): string {
@@ -165,6 +200,7 @@ type WizardStage =
   | "buySymbol"
   | "buyDate"
   | "allocation"
+  | "addAnotherBuy"
   | "evaluationDate";
 
 type WizardSwitchAnswer = "yes" | "no" | null;
@@ -214,12 +250,24 @@ function getReturnPct(currentValue: number, baseValue: number): number {
   return ((currentValue - baseValue) / baseValue) * 100;
 }
 
+function makeSellLine(patch: Partial<SellLine> = {}): SellLine {
+  return {
+    id: `sell-${crypto.randomUUID()}`,
+    symbol: "",
+    sellDate: "",
+    quantity: 0,
+    ...patch,
+  };
+}
+
 function makeBuyLine(patch: Partial<BuyLine> = {}): BuyLine {
   return {
     id: `line-${crypto.randomUUID()}`,
     symbol: "",
     buyDate: "",
     allocation: 100,
+    quantity: 0,
+    inputMode: "allocation",
     ...patch,
   };
 }
@@ -294,23 +342,28 @@ export default function Home() {
   const [soldSymbol, setSoldSymbol] = useState("TSLA");
   const [soldDate, setSoldDate] = useState("");
   const [soldQuantity, setSoldQuantity] = useState(10);
+  const [extraSoldLines, setExtraSoldLines] = useState<SellLine[]>([]);
   const [evaluationDate, setEvaluationDate] = useState(
     () => new Date().toISOString().slice(0, 10),
   );
   const [buys, setBuys] = useState<BuyLine[]>(() => [makeBuyLine({ allocation: 0 })]);
   const [hasSwitched, setHasSwitched] = useState(false);
   const [wizardStage, setWizardStage] = useState<WizardStage>("soldSymbol");
+  const [wizardBuyIndex, setWizardBuyIndex] = useState(0);
   const [wizardSwitchAnswer, setWizardSwitchAnswer] = useState<WizardSwitchAnswer>(null);
   const [confirmedSoldSymbol, setConfirmedSoldSymbol] = useState("");
   const [confirmedBuySymbol, setConfirmedBuySymbol] = useState("");
   const [manualOpen, setManualOpen] = useState(false);
+  const [showManualNudge, setShowManualNudge] = useState(false);
   const [displayCurrency, setDisplayCurrency] = useState<Currency>("USD");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<CalcResult | null>(null);
 
   const allocationSum = useMemo(
-    () => buys.reduce((sum, l) => sum + (l.allocation || 0), 0),
+    () => buys.reduce((sum, line) => (
+      line.inputMode === "allocation" ? sum + (line.allocation || 0) : sum
+    ), 0),
     [buys],
   );
 
@@ -318,8 +371,23 @@ export default function Home() {
     setHasSwitched(true);
     setBuys((p) => [
       ...p,
-      { id: `line-${crypto.randomUUID()}`, symbol: "", buyDate: "", allocation: 0 },
+      makeBuyLine({ buyDate: soldDate, allocation: 0 }),
     ]);
+  };
+
+  const addSellLine = () => {
+    setExtraSoldLines((current) => [
+      ...current,
+      makeSellLine({ sellDate: soldDate }),
+    ]);
+  };
+
+  const updateExtraSellLine = (id: string, patch: Partial<SellLine>) => {
+    setExtraSoldLines((current) => current.map((line) => (line.id === id ? { ...line, ...patch } : line)));
+  };
+
+  const removeExtraSellLine = (id: string) => {
+    setExtraSoldLines((current) => current.filter((line) => line.id !== id));
   };
 
   const removeBuyLine = (id: string) =>
@@ -338,29 +406,38 @@ export default function Home() {
     setConfirmedSoldSymbol("");
   };
 
-  const updateFirstBuyLine = (patch: Partial<BuyLine>) => {
+  const updateWizardBuyLine = (patch: Partial<BuyLine>) => {
     setHasSwitched(true);
-    setBuys((current) => {
-      const [first, ...rest] = current.length ? current : [makeBuyLine({ buyDate: soldDate })];
-      return [{ ...first, ...patch }, ...rest];
-    });
+    setBuys((current) => current.map((line, index) => (
+      index === wizardBuyIndex ? { ...line, ...patch } : line
+    )));
   };
 
-  const changeFirstBuySymbol = (symbol: string) => {
+  const changeWizardBuySymbol = (symbol: string) => {
     setConfirmedBuySymbol("");
-    updateFirstBuyLine({ symbol });
+    updateWizardBuyLine({ symbol });
+  };
+
+  const startAnotherWizardBuy = () => {
+    const nextIndex = buys.length;
+    setBuys((current) => [...current, makeBuyLine({ buyDate: soldDate, allocation: 0 })]);
+    setWizardBuyIndex(nextIndex);
+    setConfirmedBuySymbol("");
+    setWizardStage("buySymbol");
   };
 
   const answerSwitched = (answer: WizardSwitchAnswer) => {
     setWizardSwitchAnswer(answer);
     if (answer === "yes") {
       setHasSwitched(true);
+      setWizardBuyIndex(0);
       setBuys([makeBuyLine({ buyDate: soldDate })]);
       setWizardStage("buySymbol");
       return;
     }
 
     setHasSwitched(false);
+    setWizardBuyIndex(0);
     setBuys([makeBuyLine({ allocation: 0 })]);
     setWizardStage("evaluationDate");
   };
@@ -370,8 +447,8 @@ export default function Home() {
     if (nextValue) {
       setWizardSwitchAnswer("yes");
       setBuys((current) => {
-        const hasActiveInput = current.some((line) => line.symbol || line.buyDate || line.allocation > 0);
-        return hasActiveInput ? current : initialBuys;
+        const hasActiveInput = current.some((line) => line.symbol || line.buyDate || line.allocation > 0 || line.quantity > 0);
+        return hasActiveInput ? current : [makeBuyLine({ buyDate: soldDate })];
       });
       return;
     }
@@ -387,8 +464,9 @@ export default function Home() {
     else if (wizardStage === "buySymbol") setWizardStage("switched");
     else if (wizardStage === "buyDate") setWizardStage("buySymbol");
     else if (wizardStage === "allocation") setWizardStage("buyDate");
+    else if (wizardStage === "addAnotherBuy") setWizardStage("allocation");
     else if (wizardStage === "evaluationDate") {
-      setWizardStage(wizardSwitchAnswer === "yes" ? "allocation" : "switched");
+      setWizardStage(wizardSwitchAnswer === "yes" ? "addAnotherBuy" : "switched");
     }
   };
 
@@ -401,53 +479,103 @@ export default function Home() {
   };
 
   const confirmBuySymbol = (stock?: Stock) => {
-    const symbol = stock?.symbol ?? firstBuyLine.symbol.trim().toUpperCase();
+    const symbol = stock?.symbol ?? currentWizardBuyLine.symbol.trim().toUpperCase();
     if (!symbol) return;
     setConfirmedBuySymbol(symbol);
-    updateFirstBuyLine({ symbol });
+    updateWizardBuyLine({ symbol });
     setWizardStage("buyDate");
   };
 
-  const calculate = async () => {
+  const calculate = async (source: "wizard" | "manual" = "manual") => {
     setManualOpen(true);
     setError("");
     setResult(null);
-    const activeBuys = buys.filter((line) => line.allocation > 0);
-    const cashAllocation = Math.max(0, 100 - allocationSum);
+    setShowManualNudge(false);
+    const sellInputs = [
+      { id: "primary-sell", symbol: soldSymbol, sellDate: soldDate, quantity: soldQuantity },
+      ...extraSoldLines,
+    ].filter((line, index) => (
+      index === 0 || line.symbol.trim() || line.sellDate || line.quantity > 0
+    ));
+    const activeBuys = hasSwitched
+      ? buys.filter((line) => (
+          line.inputMode === "shares" ? line.quantity > 0 : line.allocation > 0
+        ))
+      : [];
 
-    if (!soldSymbol || !soldDate || !evaluationDate || soldQuantity <= 0) {
+    if (!evaluationDate || sellInputs.some((line) => !line.symbol.trim() || !line.sellDate || line.quantity <= 0)) {
       setError("매도 종목, 매도일, 평가일, 수량을 정확히 입력해주세요.");
       setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
       return;
     }
-    if (buys.some((line) => line.allocation < 0)) {
-      setError("매수 비중은 0% 이상으로 입력해주세요.");
-      setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
-      return;
-    }
-    if (allocationSum > 100) {
-      setError("갈아탄 종목 비중 합계는 100%를 넘을 수 없습니다.");
+    if (buys.some((line) => line.allocation < 0 || line.quantity < 0)) {
+      setError("매수 비중과 주식수는 0 이상으로 입력해주세요.");
       setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
       return;
     }
     if (activeBuys.some((line) => !line.symbol.trim() || !line.buyDate)) {
-      setError("비중이 있는 매수 라인은 종목과 매수일을 모두 입력해주세요.");
+      setError("입력한 매수 라인은 종목과 매수일을 모두 입력해주세요.");
       setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
       return;
     }
 
     setLoading(true);
     try {
-      const [soldPrice, keepPrice] = await Promise.all([
-        fetchClose(soldSymbol, soldDate),
-        fetchClose(soldSymbol, evaluationDate),
-      ]);
-      const displayFxRate = await fetchClose("USDKRW=X", evaluationDate)
-        .then((payload) => payload.close)
-        .catch(() => 1);
-      const soldCurrency = soldPrice.currency;
-      const soldProceeds = soldPrice.close * soldQuantity;
-      const keepValue = keepPrice.close * soldQuantity;
+      const fxCache = new Map<string, number>();
+      const getFxRate = async (date: string) => {
+        const cached = fxCache.get(date);
+        if (cached) return cached;
+        const rate = await fetchClose("USDKRW=X", date).then((payload) => payload.close);
+        fxCache.set(date, rate);
+        return rate;
+      };
+
+      const sellPricePairs = await Promise.all(
+        sellInputs.map(async (line) => {
+          const [sellPrice, keepPrice] = await Promise.all([
+            fetchClose(line.symbol, line.sellDate),
+            fetchClose(line.symbol, evaluationDate),
+          ]);
+          return { line, sellPrice, keepPrice };
+        }),
+      );
+
+      const soldCurrency = sellPricePairs[0].sellPrice.currency;
+      const displayFxRate = await getFxRate(evaluationDate).catch(() => 1);
+
+      const soldResults = await Promise.all(
+        sellPricePairs.map(async ({ line, sellPrice, keepPrice }) => {
+          const currency = sellPrice.currency;
+          const soldProceedsNative = sellPrice.close * line.quantity;
+          const keepValueNative = keepPrice.close * line.quantity;
+          const fxAtSell = currency === soldCurrency ? 1 : await getFxRate(line.sellDate);
+          const fxAtEval = currency === soldCurrency ? 1 : await getFxRate(evaluationDate);
+          const soldProceedsBase = convertAmount(soldProceedsNative, currency, soldCurrency, fxAtSell);
+          const keepValueBase = convertAmount(keepValueNative, currency, soldCurrency, fxAtEval);
+
+          return {
+            id: line.id,
+            symbol: sellPrice.resolvedSymbol,
+            sellDate: line.sellDate,
+            matchedSellDate: sellPrice.matchedDate,
+            keepMatchedDate: keepPrice.matchedDate,
+            sellPrice: sellPrice.close,
+            keepPrice: keepPrice.close,
+            currency,
+            fxAtSell,
+            fxAtEval,
+            quantity: line.quantity,
+            soldProceedsNative,
+            soldProceedsBase,
+            keepValueNative,
+            keepValueBase,
+          } satisfies SellResult;
+        }),
+      );
+
+      const primarySold = soldResults[0];
+      const soldProceeds = soldResults.reduce((sum, line) => sum + line.soldProceedsBase, 0);
+      const keepValue = soldResults.reduce((sum, line) => sum + line.keepValueBase, 0);
 
       const buyResults = await Promise.all(
         activeBuys.map(async (line) => {
@@ -460,39 +588,52 @@ export default function Home() {
           let fxAtBuy = 1, fxAtEval = 1;
           if (needsFx) {
             [fxAtBuy, fxAtEval] = await Promise.all([
-              fetchClose("USDKRW=X", line.buyDate).then((r) => r.close),
-              fetchClose("USDKRW=X", evaluationDate).then((r) => r.close),
+              getFxRate(line.buyDate),
+              getFxRate(evaluationDate),
             ]);
           }
-          const investedBase = soldProceeds * (line.allocation / 100);
+          let investedBase: number;
           let investedNative: number;
-          if (soldCurrency === "USD" && buyCurrency === "KRW") investedNative = investedBase * fxAtBuy;
-          else if (soldCurrency === "KRW" && buyCurrency === "USD") investedNative = investedBase / fxAtBuy;
-          else investedNative = investedBase;
+          let shares: number;
 
-          const shares = investedNative / buyPrice.close;
+          if (line.inputMode === "shares") {
+            shares = line.quantity;
+            investedNative = shares * buyPrice.close;
+            investedBase = convertAmount(investedNative, buyCurrency, soldCurrency, fxAtBuy);
+          } else {
+            investedBase = soldProceeds * (line.allocation / 100);
+            investedNative = convertAmount(investedBase, soldCurrency, buyCurrency, fxAtBuy);
+            shares = investedNative / buyPrice.close;
+          }
+
           const currentValueNative = shares * evalPrice.close;
-
-          let currentValueBase: number;
-          if (soldCurrency === "USD" && buyCurrency === "KRW") currentValueBase = currentValueNative / fxAtEval;
-          else if (soldCurrency === "KRW" && buyCurrency === "USD") currentValueBase = currentValueNative * fxAtEval;
-          else currentValueBase = currentValueNative;
+          const currentValueBase = convertAmount(currentValueNative, buyCurrency, soldCurrency, fxAtEval);
+          const allocation = soldProceeds ? (investedBase / soldProceeds) * 100 : 0;
 
           return {
             id: line.id, symbol: buyPrice.resolvedSymbol, buyDate: line.buyDate,
             matchedBuyDate: buyPrice.matchedDate, buyPrice: buyPrice.close, evalPrice: evalPrice.close,
-            currency: buyCurrency, fxAtBuy, fxAtEval, allocation: line.allocation,
+            currency: buyCurrency, fxAtBuy, fxAtEval, inputMode: line.inputMode, allocation,
             investedBase, investedNative, shares, currentValueNative, currentValueBase,
           } satisfies BuyResult;
         }),
       );
 
-      const cashRemainderValue = soldProceeds * (cashAllocation / 100);
+      const totalInvestedBase = buyResults.reduce((sum, line) => sum + line.investedBase, 0);
+      const additionalCashBase = Math.max(0, totalInvestedBase - soldProceeds);
+      const cashRemainderValue = Math.max(0, soldProceeds - totalInvestedBase);
+      const cashAllocation = soldProceeds ? (cashRemainderValue / soldProceeds) * 100 : 0;
+      const additionalCashAllocation = soldProceeds ? (additionalCashBase / soldProceeds) * 100 : 0;
+      const holdScenarioValue = keepValue + additionalCashBase;
+      const cashHoldValue = soldProceeds + additionalCashBase;
       const totalCurrentValue =
         buyResults.reduce((s, r) => s + r.currentValueBase, 0) + cashRemainderValue;
-      const tradeWindowStart = [soldDate, ...activeBuys.map((line) => line.buyDate)].sort()[0];
+      const tradeWindowStart = [
+        ...sellInputs.map((line) => line.sellDate),
+        ...activeBuys.map((line) => line.buyDate),
+      ].sort()[0];
       const tradeSymbols = Array.from(
-        new Set([soldPrice.resolvedSymbol, ...buyResults.map((line) => line.symbol)]),
+        new Set([...soldResults.map((line) => line.symbol), ...buyResults.map((line) => line.symbol)]),
       );
       const bestTradeCandidates = tradeWindowStart < evaluationDate
         ? await Promise.all(
@@ -511,15 +652,19 @@ export default function Home() {
         return best;
       }, null);
       setDisplayCurrency(soldCurrency);
+      setShowManualNudge(source === "wizard");
       setResult({
         verdictMessageIndex: Math.floor(Date.now() / 1000),
         soldCurrency, displayFxRate,
-        soldResolvedSymbol: soldPrice.resolvedSymbol, soldMatchedDate: soldPrice.matchedDate,
-        soldPrice: soldPrice.close, soldProceeds,
-        keepMatchedDate: keepPrice.matchedDate, keepPrice: keepPrice.close, keepValue,
-        totalCurrentValue, cashAllocation, cashRemainderValue, cashHoldValue: soldProceeds,
-        opportunityCostVsHold: keepValue - totalCurrentValue,
-        opportunityCostVsCash: soldProceeds - totalCurrentValue,
+        soldResults,
+        soldResolvedSymbol: primarySold.symbol, soldMatchedDate: primarySold.matchedSellDate,
+        soldPrice: primarySold.sellPrice, soldProceeds,
+        keepMatchedDate: primarySold.keepMatchedDate, keepPrice: primarySold.keepPrice, keepValue,
+        holdScenarioValue,
+        totalCurrentValue, totalInvestedBase, additionalCashBase, additionalCashAllocation,
+        cashAllocation, cashRemainderValue, cashHoldValue,
+        opportunityCostVsHold: holdScenarioValue - totalCurrentValue,
+        opportunityCostVsCash: cashHoldValue - totalCurrentValue,
         bestTrade,
         buyResults,
       });
@@ -545,26 +690,31 @@ export default function Home() {
   /* allocation bar color */
   const allocOver = allocationSum > 100;
   const cashAllocationPreview = Math.max(0, 100 - allocationSum);
-  const allocBarColor = allocOver ? "#ef4444" : "#22c55e";
+  const allocBarColor = allocOver ? "#f97316" : "#22c55e";
+  const shareModeCount = buys.filter((line) => line.inputMode === "shares" && line.quantity > 0).length;
 
   const hasMobileResultAd = Boolean(result && showMobileAd);
 
   const firstBuyLine = buys[0] ?? initialBuys[0];
+  const currentWizardBuyLine = buys[wizardBuyIndex] ?? firstBuyLine;
   const soldStockCandidate = useMemo(
     () => searchStocks(soldSymbol, 1)[0] ?? null,
     [soldSymbol],
   );
   const buyStockCandidate = useMemo(
-    () => searchStocks(firstBuyLine.symbol, 1)[0] ?? null,
-    [firstBuyLine.symbol],
+    () => searchStocks(currentWizardBuyLine.symbol, 1)[0] ?? null,
+    [currentWizardBuyLine.symbol],
   );
   const soldSymbolConfirmed = Boolean(
     confirmedSoldSymbol && confirmedSoldSymbol === soldSymbol.trim().toUpperCase(),
   );
   const buySymbolConfirmed = Boolean(
-    confirmedBuySymbol && confirmedBuySymbol === firstBuyLine.symbol.trim().toUpperCase(),
+    confirmedBuySymbol && confirmedBuySymbol === currentWizardBuyLine.symbol.trim().toUpperCase(),
   );
-  const wizardTotalSteps = wizardSwitchAnswer === "yes" ? 8 : 5;
+  const wizardBuyInputReady = currentWizardBuyLine.inputMode === "shares"
+    ? currentWizardBuyLine.quantity > 0
+    : currentWizardBuyLine.allocation > 0;
+  const wizardTotalSteps = wizardSwitchAnswer === "yes" ? 9 : 5;
   const wizardStepNumber =
     wizardStage === "soldSymbol" ? 1 :
     wizardStage === "soldDate" ? 2 :
@@ -573,19 +723,20 @@ export default function Home() {
     wizardStage === "buySymbol" ? 5 :
     wizardStage === "buyDate" ? 6 :
     wizardStage === "allocation" ? 7 :
+    wizardStage === "addAnotherBuy" ? 8 :
     wizardTotalSteps;
   const wizardProgress = Math.min(100, (wizardStepNumber / wizardTotalSteps) * 100);
 
   const resultMetrics = useMemo(() => {
     if (!result) return null;
 
-    const holdReturnPct = getReturnPct(result.keepValue, result.soldProceeds);
-    const switchedReturnPct = getReturnPct(result.totalCurrentValue, result.soldProceeds);
-    const gapPctOfSold = result.soldProceeds
-      ? (result.opportunityCostVsHold / result.soldProceeds) * 100
+    const holdReturnPct = getReturnPct(result.holdScenarioValue, result.cashHoldValue);
+    const switchedReturnPct = getReturnPct(result.totalCurrentValue, result.cashHoldValue);
+    const gapPctOfSold = result.cashHoldValue
+      ? (result.opportunityCostVsHold / result.cashHoldValue) * 100
       : 0;
-    const bestValue = Math.max(result.cashHoldValue, result.keepValue, result.totalCurrentValue);
-    const winningScenario = bestValue === result.keepValue
+    const bestValue = Math.max(result.cashHoldValue, result.holdScenarioValue, result.totalCurrentValue);
+    const winningScenario = bestValue === result.holdScenarioValue
       ? "버텼다면"
       : bestValue === result.totalCurrentValue
         ? result.buyResults.length > 0 ? "갈아탔다면" : "현금 보유"
@@ -597,8 +748,8 @@ export default function Home() {
       gapPctOfSold,
       winningScenario,
       chartData: [
-        { name: "매도 현금", amount: result.cashHoldValue, fill: "#64748B" },
-        { name: "버텼다면", amount: result.keepValue, fill: "#F59E0B" },
+        { name: result.additionalCashBase > 0 ? "매도+추가 현금" : "매도 현금", amount: result.cashHoldValue, fill: "#64748B" },
+        { name: "버텼다면", amount: result.holdScenarioValue, fill: "#F59E0B" },
         {
           name: result.buyResults.length > 0 ? "갈아탔다면" : "현금 보유",
           amount: result.totalCurrentValue,
@@ -679,7 +830,7 @@ export default function Home() {
                         <span>검색 결과</span>
                         <strong>{soldStockCandidate.symbol} · {soldStockCandidate.nameKo}</strong>
                         <small>{MARKET_TEXT[soldStockCandidate.market]} · {soldStockCandidate.nameEn}</small>
-                        <button type="button" onClick={() => confirmSoldSymbol(soldStockCandidate)}>
+                        <button type="button" onMouseDown={(event) => { event.preventDefault(); confirmSoldSymbol(soldStockCandidate); }} onClick={() => confirmSoldSymbol(soldStockCandidate)}>
                           이 종목 맞아요
                         </button>
                       </>
@@ -688,7 +839,7 @@ export default function Home() {
                         <span>직접 입력 심볼</span>
                         <strong>{soldSymbol.trim().toUpperCase()}</strong>
                         <small>검색 목록에 없어도 Yahoo Finance 심볼이면 계산할 수 있습니다.</small>
-                        <button type="button" onClick={() => confirmSoldSymbol()}>
+                        <button type="button" onMouseDown={(event) => { event.preventDefault(); confirmSoldSymbol(); }} onClick={() => confirmSoldSymbol()}>
                           이 심볼로 진행
                         </button>
                       </>
@@ -756,29 +907,29 @@ export default function Home() {
             {wizardStage === "buySymbol" && (
               <>
                 <p className="wizard-kicker">환승 종목</p>
-                <h2>다시 산 종목은?</h2>
+                <h2>{wizardBuyIndex + 1}번째로 다시 산 종목은?</h2>
                 <div className="wizard-control">
-                  <StockSearch value={firstBuyLine.symbol}
-                    onChange={changeFirstBuySymbol}
+                  <StockSearch value={currentWizardBuyLine.symbol}
+                    onChange={changeWizardBuySymbol}
                     placeholder="NVDA, 005930…" />
                 </div>
-                {firstBuyLine.symbol.trim() && (
+                {currentWizardBuyLine.symbol.trim() && (
                   <div className={`wizard-confirm-card ${buySymbolConfirmed ? "confirmed" : ""}`}>
                     {buyStockCandidate ? (
                       <>
                         <span>검색 결과</span>
                         <strong>{buyStockCandidate.symbol} · {buyStockCandidate.nameKo}</strong>
                         <small>{MARKET_TEXT[buyStockCandidate.market]} · {buyStockCandidate.nameEn}</small>
-                        <button type="button" onClick={() => confirmBuySymbol(buyStockCandidate)}>
+                        <button type="button" onMouseDown={(event) => { event.preventDefault(); confirmBuySymbol(buyStockCandidate); }} onClick={() => confirmBuySymbol(buyStockCandidate)}>
                           이 종목 맞아요
                         </button>
                       </>
                     ) : (
                       <>
                         <span>직접 입력 심볼</span>
-                        <strong>{firstBuyLine.symbol.trim().toUpperCase()}</strong>
+                        <strong>{currentWizardBuyLine.symbol.trim().toUpperCase()}</strong>
                         <small>검색 목록에 없어도 Yahoo Finance 심볼이면 계산할 수 있습니다.</small>
-                        <button type="button" onClick={() => confirmBuySymbol()}>
+                        <button type="button" onMouseDown={(event) => { event.preventDefault(); confirmBuySymbol(); }} onClick={() => confirmBuySymbol()}>
                           이 심볼로 진행
                         </button>
                       </>
@@ -797,12 +948,17 @@ export default function Home() {
                 <h2>언제 다시 샀나요?</h2>
                 <label className="input-wrap wizard-control">
                   <span>매수일</span>
-                  <input type="date" value={firstBuyLine.buyDate}
-                    onChange={(event) => updateFirstBuyLine({ buyDate: event.target.value })} />
+                  <input type="date" value={currentWizardBuyLine.buyDate}
+                    onChange={(event) => updateWizardBuyLine({ buyDate: event.target.value })} />
                 </label>
+                <div className="wizard-inline-actions">
+                  <button type="button" className="fun-btn" disabled={!soldDate} onClick={() => updateWizardBuyLine({ buyDate: soldDate })}>
+                    매도일과 같은 날짜
+                  </button>
+                </div>
                 <div className="wizard-actions">
                   <button type="button" className="ghost-btn" onClick={goWizardBack}>이전</button>
-                  <button type="button" className="calc-btn" disabled={!firstBuyLine.buyDate} onClick={() => setWizardStage("allocation")}>
+                  <button type="button" className="calc-btn" disabled={!currentWizardBuyLine.buyDate} onClick={() => setWizardStage("allocation")}>
                     다음
                   </button>
                 </div>
@@ -812,17 +968,57 @@ export default function Home() {
             {wizardStage === "allocation" && (
               <>
                 <p className="wizard-kicker">비중</p>
-                <h2>매도 자금 중 몇 %를 넣었나요?</h2>
-                <label className="input-wrap wizard-control">
-                  <span>비중(%)</span>
-                  <input type="number" min={0} max={100} step="0.01" value={firstBuyLine.allocation}
-                    onChange={(event) => updateFirstBuyLine({ allocation: Number(event.target.value) })} />
-                </label>
+                <h2>비율로 샀나요, 주식수로 샀나요?</h2>
+                <div className="wizard-control mode-panel">
+                  <div className="line-mode-toggle" role="group" aria-label="매수 입력 방식">
+                    <button type="button" className={currentWizardBuyLine.inputMode === "allocation" ? "active" : ""}
+                      onClick={() => updateWizardBuyLine({ inputMode: "allocation" })}>
+                      비율
+                    </button>
+                    <button type="button" className={currentWizardBuyLine.inputMode === "shares" ? "active" : ""}
+                      onClick={() => updateWizardBuyLine({ inputMode: "shares" })}>
+                      주식수
+                    </button>
+                  </div>
+                  <label className="input-wrap">
+                    <span>{currentWizardBuyLine.inputMode === "allocation" ? "비중(%)" : "매수 주식수"}</span>
+                    <input type="number" min={0} step={currentWizardBuyLine.inputMode === "allocation" ? "0.01" : "0.0001"}
+                      value={currentWizardBuyLine.inputMode === "allocation" ? currentWizardBuyLine.allocation : currentWizardBuyLine.quantity}
+                      onChange={(event) => updateWizardBuyLine(
+                        currentWizardBuyLine.inputMode === "allocation"
+                          ? { allocation: Number(event.target.value) }
+                          : { quantity: Number(event.target.value) },
+                      )} />
+                  </label>
+                  <p className="mode-help">
+                    비율이 100%를 넘거나 주식수 기준 매수액이 매도금보다 크면, 초과분은 추가 투입 현금으로 계산합니다.
+                  </p>
+                </div>
                 <div className="wizard-actions">
                   <button type="button" className="ghost-btn" onClick={goWizardBack}>이전</button>
-                  <button type="button" className="calc-btn" disabled={firstBuyLine.allocation < 0 || firstBuyLine.allocation > 100} onClick={() => setWizardStage("evaluationDate")}>
+                  <button type="button" className="calc-btn" disabled={!wizardBuyInputReady} onClick={() => setWizardStage("addAnotherBuy")}>
                     다음
                   </button>
+                </div>
+              </>
+            )}
+
+            {wizardStage === "addAnotherBuy" && (
+              <>
+                <p className="wizard-kicker">환승이 한 번으로 끝났을 리가</p>
+                <h2>갈아탄 종목이 더 있나요?</h2>
+                <div className="wizard-choice-grid">
+                  <button type="button" className="choice-card" onClick={startAnotherWizardBuy}>
+                    <span>네, 하나 더 있어요</span>
+                    <strong>다음 종목도 입력</strong>
+                  </button>
+                  <button type="button" className="choice-card muted" onClick={() => setWizardStage("evaluationDate")}>
+                    <span>이제 그만 캐묻죠</span>
+                    <strong>평가일로 넘어가기</strong>
+                  </button>
+                </div>
+                <div className="wizard-actions compact-only">
+                  <button type="button" className="ghost-btn" onClick={goWizardBack}>이전</button>
                 </div>
               </>
             )}
@@ -837,7 +1033,7 @@ export default function Home() {
                 </label>
                 <div className="wizard-actions">
                   <button type="button" className="ghost-btn" onClick={goWizardBack}>이전</button>
-                  <button type="button" className="calc-btn" disabled={loading || !evaluationDate} onClick={calculate}>
+                  <button type="button" className="calc-btn" disabled={loading || !evaluationDate} onClick={() => calculate("wizard")}>
                     {loading ? "계산 중..." : "결과 보기"}
                   </button>
                 </div>
@@ -871,20 +1067,53 @@ export default function Home() {
                     <span className="step-num">1</span>
                     <span className="step-title">매도 정보</span>
                   </div>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <div className="input-wrap sm:col-span-1">
-                      <span>매도 종목</span>
-                      <StockSearch value={soldSymbol} onChange={changeSoldSymbol} placeholder="TSLA, 테슬라…" />
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    <button type="button" onClick={addSellLine} className="fun-btn">매도 종목 추가</button>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="buy-line sell-line">
+                      <div className="input-wrap compact">
+                        <span>매도 종목 1</span>
+                        <StockSearch value={soldSymbol} onChange={changeSoldSymbol} placeholder="TSLA, 테슬라…" compact />
+                      </div>
+                      <label className="input-wrap compact">
+                        <span>매도일</span>
+                        <input type="date" value={soldDate} onChange={(event) => setSoldDate(event.target.value)} />
+                      </label>
+                      <label className="input-wrap compact">
+                        <span>매도 주식수</span>
+                        <input type="number" min={0.0001} step="0.0001" value={soldQuantity}
+                          onChange={(event) => setSoldQuantity(Number(event.target.value))} />
+                      </label>
+                      <div className="delete-col flex items-end">
+                        <button type="button" className="remove-btn" disabled>기준</button>
+                      </div>
                     </div>
-                    <label className="input-wrap">
-                      <span>매도일</span>
-                      <input type="date" value={soldDate} onChange={(event) => setSoldDate(event.target.value)} />
-                    </label>
-                    <label className="input-wrap">
-                      <span>수량</span>
-                      <input type="number" min={0.0001} step="0.0001" value={soldQuantity}
-                        onChange={(event) => setSoldQuantity(Number(event.target.value))} />
-                    </label>
+                    {extraSoldLines.map((line, index) => (
+                      <div key={line.id} className="buy-line sell-line">
+                        <div className="input-wrap compact">
+                          <span>매도 종목 {index + 2}</span>
+                          <StockSearch value={line.symbol}
+                            onChange={(symbol) => updateExtraSellLine(line.id, { symbol })}
+                            placeholder="AAPL, 000660…" compact />
+                        </div>
+                        <label className="input-wrap compact">
+                          <span>매도일</span>
+                          <input type="date" value={line.sellDate}
+                            onChange={(event) => updateExtraSellLine(line.id, { sellDate: event.target.value })} />
+                        </label>
+                        <label className="input-wrap compact">
+                          <span>매도 주식수</span>
+                          <input type="number" min={0.0001} step="0.0001" value={line.quantity}
+                            onChange={(event) => updateExtraSellLine(line.id, { quantity: Number(event.target.value) })} />
+                        </label>
+                        <div className="delete-col flex items-end">
+                          <button type="button" onClick={() => removeExtraSellLine(line.id)} className="remove-btn">
+                            삭제
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </section>
 
@@ -943,12 +1172,32 @@ export default function Home() {
                               <span>매수일</span>
                               <input type="date" value={line.buyDate}
                                 onChange={(event) => updateBuyLine(line.id, { buyDate: event.target.value })} />
+                              <button type="button" className="mini-link" disabled={!soldDate}
+                                onClick={() => updateBuyLine(line.id, { buyDate: soldDate })}>
+                                같은 날짜
+                              </button>
                             </label>
-                            <label className="input-wrap compact">
-                              <span>비중(%)</span>
-                              <input type="number" min={0} max={100} step="0.01" value={line.allocation}
-                                onChange={(event) => updateBuyLine(line.id, { allocation: Number(event.target.value) })} />
-                            </label>
+                            <div className="input-wrap compact">
+                              <span>입력 방식</span>
+                              <div className="line-mode-toggle" role="group" aria-label={`종목 ${idx + 1} 입력 방식`}>
+                                <button type="button" className={line.inputMode === "allocation" ? "active" : ""}
+                                  onClick={() => updateBuyLine(line.id, { inputMode: "allocation" })}>
+                                  비율
+                                </button>
+                                <button type="button" className={line.inputMode === "shares" ? "active" : ""}
+                                  onClick={() => updateBuyLine(line.id, { inputMode: "shares" })}>
+                                  주식수
+                                </button>
+                              </div>
+                              <input type="number" min={0} step={line.inputMode === "allocation" ? "0.01" : "0.0001"}
+                                value={line.inputMode === "allocation" ? line.allocation : line.quantity}
+                                aria-label={line.inputMode === "allocation" ? "비중" : "매수 주식수"}
+                                onChange={(event) => updateBuyLine(line.id,
+                                  line.inputMode === "allocation"
+                                    ? { allocation: Number(event.target.value) }
+                                    : { quantity: Number(event.target.value) },
+                                )} />
+                            </div>
                             <div className="delete-col flex items-end">
                               <button type="button" onClick={() => removeBuyLine(line.id)}
                                 className="remove-btn" disabled={buys.length === 1}>
@@ -973,19 +1222,27 @@ export default function Home() {
                     </div>
                     <span className="shrink-0 text-sm font-black tabular-nums" style={{ color: allocBarColor }}>
                       {allocationSum.toFixed(1)}%
-                      {allocOver ? " 초과" : cashAllocationPreview > 0 ? ` · 현금 ${cashAllocationPreview.toFixed(1)}%` : " ✓"}
+                      {allocOver ? ` · 추가 현금 ${Math.max(0, allocationSum - 100).toFixed(1)}%` : cashAllocationPreview > 0 ? ` · 현금 ${cashAllocationPreview.toFixed(1)}%` : " ✓"}
+                      {shareModeCount > 0 ? ` · 주식수 ${shareModeCount}줄` : ""}
                     </span>
                   </div>
                 </section>
 
                 <section className="manual-section action-section">
-                  <button type="button" onClick={calculate} disabled={loading} className="calc-btn">
+                  <button type="button" onClick={() => calculate("manual")} disabled={loading} className="calc-btn">
                     {loading ? "계산 중..." : "껄껄 계산하기"}
                   </button>
                 </section>
               </div>
             </details>
           </div>
+
+          {showManualNudge && result && (
+            <div className="manual-nudge">
+              <strong>질문만으로도 충분히 아프지만요.</strong>
+              <span>직접 입력 모드를 열면 여러 매도 종목, 주식수 기준 매수, 추가 투입 현금까지 넣어서 당신의 잘못을... 아니 기회비용을 더 정교하게 파헤칠 수 있어요.</span>
+            </div>
+          )}
 
           <section ref={resultRef} data-result className="mt-5 space-y-4 lg:mt-0">
 
@@ -1070,21 +1327,37 @@ export default function Home() {
                   <p className="value">
                     {formatConvertedAmount(result.soldProceeds, result.soldCurrency, displayCurrency, result.displayFxRate)}
                   </p>
-                  <p className="sub">{result.soldResolvedSymbol} · {result.soldMatchedDate}</p>
+                  <p className="sub">
+                    {result.soldResults.length > 1
+                      ? `${result.soldResults.length}개 매도 종목 합산`
+                      : `${result.soldResolvedSymbol} · ${result.soldMatchedDate}`}
+                  </p>
+                  {result.additionalCashBase > 0 && (
+                    <p className="sub accent">
+                      추가 투입 현금 {formatConvertedAmount(result.additionalCashBase, result.soldCurrency, displayCurrency, result.displayFxRate)} 별도 반영
+                    </p>
+                  )}
                 </div>
                 <div className="scenario-card hold">
                   <p className="label">지금까지 버텼다면?</p>
                   <p className="value">
-                    {formatConvertedAmount(result.keepValue, result.soldCurrency, displayCurrency, result.displayFxRate)}
+                    {formatConvertedAmount(result.holdScenarioValue, result.soldCurrency, displayCurrency, result.displayFxRate)}
                   </p>
                   <p className="sub">수익률 {formatPercent(resultMetrics.holdReturnPct)} · {result.keepMatchedDate}</p>
+                  {result.additionalCashBase > 0 && (
+                    <p className="sub accent">초과 매수분은 현금으로 함께 보유한 기준입니다.</p>
+                  )}
                 </div>
                 <div className="scenario-card switched">
                   <p className="label">{result.buyResults.length > 0 ? "혹시 갈아탔다면?" : "현금으로 뒀다면?"}</p>
                   <p className={`value ${vc.valueColor}`}>
                     {formatConvertedAmount(result.totalCurrentValue, result.soldCurrency, displayCurrency, result.displayFxRate)}
                   </p>
-                  <p className="sub">수익률 {formatPercent(resultMetrics.switchedReturnPct)}{result.cashAllocation > 0 ? ` · 현금 ${result.cashAllocation.toFixed(1)}%` : ""}</p>
+                  <p className="sub">
+                    수익률 {formatPercent(resultMetrics.switchedReturnPct)}
+                    {result.cashAllocation > 0 ? ` · 남은 현금 ${result.cashAllocation.toFixed(1)}%` : ""}
+                    {result.additionalCashAllocation > 0 ? ` · 추가 현금 ${result.additionalCashAllocation.toFixed(1)}%` : ""}
+                  </p>
                   {result.buyResults.some((line) => line.currency !== result.soldCurrency) && (
                     <p className="sub accent">환율 기준 환산</p>
                   )}
@@ -1199,15 +1472,44 @@ export default function Home() {
                   <b>▼</b>
                 </summary>
                 <div className="mt-4 space-y-2">
+                  <div className="detail-subtitle">매도한 종목</div>
+                  {result.soldResults.map((line) => (
+                    <div key={line.id} className="rounded-lg p-3"
+                      style={{ border: "1.5px solid rgba(15,25,40,0.07)", background: "#F8FAFC" }}>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-black" style={{ color: "var(--ink)" }}>{line.symbol}</span>
+                        <span className="text-xs" style={{ color: "var(--muted)" }}>{line.quantity.toFixed(4)}주 매도</span>
+                        {line.currency === "KRW" ? <span className="tag-krw">KRW</span> : <span className="tag-usd">USD</span>}
+                        <span className="ml-auto text-sm font-black tabular-nums text-slate-700">
+                          {formatConvertedAmount(line.soldProceedsBase, result.soldCurrency, displayCurrency, result.displayFxRate)}
+                        </span>
+                      </div>
+                      <div className="mt-2 space-y-1 text-xs" style={{ color: "var(--muted)" }}>
+                        <p>
+                          매도 {formatAmount(line.sellPrice, line.currency)} ({line.matchedSellDate})
+                          {line.fxAtSell !== 1 && ` · 환율 ₩${Math.round(line.fxAtSell).toLocaleString()}`}
+                        </p>
+                        <p>
+                          보유했다면 {formatAmount(line.keepPrice, line.currency)} ({line.keepMatchedDate}) → {formatConvertedAmount(line.keepValueBase, result.soldCurrency, displayCurrency, result.displayFxRate)}
+                          {line.fxAtEval !== 1 && ` · 평가 환율 ₩${Math.round(line.fxAtEval).toLocaleString()}`}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+
+                  {result.buyResults.length > 0 && <div className="detail-subtitle with-gap">갈아탄 종목</div>}
                   {result.buyResults.map((line) => {
                     const pnl = line.currentValueBase - line.investedBase;
                     const isProfit = pnl >= 0;
+                    const inputLabel = line.inputMode === "shares"
+                      ? `${line.shares.toFixed(4)}주 입력`
+                      : `${line.allocation.toFixed(1)}% 입력`;
                     return (
                       <div key={line.id} className="rounded-lg p-3"
                         style={{ border: "1.5px solid rgba(15,25,40,0.07)", background: "#F8FAFC" }}>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-black" style={{ color: "var(--ink)" }}>{line.symbol}</span>
-                          <span className="text-xs" style={{ color: "var(--muted)" }}>({line.allocation.toFixed(1)}%)</span>
+                          <span className="text-xs" style={{ color: "var(--muted)" }}>({inputLabel})</span>
                           {line.currency === "KRW" ? <span className="tag-krw">KRW</span> : <span className="tag-usd">USD</span>}
                           <span className={`ml-auto text-sm font-black tabular-nums ${isProfit ? "text-emerald-600" : "text-red-600"}`}>
                             {isProfit ? "+" : ""}
@@ -1215,6 +1517,9 @@ export default function Home() {
                           </span>
                         </div>
                         <div className="mt-2 space-y-1 text-xs" style={{ color: "var(--muted)" }}>
+                          <p>
+                            투입 원금 {formatConvertedAmount(line.investedBase, result.soldCurrency, displayCurrency, result.displayFxRate)}
+                          </p>
                           <p>
                             매수 {formatAmount(line.buyPrice, line.currency)} ({line.matchedBuyDate})
                             {line.fxAtBuy !== 1 && ` · 환율 ₩${Math.round(line.fxAtBuy).toLocaleString()}`}
@@ -1244,6 +1549,21 @@ export default function Home() {
                       </div>
                       <p className="mt-2 text-xs" style={{ color: "var(--muted)" }}>
                         100%에서 남은 비중은 투자 수익률 계산에서 제외하고 현금으로 유지합니다.
+                      </p>
+                    </div>
+                  )}
+                  {result.additionalCashBase > 0 && (
+                    <div className="rounded-lg p-3"
+                      style={{ border: "1.5px solid rgba(249,115,22,0.28)", background: "#FFF7ED" }}>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-black" style={{ color: "var(--ink)" }}>추가 투입 현금</span>
+                        <span className="text-xs" style={{ color: "var(--muted)" }}>매도금 초과 매수분</span>
+                        <span className="ml-auto text-sm font-black tabular-nums text-orange-700">
+                          {formatConvertedAmount(result.additionalCashBase, result.soldCurrency, displayCurrency, result.displayFxRate)}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-xs" style={{ color: "var(--muted)" }}>
+                        비교가 불공평해지지 않도록, 계속 보유/현금 보유 시나리오에도 같은 금액을 현금으로 더해 계산했습니다.
                       </p>
                     </div>
                   )}
