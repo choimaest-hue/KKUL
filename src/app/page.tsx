@@ -1269,12 +1269,12 @@ export default function Home() {
                     </div>
                   )}
 
-                  <div className="mt-4 flex items-center gap-3">
+                  <div className="alloc-summary-row mt-4 flex items-center gap-3">
                     <div className="alloc-bar-track">
                       <div className="alloc-bar-fill"
                         style={{ width: `${Math.max(0, Math.min(allocationSum, 100))}%`, background: allocBarColor }} />
                     </div>
-                    <span className="shrink-0 text-sm font-black tabular-nums" style={{ color: allocBarColor }}>
+                    <span className="alloc-summary-text text-sm font-black tabular-nums" style={{ color: allocBarColor }}>
                       {allocationSum.toFixed(1)}%
                       {allocOver ? ` · 추가 현금 ${Math.max(0, allocationSum - 100).toFixed(1)}%` : cashAllocationPreview > 0 ? ` · 현금 ${cashAllocationPreview.toFixed(1)}%` : " ✓"}
                       {shareModeCount > 0 ? ` · 주식수 ${shareModeCount}줄` : ""}
