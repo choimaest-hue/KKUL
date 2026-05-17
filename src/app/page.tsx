@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -160,6 +160,57 @@ function formatConvertedAmount(
   usdKrwRate: number,
 ): string {
   return formatAmount(convertAmount(value, fromCurrency, toCurrency, usdKrwRate), toCurrency);
+}
+
+function getLocalDateInputValue(date = new Date()): string {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+  return localDate.toISOString().slice(0, 10);
+}
+
+function isFutureDate(value: string, today: string): boolean {
+  return Boolean(value && value > today);
+}
+
+const FUTURE_DATE_MESSAGE = "미래는 아직 예측 못해요. 오늘 이전 날짜를 선택해주세요.";
+
+type DateFieldProps = {
+  id: string;
+  label: string;
+  value: string;
+  maxDate: string;
+  onChange: (value: string) => void;
+  className?: string;
+  compact?: boolean;
+  children?: ReactNode;
+};
+
+function DateField({ id, label, value, maxDate, onChange, className = "", compact = false, children }: DateFieldProps) {
+  const hasFutureWarning = isFutureDate(value, maxDate);
+  const warningId = `${id}-future-warning`;
+  const classes = ["input-wrap", compact ? "compact" : "", className, hasFutureWarning ? "has-date-warning" : ""]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <label className={classes}>
+      <span>{label}</span>
+      <input
+        id={id}
+        type="date"
+        value={value}
+        max={maxDate}
+        aria-invalid={hasFutureWarning || undefined}
+        aria-describedby={hasFutureWarning ? warningId : undefined}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      {children}
+      {hasFutureWarning && (
+        <small id={warningId} className="date-warning" role="alert">
+          {FUTURE_DATE_MESSAGE}
+        </small>
+      )}
+    </label>
+  );
 }
 
 async function fetchClose(symbol: string, date: string): Promise<PricePayload> {
@@ -359,6 +410,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<CalcResult | null>(null);
+  const todayIso = useMemo(() => getLocalDateInputValue(), []);
 
   const allocationSum = useMemo(
     () => buys.reduce((sum, line) => (
@@ -366,6 +418,16 @@ export default function Home() {
     ), 0),
     [buys],
   );
+  const soldDateFuture = isFutureDate(soldDate, todayIso);
+  const evaluationDateFuture = isFutureDate(evaluationDate, todayIso);
+  const currentWizardBuyDateFuture = isFutureDate(buys[wizardBuyIndex]?.buyDate ?? "", todayIso);
+  const manualFutureDate = soldDateFuture
+    || evaluationDateFuture
+    || extraSoldLines.some((line) => isFutureDate(line.sellDate, todayIso))
+    || (hasSwitched && buys.some((line) => {
+      const hasActiveInput = line.inputMode === "shares" ? line.quantity > 0 : line.allocation > 0;
+      return hasActiveInput && isFutureDate(line.buyDate, todayIso);
+    }));
 
   const addBuyLine = () => {
     setHasSwitched(true);
@@ -505,6 +567,15 @@ export default function Home() {
 
     if (!evaluationDate || sellInputs.some((line) => !line.symbol.trim() || !line.sellDate || line.quantity <= 0)) {
       setError("매도 종목, 매도일, 평가일, 수량을 정확히 입력해주세요.");
+      setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
+      return;
+    }
+    if (
+      isFutureDate(evaluationDate, todayIso)
+      || sellInputs.some((line) => isFutureDate(line.sellDate, todayIso))
+      || activeBuys.some((line) => isFutureDate(line.buyDate, todayIso))
+    ) {
+      setError(FUTURE_DATE_MESSAGE);
       setTimeout(() => errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
       return;
     }
@@ -853,13 +924,11 @@ export default function Home() {
               <>
                 <p className="wizard-kicker">매도 기억 소환</p>
                 <h2>언제 팔았나요?</h2>
-                <label className="input-wrap wizard-control">
-                  <span>매도일</span>
-                  <input type="date" value={soldDate} onChange={(event) => setSoldDate(event.target.value)} />
-                </label>
+                <DateField id="wizard-sold-date" label="매도일" value={soldDate} maxDate={todayIso}
+                  onChange={setSoldDate} className="wizard-control" />
                 <div className="wizard-actions">
                   <button type="button" className="ghost-btn" onClick={goWizardBack}>이전</button>
-                  <button type="button" className="calc-btn" disabled={!soldDate} onClick={() => setWizardStage("soldQuantity")}>
+                  <button type="button" className="calc-btn" disabled={!soldDate || soldDateFuture} onClick={() => setWizardStage("soldQuantity")}>
                     다음
                   </button>
                 </div>
@@ -946,11 +1015,8 @@ export default function Home() {
               <>
                 <p className="wizard-kicker">재매수 시점</p>
                 <h2>언제 다시 샀나요?</h2>
-                <label className="input-wrap wizard-control">
-                  <span>매수일</span>
-                  <input type="date" value={currentWizardBuyLine.buyDate}
-                    onChange={(event) => updateWizardBuyLine({ buyDate: event.target.value })} />
-                </label>
+                <DateField id="wizard-buy-date" label="매수일" value={currentWizardBuyLine.buyDate} maxDate={todayIso}
+                  onChange={(value) => updateWizardBuyLine({ buyDate: value })} className="wizard-control" />
                 <div className="wizard-inline-actions">
                   <button type="button" className="fun-btn" disabled={!soldDate} onClick={() => updateWizardBuyLine({ buyDate: soldDate })}>
                     매도일과 같은 날짜
@@ -958,7 +1024,7 @@ export default function Home() {
                 </div>
                 <div className="wizard-actions">
                   <button type="button" className="ghost-btn" onClick={goWizardBack}>이전</button>
-                  <button type="button" className="calc-btn" disabled={!currentWizardBuyLine.buyDate} onClick={() => setWizardStage("allocation")}>
+                  <button type="button" className="calc-btn" disabled={!currentWizardBuyLine.buyDate || currentWizardBuyDateFuture} onClick={() => setWizardStage("allocation")}>
                     다음
                   </button>
                 </div>
@@ -1027,13 +1093,11 @@ export default function Home() {
               <>
                 <p className="wizard-kicker">지금까지 버텼다면?</p>
                 <h2>어느 날짜 기준으로 볼까요?</h2>
-                <label className="input-wrap wizard-control">
-                  <span>평가일</span>
-                  <input type="date" value={evaluationDate} onChange={(event) => setEvaluationDate(event.target.value)} />
-                </label>
+                <DateField id="wizard-evaluation-date" label="평가일" value={evaluationDate} maxDate={todayIso}
+                  onChange={setEvaluationDate} className="wizard-control" />
                 <div className="wizard-actions">
                   <button type="button" className="ghost-btn" onClick={goWizardBack}>이전</button>
-                  <button type="button" className="calc-btn" disabled={loading || !evaluationDate} onClick={() => calculate("wizard")}>
+                  <button type="button" className="calc-btn" disabled={loading || !evaluationDate || evaluationDateFuture} onClick={() => calculate("wizard")}>
                     {loading ? "계산 중..." : "결과 보기"}
                   </button>
                 </div>
@@ -1076,10 +1140,8 @@ export default function Home() {
                         <span>매도 종목 1</span>
                         <StockSearch value={soldSymbol} onChange={changeSoldSymbol} placeholder="TSLA, 테슬라…" compact />
                       </div>
-                      <label className="input-wrap compact">
-                        <span>매도일</span>
-                        <input type="date" value={soldDate} onChange={(event) => setSoldDate(event.target.value)} />
-                      </label>
+                      <DateField id="manual-sold-date-primary" label="매도일" value={soldDate} maxDate={todayIso}
+                        onChange={setSoldDate} compact />
                       <label className="input-wrap compact">
                         <span>매도 주식수</span>
                         <input type="number" min={0.0001} step="0.0001" value={soldQuantity}
@@ -1097,11 +1159,8 @@ export default function Home() {
                             onChange={(symbol) => updateExtraSellLine(line.id, { symbol })}
                             placeholder="AAPL, 000660…" compact />
                         </div>
-                        <label className="input-wrap compact">
-                          <span>매도일</span>
-                          <input type="date" value={line.sellDate}
-                            onChange={(event) => updateExtraSellLine(line.id, { sellDate: event.target.value })} />
-                        </label>
+                        <DateField id={`manual-sold-date-${line.id}`} label="매도일" value={line.sellDate} maxDate={todayIso}
+                          onChange={(value) => updateExtraSellLine(line.id, { sellDate: value })} compact />
                         <label className="input-wrap compact">
                           <span>매도 주식수</span>
                           <input type="number" min={0.0001} step="0.0001" value={line.quantity}
@@ -1123,11 +1182,8 @@ export default function Home() {
                     <span className="step-title">지금까지 버텼다면?</span>
                   </div>
                   <div className="hold-input-grid">
-                    <label className="input-wrap">
-                      <span>평가 기준일</span>
-                      <input type="date" value={evaluationDate}
-                        onChange={(event) => setEvaluationDate(event.target.value)} />
-                    </label>
+                    <DateField id="manual-evaluation-date" label="평가 기준일" value={evaluationDate} maxDate={todayIso}
+                      onChange={setEvaluationDate} />
                     <div className="hold-preview">
                       <span>비교 기준</span>
                       <strong>{soldSymbol || "매도 종목"}</strong>
@@ -1168,15 +1224,13 @@ export default function Home() {
                                 onChange={(sym) => updateBuyLine(line.id, { symbol: sym })}
                                 placeholder="엔비디아, 삼성…" compact />
                             </div>
-                            <label className="input-wrap compact">
-                              <span>매수일</span>
-                              <input type="date" value={line.buyDate}
-                                onChange={(event) => updateBuyLine(line.id, { buyDate: event.target.value })} />
+                            <DateField id={`manual-buy-date-${line.id}`} label="매수일" value={line.buyDate} maxDate={todayIso}
+                              onChange={(value) => updateBuyLine(line.id, { buyDate: value })} compact>
                               <button type="button" className="mini-link" disabled={!soldDate}
                                 onClick={() => updateBuyLine(line.id, { buyDate: soldDate })}>
                                 같은 날짜
                               </button>
-                            </label>
+                            </DateField>
                             <div className="input-wrap compact">
                               <span>입력 방식</span>
                               <div className="line-mode-toggle" role="group" aria-label={`종목 ${idx + 1} 입력 방식`}>
@@ -1229,7 +1283,7 @@ export default function Home() {
                 </section>
 
                 <section className="manual-section action-section">
-                  <button type="button" onClick={() => calculate("manual")} disabled={loading} className="calc-btn">
+                  <button type="button" onClick={() => calculate("manual")} disabled={loading || manualFutureDate} className="calc-btn">
                     {loading ? "계산 중..." : "껄껄 계산하기"}
                   </button>
                 </section>
