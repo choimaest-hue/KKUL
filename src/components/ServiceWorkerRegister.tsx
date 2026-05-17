@@ -8,19 +8,38 @@ export default function ServiceWorkerRegister() {
       return;
     }
 
+    const hadController = Boolean(navigator.serviceWorker.controller);
+    let refreshing = false;
+    const onControllerChange = () => {
+      if (!hadController || refreshing) {
+        return;
+      }
+
+      refreshing = true;
+      window.location.reload();
+    };
+
+    navigator.serviceWorker.addEventListener("controllerchange", onControllerChange);
+
     const register = () => {
-      navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" }).catch(() => {
-        // Ignore registration failures. The app still works without offline cache.
-      });
+      navigator.serviceWorker
+        .register("/sw.js", { scope: "/", updateViaCache: "none" })
+        .then((registration) => registration.update())
+        .catch(() => {
+          // Ignore registration failures. The app still works without offline cache.
+        });
     };
 
     if (document.readyState === "complete") {
       register();
-      return;
+      return () => navigator.serviceWorker.removeEventListener("controllerchange", onControllerChange);
     }
 
     window.addEventListener("load", register, { once: true });
-    return () => window.removeEventListener("load", register);
+    return () => {
+      window.removeEventListener("load", register);
+      navigator.serviceWorker.removeEventListener("controllerchange", onControllerChange);
+    };
   }, []);
 
   return null;

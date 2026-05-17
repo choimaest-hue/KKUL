@@ -1,6 +1,5 @@
-const CACHE_NAME = "kkul-shell-v5";
+const CACHE_NAME = "kkul-assets-v6";
 const APP_SHELL = [
-  "/",
   "/manifest.webmanifest",
   "/icon.svg",
   "/apple-icon.png",
@@ -22,6 +21,20 @@ const APP_SHELL = [
   "/screenshots/app-wide.png",
   "/screenshots/app-narrow.png",
 ];
+
+function shouldBypassCache(url, request) {
+  if (request.mode === "navigate") {
+    return true;
+  }
+
+  return (
+    url.pathname === "/sw.js" ||
+    url.pathname.startsWith("/_next/") ||
+    url.pathname.startsWith("/api/") ||
+    url.pathname === "/" ||
+    url.pathname.endsWith(".html")
+  );
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -49,16 +62,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/", copy)).catch(() => undefined);
-          return response;
-        })
-        .catch(() => caches.match("/").then((cached) => cached || Response.error())),
-    );
+  if (shouldBypassCache(url, event.request)) {
+    event.respondWith(fetch(event.request));
     return;
   }
 
