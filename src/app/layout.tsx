@@ -3,6 +3,10 @@ import { Do_Hyeon, Jua } from "next/font/google";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
+const siteUrl = "https://kkul.vercel.app";
+const siteDescription =
+  "매도 후 갈아탄 선택을 종가 기준으로 계산해 기회비용을 보여주는 코믹 경제 웹앱. 미국/한국 주식, 환율 자동 반영.";
+
 const doHyeon = Do_Hyeon({
   variable: "--font-do-hyeon",
   weight: "400",
@@ -16,10 +20,21 @@ const jua = Jua({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   applicationName: "껄껄무새",
   title: "껄껄무새 | 미국/한국 주식 기회비용 계산기",
-  description:
-    "매도 후 갈아탄 선택을 종가 기준으로 계산해 기회비용을 보여주는 코믹 경제 웹앱. 미국/한국 주식, 환율 자동 반영.",
+  description: siteDescription,
+  keywords: [
+    "껄껄무새",
+    "주식 기회비용 계산기",
+    "주식 수익률 계산기",
+    "미국 주식 계산기",
+    "한국 주식 계산기",
+    "주식 갈아타기 계산",
+  ],
+  alternates: {
+    canonical: "/",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -40,9 +55,19 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "껄껄무새 — 주식 기회비용 계산기",
-    description: "매도/매수 시점 기반 주식 기회비용 계산기. 미국·한국 주식, 환율 자동 반영.",
+    description: siteDescription,
+    url: "/",
+    siteName: "껄껄무새",
     type: "website",
     locale: "ko_KR",
+    images: [
+      {
+        url: "/screenshots/app-wide.png",
+        width: 1600,
+        height: 900,
+        alt: "껄껄무새 주식 기회비용 계산 화면",
+      },
+    ],
   },
   twitter: {
     card: "summary",
@@ -60,6 +85,19 @@ export const viewport: Viewport = {
   themeColor: "#070A12",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "껄껄무새",
+  alternateName: "주식 기회비용 계산기",
+  url: siteUrl,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  inLanguage: "ko-KR",
+  description: siteDescription,
+  image: `${siteUrl}/screenshots/app-wide.png`,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -71,6 +109,10 @@ export default function RootLayout({
       className={`${doHyeon.variable} ${jua.variable} h-full antialiased`}
     >
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3397494907696633"
